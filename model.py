@@ -18,7 +18,8 @@ class Model(nn.Module):
 
         # classifier
         self.in_length = 16
-        self.fc = CapsuleLinear(out_capsules=num_class, in_length=self.in_length, out_length=8, squash=False)
+        self.fc = CapsuleLinear(out_capsules=num_class, in_length=self.in_length, out_length=8, bias=False,
+                                squash=False)
 
     def forward(self, x):
         x = self.features(x)
