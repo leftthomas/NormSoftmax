@@ -53,38 +53,38 @@ Here is the recall details:
   <tbody>
     <tr>
       <td align="center">R@1</td>
-      <td align="center">87.42%</td>
-      <td align="center">61.87%</td>
+      <td align="center">85.07%</td>
+      <td align="center">64.16%</td>
       <td align="center">56.93%</td>
     </tr>
     <tr>
       <td align="center">R@2</td>
-      <td align="center">91.98%</td>
-      <td align="center">73.38%</td>
+      <td align="center">91.13%</td>
+      <td align="center">75.22%</td>
       <td align="center">61.68%</td>
     </tr>
     <tr>
       <td align="center">R@4</td>
-      <td align="center">94.83%</td>
-      <td align="center">82.04%</td>
+      <td align="center">94.45%</td>
+      <td align="center">83.25%</td>
       <td align="center">66.18%</td>
     </tr>
     <tr>
       <td align="center">R@8</td>
-      <td align="center">96.84%</td>
-      <td align="center">88.84%</td>
+      <td align="center">96.73%</td>
+      <td align="center">89.30%</td>
       <td align="center">70.08%</td>
     </tr>
     <tr>
       <td align="center">R@10</td>
-      <td align="center">97.37%</td>
-      <td align="center">90.60%</td>
+      <td align="center">97.42%</td>
+      <td align="center">91.17%</td>
       <td align="center">71.32%</td>
     </tr>
     <tr>
       <td align="center">R@100</td>
-      <td align="center">99.66%</td>
-      <td align="center">99.04%</td>
+      <td align="center">99.79%</td>
+      <td align="center">99.27%</td>
       <td align="center">82.58%</td>
     </tr>
     <tr>

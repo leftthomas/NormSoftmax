@@ -21,6 +21,7 @@ def train(net, data_dict, optim):
     for inputs, labels in data_loader:
         optim.zero_grad()
         out = net(inputs.to(DEVICE))
+        out = out.norm(dim=-1)
         loss = criterion(out, labels.to(DEVICE))
         print('loss:{:.4f}'.format(loss.item()), end='\r')
         loss.backward()
@@ -42,7 +43,7 @@ def eval(net, data_dict, ensemble_num, recalls):
     with torch.no_grad():
         for inputs, labels in data_loader:
             out = net(inputs.to(DEVICE))
-            out = F.normalize(out)
+            out = F.normalize(out, dim=-1)
             features.append(out.cpu())
     features = torch.cat(features, 0)
     torch.save(features, 'results/{}_test_features_{:03}.pth'.format(DATA_NAME, ensemble_num))
@@ -50,6 +51,7 @@ def eval(net, data_dict, ensemble_num, recalls):
     features = [torch.load('results/{}_test_features_{:03}.pth'.format(DATA_NAME, d)) for d in
                 range(1, ensemble_num + 1)]
     features = torch.cat(features, 1)
+    features = features.view(features.size(0), -1)
     acc_list = recall(features, data_set.labels, rank=recalls)
     desc = ''
     for index, recall_id in enumerate(recalls):

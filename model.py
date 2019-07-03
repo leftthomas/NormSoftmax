@@ -26,5 +26,4 @@ class Model(nn.Module):
         x = x.permute(0, 2, 3, 1).contiguous()
         feature = x.view(x.size(0), -1, self.in_length)
         out = self.fc(feature)
-        out = out.norm(dim=-1)
         return out
