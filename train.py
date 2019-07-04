@@ -21,12 +21,11 @@ def train(net, data_dict, optim):
     for inputs, labels in data_loader:
         optim.zero_grad()
         out = net(inputs.to(DEVICE))
-        out = out.norm(dim=-1)
-        loss = criterion(out, labels.to(DEVICE))
+        loss = cel_criterion(out.norm(dim=-1), labels.to(DEVICE))
         print('loss:{:.4f}'.format(loss.item()), end='\r')
         loss.backward()
         optim.step()
-        _, pred = torch.max(out, 1)
+        _, pred = torch.max(out.norm(dim=-1), 1)
         l_data += loss.item()
         t_data += torch.sum(pred.cpu() == labels).item()
         n_data += len(labels)
@@ -88,7 +87,7 @@ if __name__ == '__main__':
         model = Model(META_CLASS_SIZE).to(DEVICE)
         optimizer = Adam(model.parameters(), lr=1e-4)
         lr_scheduler = MultiStepLR(optimizer, milestones=[int(NUM_EPOCHS * 0.5), int(NUM_EPOCHS * 0.7)], gamma=0.1)
-        criterion = CrossEntropyLoss()
+        cel_criterion = CrossEntropyLoss()
 
         best_acc, best_model = 0, None
         for epoch in range(1, NUM_EPOCHS + 1):
