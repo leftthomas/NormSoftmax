@@ -79,23 +79,21 @@ if __name__ == '__main__':
     all_class = sorted(train_data)
     idx_to_class = {i: all_class[i] for i in range(len(all_class))}
 
-    for i in range(1, ENSEMBLE_SIZE + 1):
-        print('Training ensemble #{}'.format(i))
-        meta_id = create_id(META_CLASS_SIZE, len(data_dicts['train']))
-        meta_data_dict = load_data(meta_id, idx_to_class, train_data)
-        model = Model(META_CLASS_SIZE).to(DEVICE)
-        optimizer = Adam(model.parameters(), lr=1e-4)
-        lr_scheduler = MultiStepLR(optimizer, milestones=[int(NUM_EPOCHS * 0.5), int(NUM_EPOCHS * 0.7)], gamma=0.1)
-        cel_criterion = CrossEntropyLoss()
+    meta_id = create_id(META_CLASS_SIZE, len(data_dicts['train']))
+    meta_data_dict = load_data(meta_id, idx_to_class, train_data)
+    model = Model(META_CLASS_SIZE).to(DEVICE)
+    optimizer = Adam(model.parameters(), lr=1e-4)
+    lr_scheduler = MultiStepLR(optimizer, milestones=[int(NUM_EPOCHS * 0.5), int(NUM_EPOCHS * 0.7)], gamma=0.1)
+    cel_criterion = CrossEntropyLoss()
 
-        best_acc, best_model = 0, None
-        for epoch in range(1, NUM_EPOCHS + 1):
-            lr_scheduler.step(epoch)
-            train_loss, train_acc = train(model, meta_data_dict, optimizer)
-            print('Epoch {}/{} - Loss:{:.4f} - Acc:{:.4f}'.format(epoch, NUM_EPOCHS, train_loss, train_acc))
-            # deep copy the model
-            if train_acc > best_acc:
-                best_acc = train_acc
-                best_model = copy.deepcopy(model)
-                torch.save(model.state_dict(), 'epochs/{}_model_{:03}.pth'.format(DATA_NAME, i))
-        eval(best_model, test_data, i, recall_ids)
+    best_acc, best_model = 0, None
+    for epoch in range(1, NUM_EPOCHS + 1):
+        lr_scheduler.step(epoch)
+        train_loss, train_acc = train(model, meta_data_dict, optimizer)
+        print('Epoch {}/{} - Loss:{:.4f} - Acc:{:.4f}'.format(epoch, NUM_EPOCHS, train_loss, train_acc))
+        # deep copy the model
+        if train_acc > best_acc:
+            best_acc = train_acc
+            best_model = copy.deepcopy(model)
+            torch.save(model.state_dict(), 'epochs/{}_model_{:03}.pth'.format(DATA_NAME, i))
+    eval(best_model, test_data, i, recall_ids)

@@ -1,10 +1,11 @@
+import torch
 import torch.nn as nn
 from torchvision.models.resnet import resnet18
 
 
 class Model(nn.Module):
 
-    def __init__(self, num_class):
+    def __init__(self, meta_class_size, ensemble_size):
         super(Model, self).__init__()
 
         # backbone
@@ -16,10 +17,11 @@ class Model(nn.Module):
         self.features = nn.Sequential(*layers)
 
         # classifier
-        self.fc = nn.Linear(in_features=512, out_features=num_class, bias=True)
+        self.fcs = nn.ModuleList([nn.Linear(512, meta_class_size, bias=True) for _ in range(ensemble_size)])
 
     def forward(self, x):
         x = self.features(x)
         feature = x.view(x.size(0), -1)
-        out = self.fc(feature)
+        out = [fc(feature) for fc in self.fcs(feature)]
+        out = torch.stack(out, dim=1)
         return out
