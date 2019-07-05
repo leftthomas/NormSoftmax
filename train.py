@@ -21,11 +21,11 @@ def train(net, data_dict, optim):
     for inputs, labels in data_loader:
         optim.zero_grad()
         out = net(inputs.to(DEVICE))
-        loss = cel_criterion(out.norm(dim=-1), labels.to(DEVICE))
+        loss = cel_criterion(out, labels.to(DEVICE))
         print('loss:{:.4f}'.format(loss.item()), end='\r')
         loss.backward()
         optim.step()
-        _, pred = torch.max(out.norm(dim=-1), 1)
+        _, pred = torch.max(out, 1)
         l_data += loss.item()
         t_data += torch.sum(pred.cpu() == labels).item()
         n_data += len(labels)
@@ -33,7 +33,7 @@ def train(net, data_dict, optim):
     return l_data / n_data, t_data / n_data
 
 
-def eval(net, data_dict, ensemble_num, recalls):
+def eval(net, data_dict, ensemble_num, recalls, weights):
     net.eval()
     data_set = ImageReader(data_dict, get_transform(DATA_NAME, 'test'))
     data_loader = DataLoader(data_set, BATCH_SIZE, shuffle=False, num_workers=8)
@@ -49,9 +49,8 @@ def eval(net, data_dict, ensemble_num, recalls):
     # load feature vectors
     features = [torch.load('results/{}_test_features_{:03}.pth'.format(DATA_NAME, d)) for d in
                 range(1, ensemble_num + 1)]
-    features = torch.cat(features, 1)
-    features = features.view(features.size(0), -1)
-    acc_list = recall(features, data_set.labels, rank=recalls)
+    features = torch.stack(features, 0)
+    acc_list = recall(features, data_set.labels, recalls, weights)
     desc = ''
     for index, recall_id in enumerate(recalls):
         desc += 'R@{}:{:.2f}% '.format(recall_id, acc_list[index] * 100)
@@ -79,6 +78,8 @@ if __name__ == '__main__':
     # sort classes and fix the class order
     all_class = sorted(train_data)
     idx_to_class = {i: all_class[i] for i in range(len(all_class))}
+    # use this to assign weight for each model
+    weight_list = []
 
     for i in range(1, ENSEMBLE_SIZE + 1):
         print('Training ensemble #{}'.format(i))
@@ -99,4 +100,5 @@ if __name__ == '__main__':
                 best_acc = train_acc
                 best_model = copy.deepcopy(model)
                 torch.save(model.state_dict(), 'epochs/{}_model_{:03}.pth'.format(DATA_NAME, i))
-        eval(best_model, test_data, i, recall_ids)
+        weight_list.append(best_acc)
+        eval(best_model, test_data, i, recall_ids, weight_list)

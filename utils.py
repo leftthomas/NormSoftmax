@@ -1,6 +1,7 @@
 import random
 
 import torch
+import torch.nn.functional as F
 from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
@@ -76,10 +77,12 @@ class ImageReader(Dataset):
         return len(self.images)
 
 
-def recall(feature_vectors, img_labels, rank):
+def recall(feature_vectors, img_labels, rank, weights):
     num_images = len(img_labels)
     img_labels = torch.tensor(img_labels)
-    sim_matrix = feature_vectors.mm(torch.t(feature_vectors))
+    weights = F.softmax(torch.tensor(weights)).view(-1, 1, 1)
+    sim_matrix = feature_vectors.bmm(feature_vectors.permute(0, 2, 1).contiguous())
+    sim_matrix = torch.sum(weights * sim_matrix, 0)
     sim_matrix[torch.eye(num_images).byte()] = -1
 
     idx = sim_matrix.argsort(dim=-1, descending=True)
