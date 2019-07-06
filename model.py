@@ -18,8 +18,8 @@ class Model(nn.Module):
 
         # classifier
         self.fcs = nn.ModuleList(
-            [nn.Sequential(nn.Linear(32768, 1024, bias=True), nn.Linear(1024, meta_class_size, bias=True)) for _ in
-             range(ensemble_size)])
+            [nn.Sequential(nn.Linear(32768, 1024, bias=True), nn.Dropout(), nn.Linear(1024, meta_class_size, bias=True))
+             for _ in range(ensemble_size)])
 
     def forward(self, x):
         x = self.features(x)
