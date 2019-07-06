@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
-from torchvision.models.resnet import resnet18
+from capsule_layer import CapsuleLinear
+from torchvision.models.resnet import resnet34
 
 
 class Model(nn.Module):
@@ -9,7 +10,7 @@ class Model(nn.Module):
         super(Model, self).__init__()
 
         # backbone
-        basic_model, layers = resnet18(pretrained=True), []
+        basic_model, layers = resnet34(pretrained=True), []
         for name, module in basic_model.named_children():
             if name == 'fc' or name == 'avgpool':
                 continue
@@ -18,12 +19,13 @@ class Model(nn.Module):
 
         # classifier
         self.fcs = nn.ModuleList(
-            [nn.Sequential(nn.Linear(32768, 1024, bias=True), nn.Dropout(), nn.Linear(1024, meta_class_size, bias=True))
-             for _ in range(ensemble_size)])
+            [nn.Sequential(CapsuleLinear(32, 512, 32), CapsuleLinear(meta_class_size, 32, 8)) for _ in
+             range(ensemble_size)])
 
     def forward(self, x):
         x = self.features(x)
-        feature = x.view(x.size(0), -1)
-        out = [fc(feature) for fc in self.fcs]
+        x = x.permute(0, 2, 3, 1).contiguous()
+        feature = x.view(x.size(0), -1, 512)
+        out = [fc(feature).norm(dim=-1) for fc in self.fcs]
         out = torch.stack(out, dim=1)
         return out
