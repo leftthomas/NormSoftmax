@@ -11,13 +11,15 @@ class Model(nn.Module):
         # backbone
         basic_model, layers = resnet18(pretrained=True), []
         for name, module in basic_model.named_children():
-            if name == 'fc':
+            if name == 'fc' or name == 'avgpool':
                 continue
             layers.append(module)
         self.features = nn.Sequential(*layers)
 
         # classifier
-        self.fcs = nn.ModuleList([nn.Linear(512, meta_class_size, bias=True) for _ in range(ensemble_size)])
+        self.fcs = nn.ModuleList(
+            [nn.Sequential(nn.Linear(32768, 1024, bias=True), nn.Linear(1024, meta_class_size, bias=True)) for _ in
+             range(ensemble_size)])
 
     def forward(self, x):
         x = self.features(x)
