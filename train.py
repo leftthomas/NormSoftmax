@@ -62,7 +62,7 @@ if __name__ == '__main__':
     recall_ids = [int(k) for k in RECALLS.split(',')]
     DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    train_data_set = ImageReader(DATA_NAME, 'train')
+    train_data_set = ImageReader(DATA_NAME, 'train', ENSEMBLE_SIZE, META_CLASS_SIZE)
     train_data_loader = DataLoader(train_data_set, BATCH_SIZE, shuffle=True, num_workers=8)
     test_data_set = ImageReader(DATA_NAME, 'test')
     test_data_loader = DataLoader(test_data_set, BATCH_SIZE, shuffle=False, num_workers=8)

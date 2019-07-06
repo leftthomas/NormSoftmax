@@ -9,17 +9,6 @@ rgb_mean = {'car': [0.4853, 0.4965, 0.4295], 'cub': [0.4707, 0.4601, 0.4549], 's
 rgb_std = {'car': [0.2237, 0.2193, 0.2568], 'cub': [0.2767, 0.2760, 0.2850], 'sop': [0.2901, 0.2974, 0.3095]}
 
 
-def get_transform(data_name, data_type):
-    normalize = transforms.Normalize(rgb_mean[data_name], rgb_std[data_name])
-    if data_type == 'train':
-        transform = transforms.Compose([transforms.Resize(int(256 * 1.1)), transforms.RandomCrop(256),
-                                        transforms.RandomHorizontalFlip(), transforms.ToTensor(), normalize])
-    else:
-        transform = transforms.Compose(
-            [transforms.Resize(256), transforms.CenterCrop(256), transforms.ToTensor(), normalize])
-    return transform
-
-
 # random assign meta class for all classes
 def create_id(meta_class_size, num_class):
     multiple = num_class // meta_class_size
@@ -38,34 +27,36 @@ def create_id(meta_class_size, num_class):
     return idx_all
 
 
-def load_data(meta_id, idx_to_class, data_dict):
-    # balance data for each class
-    max_size = 300
-    meta_data_dict = {i: [] for i in range(max(meta_id) + 1)}
-    for i, c in idx_to_class.items():
-        meta_class_id = meta_id[i]
-        image_list = data_dict[c]
-        if len(image_list) > max_size:
-            image_list = random.sample(image_list, max_size)
-        meta_data_dict[meta_class_id] += image_list
-    return meta_data_dict
-
-
 class ImageReader(Dataset):
 
-    def __init__(self, data_name, data_type):
+    def __init__(self, data_name, data_type, ensemble_size=None, meta_class_size=None):
         data_dict = torch.load('data/{}/data_dicts.pth'.format(data_name))[data_type]
+        class_to_idx = dict(zip(sorted(data_dict), range(len(data_dict))))
+        normalize = transforms.Normalize(rgb_mean[data_name], rgb_std[data_name])
         if data_type == 'train':
-            meta_ids = [create_id(META_CLASS_SIZE, len(data_dict)) for _ in range(ENSEMBLE_SIZE)]
+            self.transform = transforms.Compose([transforms.Resize(int(256 * 1.1)), transforms.RandomCrop(256),
+                                                 transforms.RandomHorizontalFlip(), transforms.ToTensor(), normalize])
+            meta_ids = [create_id(meta_class_size, len(data_dict)) for _ in range(ensemble_size)]
+            # # balance data for each class
+            # max_size = 300
+            self.images, self.labels = [], []
+            for label, image_list in data_dict.items():
+                # if len(image_list) > max_size:
+                #     image_list = random.sample(image_list, max_size)
+                for img in image_list:
+                    self.images.append(img)
+                    meta_label = []
+                    for meta_id in meta_ids:
+                        meta_label.append(meta_id[class_to_idx[label]])
+                    self.labels.append(meta_label)
         else:
-            self.class_to_idx = dict(zip(sorted(list(data_dict.keys())), range(len(list(data_dict.keys())))))
+            self.transform = transforms.Compose(
+                [transforms.Resize(256), transforms.CenterCrop(256), transforms.ToTensor(), normalize])
             self.images, self.labels = [], []
             for label, image_list in data_dict.items():
                 for img in image_list:
                     self.images.append(img)
                     self.labels.append(class_to_idx[label])
-
-        self.transform = transform
 
     def __getitem__(self, index):
         path, target = self.images[index], self.labels[index]
