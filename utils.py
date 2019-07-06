@@ -48,6 +48,7 @@ class ImageReader(Dataset):
                     meta_label = []
                     for meta_id in meta_ids:
                         meta_label.append(meta_id[class_to_idx[label]])
+                    meta_label = torch.tensor(meta_label)
                     self.labels.append(meta_label)
         else:
             self.transform = transforms.Compose(

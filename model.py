@@ -22,6 +22,6 @@ class Model(nn.Module):
     def forward(self, x):
         x = self.features(x)
         feature = x.view(x.size(0), -1)
-        out = [fc(feature) for fc in self.fcs(feature)]
+        out = [fc(feature) for fc in self.fcs]
         out = torch.stack(out, dim=1)
         return out
