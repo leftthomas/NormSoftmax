@@ -26,14 +26,14 @@ python train.py --num_epochs 30
 optional arguments:
 --data_name                   dataset name [default value is 'car'](choices=['car', 'cub', 'sop'])
 --recalls                     selected recall [default value is '1,2,4,8']
---batch_size                  train batch size [default value is 64]
+--batch_size                  train batch size [default value is 8]
 --num_epochs                  train epochs number [default value is 100]
 --ensemble_size               ensemble model size [default value is 16]
 --meta_class_size             meta class size [default value is 12]
 ```
 
 ## Benchmarks
-Adam optimizer is used with learning rate scheduling. The models are trained with batch size of 64 on one 
+Adam optimizer is used with learning rate scheduling. The models are trained with batch size of 8 on one 
 NVIDIA Tesla V100 (32G) GPU.
 
 The images are preprocessed with random resize, random crop, random horizontal flip, and normalize. 

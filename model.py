@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from capsule_layer import CapsuleLinear
-from torchvision.models.resnet import resnet34
+from torchvision.models.resnet import resnet18
 
 
 class Model(nn.Module):
@@ -10,7 +10,7 @@ class Model(nn.Module):
         super(Model, self).__init__()
 
         # backbone
-        basic_model, layers = resnet34(pretrained=True), []
+        basic_model, layers = resnet18(pretrained=True), []
         for name, module in basic_model.named_children():
             if name == 'fc' or name == 'avgpool':
                 continue
