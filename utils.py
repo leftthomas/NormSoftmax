@@ -53,16 +53,17 @@ def load_data(meta_id, idx_to_class, data_dict):
 
 class ImageReader(Dataset):
 
-    def __init__(self, data_dict, transform):
-
-        classes = [c for c in sorted(data_dict)]
-        classes.sort()
-        class_to_idx = {classes[i]: i for i in range(len(classes))}
-        self.images, self.labels = [], []
-        for label in sorted(data_dict):
-            for img in data_dict[label]:
-                self.images.append(img)
-                self.labels.append(class_to_idx[label])
+    def __init__(self, data_name, data_type):
+        data_dict = torch.load('data/{}/data_dicts.pth'.format(data_name))[data_type]
+        if data_type == 'train':
+            meta_ids = [create_id(META_CLASS_SIZE, len(data_dict)) for _ in range(ENSEMBLE_SIZE)]
+        else:
+            self.class_to_idx = dict(zip(sorted(list(data_dict.keys())), range(len(list(data_dict.keys())))))
+            self.images, self.labels = [], []
+            for label, image_list in data_dict.items():
+                for img in image_list:
+                    self.images.append(img)
+                    self.labels.append(class_to_idx[label])
 
         self.transform = transform
 
@@ -79,8 +80,9 @@ class ImageReader(Dataset):
 def recall(feature_vectors, img_labels, rank):
     num_images = len(img_labels)
     img_labels = torch.tensor(img_labels)
+    feature_vectors = feature_vectors.permute(1, 0, 2).contiguous()
     sim_matrix = feature_vectors.bmm(feature_vectors.permute(0, 2, 1).contiguous())
-    sim_matrix = torch.sum(sim_matrix, 0)
+    sim_matrix = torch.sum(sim_matrix, dim=0)
     sim_matrix[torch.eye(num_images).byte()] = -1
 
     idx = sim_matrix.argsort(dim=-1, descending=True)
