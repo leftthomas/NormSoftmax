@@ -28,12 +28,12 @@ def train(net, data_loader, optim):
         n_data += len(labels)
         train_progress.set_description(
             'Epoch {}/{} - Loss:{:.4f} - Acc:{:.4f}'.format(epoch, NUM_EPOCHS, l_data / n_data, t_data / n_data))
-        global best_acc
-        if t_data / n_data > best_acc:
-            best_acc = t_data / n_data
-            torch.save(model.state_dict(), 'epochs/{}_model.pth'.format(DATA_NAME))
     results['train_loss'].append(l_data / n_data)
     results['train_accuracy'].append(t_data / n_data)
+    global best_acc
+    if t_data / n_data > best_acc:
+        best_acc = t_data / n_data
+        torch.save(model.state_dict(), 'epochs/{}_model.pth'.format(DATA_NAME))
 
 
 def eval(net, data_loader, recalls):

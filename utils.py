@@ -37,12 +37,12 @@ class ImageReader(Dataset):
             self.transform = transforms.Compose([transforms.Resize(int(256 * 1.1)), transforms.RandomCrop(256),
                                                  transforms.RandomHorizontalFlip(), transforms.ToTensor(), normalize])
             meta_ids = [create_id(meta_class_size, len(data_dict)) for _ in range(ensemble_size)]
-            # # balance data for each class
-            # max_size = 300
+            # balance data for each class
+            max_size = 300
             self.images, self.labels = [], []
             for label, image_list in data_dict.items():
-                # if len(image_list) > max_size:
-                #     image_list = random.sample(image_list, max_size)
+                if len(image_list) > max_size:
+                    image_list = random.sample(image_list, max_size)
                 for img in image_list:
                     self.images.append(img)
                     meta_label = []
