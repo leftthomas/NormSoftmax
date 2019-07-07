@@ -9,23 +9,38 @@ class Model(nn.Module):
         super(Model, self).__init__()
 
         # backbone
-        self.features = []
-        for _ in range(ensemble_size):
-            basic_model, layers = resnet18(pretrained=True), []
-            for name, module in basic_model.named_children():
-                if name == 'fc':
-                    continue
-                layers.append(module)
-            self.features.append(nn.Sequential(*layers))
-        self.features = nn.ModuleList(self.features)
+        self.meta_class_size, self.ensemble_size = meta_class_size, ensemble_size
+        basic_model = resnet18(pretrained=True)
 
-        # classifier
-        self.fcs = nn.ModuleList([nn.Sequential(nn.Linear(512, meta_class_size)) for _ in range(ensemble_size)])
+        # common features
+        self.common_extractor = []
+        for name, module in basic_model.named_children():
+            if name == 'conv1' or name == 'bn1' or name == 'relu' or name == 'maxpool':
+                self.common_extractor.append(module)
+            else:
+                continue
+        self.common_extractor = nn.Sequential(*self.common_extractor)
+
+        # individual features
+        self.individual_extractors = []
+        layers = []
+        for name, module in basic_model.named_children():
+            if name == 'layer1' or name == 'layer2' or name == 'layer3' or name == 'layer4' or name == 'avgpool':
+                layers.append(module)
+            else:
+                continue
+        layers = nn.Sequential(*layers)
+        self.individual_extractors = nn.ModuleList([layers for _ in range(ensemble_size)])
+
+        # individual classifiers
+        self.classifiers = nn.ModuleList([nn.Sequential(nn.Linear(512, meta_class_size)) for _ in range(ensemble_size)])
 
     def forward(self, x):
-        feature = []
-        for feature_extrator in self.features:
-            feature.append(feature_extrator(x).view(x.size(0), -1))
-        out = [fc(feature[index]) for index, fc in enumerate(self.fcs)]
+        common_feature = self.common_extractor(x)
+        out = []
+        for i in range(self.ensemble_size):
+            individual_feature = self.individual_extractors[i](common_feature).view(common_feature.size(0), -1)
+            individual_classes = self.classifiers[i](individual_feature)
+            out.append(individual_classes)
         out = torch.stack(out, dim=1)
         return out
