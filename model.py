@@ -10,10 +10,9 @@ class Model(nn.Module):
 
         # backbone
         self.meta_class_size, self.ensemble_size = meta_class_size, ensemble_size
-        basic_model = resnet18(pretrained=True)
 
         # common features
-        self.common_extractor = []
+        basic_model, self.common_extractor = resnet18(pretrained=True), []
         for name, module in basic_model.named_children():
             if name == 'conv1' or name == 'bn1' or name == 'relu' or name == 'maxpool':
                 self.common_extractor.append(module)
@@ -24,7 +23,7 @@ class Model(nn.Module):
         # individual features
         self.individual_extractors = []
         for i in range(ensemble_size):
-            layers = []
+            basic_model, layers = resnet18(pretrained=True), []
             for name, module in basic_model.named_children():
                 if name == 'layer1' or name == 'layer2' or name == 'layer3' or name == 'layer4' or name == 'avgpool':
                     layers.append(module)
