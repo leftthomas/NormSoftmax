@@ -26,19 +26,19 @@ python train.py --num_epochs 30
 optional arguments:
 --data_name                   dataset name [default value is 'car'](choices=['car', 'cub', 'sop'])
 --recalls                     selected recall [default value is '1,2,4,8']
---batch_size                  train batch size [default value is 8]
---num_epochs                  train epochs number [default value is 100]
---ensemble_size               ensemble model size [default value is 16]
+--batch_size                  train batch size [default value is 32]
+--num_epochs                  train epochs number [default value is 20]
+--ensemble_size               ensemble model size [default value is 48]
 --meta_class_size             meta class size [default value is 12]
 ```
 
 ## Benchmarks
-Adam optimizer is used with learning rate scheduling. The models are trained with batch size of 8 on one 
+Adam optimizer is used with learning rate scheduling. The models are trained with batch size of 32 on one 
 NVIDIA Tesla V100 (32G) GPU.
 
 The images are preprocessed with random resize, random crop, random horizontal flip, and normalize. 
-For `Cars196` and `CUB200` datasets, `100` epochs, ensemble size `16` and meta class size `12` are used. For `SOP` dataset,
-`100` epochs, ensemble size `16` and meta class size `500` is used.
+For `Cars196` and `CUB200` datasets, `20` epochs, ensemble size `48` and meta class size `12` are used. For `SOP` dataset,
+`20` epochs, ensemble size `48` and meta class size `500` is used.
 Here is the recall details:
 
 <table>

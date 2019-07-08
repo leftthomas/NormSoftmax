@@ -23,14 +23,16 @@ class Model(nn.Module):
 
         # individual features
         self.individual_extractors = []
-        layers = []
-        for name, module in basic_model.named_children():
-            if name == 'layer1' or name == 'layer2' or name == 'layer3' or name == 'layer4' or name == 'avgpool':
-                layers.append(module)
-            else:
-                continue
-        layers = nn.Sequential(*layers)
-        self.individual_extractors = nn.ModuleList([layers for _ in range(ensemble_size)])
+        for i in range(ensemble_size):
+            layers = []
+            for name, module in basic_model.named_children():
+                if name == 'layer1' or name == 'layer2' or name == 'layer3' or name == 'layer4' or name == 'avgpool':
+                    layers.append(module)
+                else:
+                    continue
+            layers = nn.Sequential(*layers)
+            self.individual_extractors.append(layers)
+        self.individual_extractors = nn.ModuleList(self.individual_extractors)
 
         # individual classifiers
         self.classifiers = nn.ModuleList([nn.Sequential(nn.Linear(512, meta_class_size)) for _ in range(ensemble_size)])

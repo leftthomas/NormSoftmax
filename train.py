@@ -58,9 +58,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train Image Retrieval Model')
     parser.add_argument('--data_name', default='car', type=str, choices=['car', 'cub', 'sop'], help='dataset name')
     parser.add_argument('--recalls', default='1,2,4,8', type=str, help='selected recall')
-    parser.add_argument('--batch_size', default=8, type=int, help='train batch size')
-    parser.add_argument('--num_epochs', default=100, type=int, help='train epoch number')
-    parser.add_argument('--ensemble_size', default=16, type=int, help='ensemble model size')
+    parser.add_argument('--batch_size', default=32, type=int, help='train batch size')
+    parser.add_argument('--num_epochs', default=20, type=int, help='train epoch number')
+    parser.add_argument('--ensemble_size', default=48, type=int, help='ensemble model size')
     parser.add_argument('--meta_class_size', default=12, type=int, help='meta class size')
 
     opt = parser.parse_args()
