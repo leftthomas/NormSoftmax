@@ -14,7 +14,7 @@ class Model(nn.Module):
         # common features
         basic_model, self.common_extractor = resnet18(pretrained=True), []
         for name, module in basic_model.named_children():
-            if name == 'conv1' or name == 'bn1' or name == 'relu' or name == 'maxpool':
+            if name != 'layer3' and name != 'layer4' and name != 'avgpool':
                 self.common_extractor.append(module)
             else:
                 continue
@@ -25,7 +25,7 @@ class Model(nn.Module):
         for i in range(ensemble_size):
             basic_model, layers = resnet18(pretrained=True), []
             for name, module in basic_model.named_children():
-                if name == 'layer1' or name == 'layer2' or name == 'layer3' or name == 'layer4' or name == 'avgpool':
+                if name == 'layer3' or name == 'layer4' or name == 'avgpool':
                     layers.append(module)
                 else:
                     continue
