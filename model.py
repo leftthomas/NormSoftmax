@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from capsule_layer import CapsuleLinear
 from torchvision.models.resnet import resnet18
 
 
@@ -14,7 +15,7 @@ class Model(nn.Module):
         # common features
         basic_model, self.common_extractor = resnet18(pretrained=True), []
         for name, module in basic_model.named_children():
-            if name != 'layer3' and name != 'layer4' and name != 'avgpool':
+            if name != 'layer3' and name != 'layer4' and name != 'avgpool' and name != 'fc':
                 self.common_extractor.append(module)
             else:
                 continue
@@ -25,10 +26,11 @@ class Model(nn.Module):
         for i in range(ensemble_size):
             basic_model, layers = resnet18(pretrained=True), []
             for name, module in basic_model.named_children():
-                if name == 'layer3' or name == 'layer4' or name == 'avgpool':
+                if name == 'layer3' or name == 'layer4':
                     layers.append(module)
                 else:
                     continue
+            layers.append(CapsuleLinear(1, 512, 512, num_iterations=1, bias=False, squash=False))
             layers = nn.Sequential(*layers)
             self.individual_extractors.append(layers)
         self.individual_extractors = nn.ModuleList(self.individual_extractors)
