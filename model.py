@@ -39,7 +39,7 @@ class Model(nn.Module):
             [CapsuleLinear(16, 512, 32, num_iterations=3, bias=False, squash=False) for _ in range(ensemble_size)])
 
         # individual classifiers
-        self.classifiers = nn.ModuleList([nn.Sequential(nn.Linear(32, meta_class_size)) for _ in range(ensemble_size)])
+        self.classifiers = nn.ModuleList([nn.Sequential(nn.Linear(512, meta_class_size)) for _ in range(ensemble_size)])
 
     def forward(self, x):
         common_feature = self.common_extractor(x)
