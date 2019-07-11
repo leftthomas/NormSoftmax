@@ -44,11 +44,11 @@ class GridAttentionBlock(nn.Module):
 
 class Model(nn.Module):
 
-    def __init__(self, meta_class_size, ensemble_size):
+    def __init__(self, meta_classes, ensemble_size):
         super(Model, self).__init__()
 
         # backbone
-        self.meta_class_size, self.ensemble_size = meta_class_size, ensemble_size
+        self.meta_classes, self.ensemble_size = meta_classes, ensemble_size
 
         # common features
         basic_model, self.common_extractor = resnet18(pretrained=True), []
@@ -74,20 +74,23 @@ class Model(nn.Module):
 
         # attention block
         self.sole_attentions = nn.ModuleList([GridAttentionBlock(128, 512, 128 // 2) for _ in range(ensemble_size)])
+        self.sole_w1 = nn.ModuleList([nn.Linear(8192, 512) for _ in range(ensemble_size)])
+        self.sole_w2 = nn.ModuleList([nn.Linear(2048, 512) for _ in range(ensemble_size)])
 
         # sole classifiers
-        self.classifiers = nn.ModuleList([nn.Sequential(nn.Linear(640, meta_class_size)) for _ in range(ensemble_size)])
+        self.classifiers = nn.ModuleList([nn.Sequential(nn.Linear(1024, meta_classes)) for _ in range(ensemble_size)])
 
     def forward(self, x):
         common_feature = self.common_extractor(x)
         out = []
         for i in range(self.ensemble_size):
             sole_feature = self.sole_extractors[i](common_feature)
-            attention_feature = self.sole_attentions[i](common_feature, sole_feature)
-            sole_feature = F.adaptive_avg_pool2d(sole_feature, output_size=1)
-            attention_feature = F.adaptive_avg_pool2d(attention_feature, output_size=1)
-            mix_feature = torch.cat((sole_feature, attention_feature), dim=1)
-            mix_feature = mix_feature.view(mix_feature.size(0), -1)
+            att_feature = self.sole_attentions[i](common_feature, sole_feature)
+            sole_feature = F.adaptive_avg_pool2d(sole_feature, output_size=4).view(sole_feature.size(0), -1)
+            att_feature = F.adaptive_avg_pool2d(att_feature, output_size=4).view(att_feature.size(0), -1)
+            sole_feature = self.sole_w1[i](sole_feature)
+            att_feature = self.sole_w2[i](att_feature)
+            mix_feature = torch.cat((sole_feature, att_feature), dim=-1)
             sole_classes = self.classifiers[i](mix_feature)
             out.append(sole_classes)
         out = torch.stack(out, dim=1)
