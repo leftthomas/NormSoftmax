@@ -1,7 +1,45 @@
 import torch
 import torch.nn as nn
-from capsule_layer import CapsuleLinear
+import torch.nn.functional as F
 from torchvision.models.resnet import resnet18
+
+
+class GridAttentionBlock(nn.Module):
+    r"""Applies an grid attention over an input signal
+    Reference papers
+    Attention-Gated Networks https://arxiv.org/abs/1804.05338 & https://arxiv.org/abs/1808.08114
+    Reference code
+    https://github.com/ozan-oktay/Attention-Gated-Networks
+    Args:
+        in_features_l (int): Number of channels in the input tensor
+        in_features_g (int): Number of channels in the output tensor
+        attn_features (int): Number of channels in the middle tensor
+        scale_factor (int): up sample factor
+    """
+
+    def __init__(self, in_features_l, in_features_g, attn_features, scale_factor=2):
+        super(GridAttentionBlock, self).__init__()
+        attn_features = attn_features if attn_features > 0 else 1
+
+        self.W_l = nn.Conv2d(in_features_l, attn_features, scale_factor, scale_factor, bias=False)
+        self.W_g = nn.Conv2d(in_features_g, attn_features, 1, 1, bias=True)
+        self.psi = nn.Conv2d(attn_features, 1, 1, 1, bias=True)
+
+        # output transform
+        self.W = nn.Sequential(nn.Conv2d(in_features_l, in_features_l, 1, 1, bias=True), nn.BatchNorm2d(in_features_l))
+
+    def forward(self, l, g):
+        l_ = self.W_l(l)
+        g_ = self.W_g(g)
+        g_ = F.interpolate(g_, size=l_.size()[2:], mode='bilinear', align_corners=False)
+        c = self.psi(F.relu(l_ + g_))
+        # compute attention map
+        a = torch.sigmoid(c)
+        a = F.interpolate(a, size=l.size()[2:], mode='bilinear', align_corners=False)
+        # re-weight the local feature
+        f = torch.mul(a.expand_as(l), l)
+        f = self.W(f)
+        return f
 
 
 class Model(nn.Module):
@@ -21,8 +59,8 @@ class Model(nn.Module):
                 continue
         self.common_extractor = nn.Sequential(*self.common_extractor)
 
-        # individual features
-        self.individual_extractors = []
+        # sole features
+        self.sole_extractors = []
         for _ in range(ensemble_size):
             basic_model, layers = resnet18(pretrained=True), []
             for name, module in basic_model.named_children():
@@ -31,25 +69,26 @@ class Model(nn.Module):
                 else:
                     continue
             layers = nn.Sequential(*layers)
-            self.individual_extractors.append(layers)
-        self.individual_extractors = nn.ModuleList(self.individual_extractors)
+            self.sole_extractors.append(layers)
+        self.sole_extractors = nn.ModuleList(self.sole_extractors)
 
-        # capsule cluster
-        self.individual_clusters = nn.ModuleList(
-            [CapsuleLinear(16, 512, 32, num_iterations=3, bias=False, squash=False) for _ in range(ensemble_size)])
+        # attention block
+        self.sole_attentions = nn.ModuleList([GridAttentionBlock(128, 512, 128 // 2) for _ in range(ensemble_size)])
 
-        # individual classifiers
-        self.classifiers = nn.ModuleList([nn.Sequential(nn.Linear(512, meta_class_size)) for _ in range(ensemble_size)])
+        # sole classifiers
+        self.classifiers = nn.ModuleList([nn.Sequential(nn.Linear(640, meta_class_size)) for _ in range(ensemble_size)])
 
     def forward(self, x):
         common_feature = self.common_extractor(x)
         out = []
         for i in range(self.ensemble_size):
-            individual_feature = self.individual_extractors[i](common_feature).permute(0, 2, 3, 1).contiguous()
-            individual_feature = individual_feature.view(individual_feature.size(0), -1, 512)
-            individual_cluster = self.individual_clusters[i](individual_feature).permute(0, 2, 1).contiguous()
-            individual_cluster = individual_cluster.view(individual_cluster.size(0), -1)
-            individual_classes = self.classifiers[i](individual_cluster)
-            out.append(individual_classes)
+            sole_feature = self.sole_extractors[i](common_feature)
+            attention_feature = self.sole_attentions[i](common_feature, sole_feature)
+            sole_feature = F.adaptive_avg_pool2d(sole_feature, output_size=1)
+            attention_feature = F.adaptive_avg_pool2d(attention_feature, output_size=1)
+            mix_feature = torch.cat((sole_feature, attention_feature), dim=1)
+            mix_feature = mix_feature.view(mix_feature.size(0), -1)
+            sole_classes = self.classifiers[i](mix_feature)
+            out.append(sole_classes)
         out = torch.stack(out, dim=1)
         return out
