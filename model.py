@@ -45,7 +45,7 @@ class Model(nn.Module):
         out = []
         for i in range(self.ensemble_size):
             sole_feature = self.sole_extractors[i](common_feature)
-            sole_feature = sole_feature.permute(0, 2, 3, 1).contiguous().view(sole_feature.size(0), -1, 128)
+            sole_feature = sole_feature.permute(0, 2, 3, 1).contiguous().view(sole_feature.size(0), -1, 512)
             att_feature = self.sole_attentions[i](sole_feature)
             att_feature = att_feature.view(att_feature.size(0), -1)
             sole_classes = self.classifiers[i](att_feature)
