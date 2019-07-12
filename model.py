@@ -35,17 +35,17 @@ class Model(nn.Module):
         self.sole_extractors = nn.ModuleList(self.sole_extractors)
 
         # attention block
-        self.sole_attentions = nn.ModuleList([CapsuleLinear(16, 512, 128) for _ in range(ensemble_size)])
+        self.sole_attentions = nn.ModuleList([CapsuleLinear(16, 256, 32) for _ in range(ensemble_size)])
 
         # sole classifiers
-        self.classifiers = nn.ModuleList([nn.Sequential(nn.Linear(2048, meta_classes)) for _ in range(ensemble_size)])
+        self.classifiers = nn.ModuleList([nn.Sequential(nn.Linear(512, meta_classes)) for _ in range(ensemble_size)])
 
     def forward(self, x):
         common_feature = self.common_extractor(x)
         out = []
         for i in range(self.ensemble_size):
             sole_feature = self.sole_extractors[i](common_feature)
-            sole_feature = sole_feature.permute(0, 2, 3, 1).contiguous().view(sole_feature.size(0), -1, 512)
+            sole_feature = sole_feature.permute(0, 2, 3, 1).contiguous().view(sole_feature.size(0), -1, 256)
             att_feature = self.sole_attentions[i](sole_feature)
             att_feature = att_feature.view(att_feature.size(0), -1)
             sole_classes = self.classifiers[i](att_feature)
