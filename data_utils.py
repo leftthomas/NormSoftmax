@@ -55,8 +55,8 @@ def process_cub_data(data_path, data_type):
         if data_type == 'uncropped':
             img = Image.open('{}/images/{}'.format(data_path, img_name)).convert('RGB')
         else:
-            x1, y1 = int(bounding_boxes[img_id][0]), int(bounding_boxes[img_id][1])
-            x2, y2 = x1 + int(bounding_boxes[img_id][2]), y1 + int(bounding_boxes[img_id][3])
+            x1, y1 = int(float(bounding_boxes[img_id][0])), int(float(bounding_boxes[img_id][1]))
+            x2, y2 = x1 + int(float(bounding_boxes[img_id][2])), y1 + int(float(bounding_boxes[img_id][3]))
             img = Image.open('{}/images/{}'.format(data_path, img_name)).convert('RGB').crop((x1, y1, x2, y2))
         img.save('{}/{}/{}'.format(data_path, data_type, os.path.basename(img_name)))
         if int(labels[img_id]) < 101:
