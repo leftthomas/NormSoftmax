@@ -57,6 +57,8 @@ def eval(net, data_loader, recalls):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train Image Retrieval Model')
     parser.add_argument('--data_name', default='car', type=str, choices=['car', 'cub', 'sop'], help='dataset name')
+    parser.add_argument('--crop_type', default='uncropped', type=str, choices=['uncropped', 'cropped'],
+                        help='crop data or not, it only works for car or cub dataset')
     parser.add_argument('--recalls', default='1,2,4,8', type=str, help='selected recall')
     parser.add_argument('--batch_size', default=16, type=int, help='train batch size')
     parser.add_argument('--num_epochs', default=20, type=int, help='train epoch number')
@@ -66,16 +68,16 @@ if __name__ == '__main__':
     opt = parser.parse_args()
 
     DATA_NAME, RECALLS, BATCH_SIZE, NUM_EPOCHS = opt.data_name, opt.recalls, opt.batch_size, opt.num_epochs
-    ENSEMBLE_SIZE, META_CLASS_SIZE = opt.ensemble_size, opt.meta_class_size
+    ENSEMBLE_SIZE, META_CLASS_SIZE, CROP_TYPE = opt.ensemble_size, opt.meta_class_size, opt.crop_type
     recall_ids = [int(k) for k in RECALLS.split(',')]
     DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     results = {'train_loss': [], 'train_accuracy': []}
     for index, recall_id in enumerate(recall_ids):
         results['test_recall@{}'.format(recall_ids[index])] = []
 
-    train_data_set = ImageReader(DATA_NAME, 'train', ENSEMBLE_SIZE, META_CLASS_SIZE)
+    train_data_set = ImageReader(DATA_NAME, 'train', CROP_TYPE, ENSEMBLE_SIZE, META_CLASS_SIZE)
     train_data_loader = DataLoader(train_data_set, BATCH_SIZE, shuffle=True, num_workers=8)
-    test_data_set = ImageReader(DATA_NAME, 'test')
+    test_data_set = ImageReader(DATA_NAME, 'test', CROP_TYPE)
     test_data_loader = DataLoader(test_data_set, BATCH_SIZE, shuffle=False, num_workers=8)
 
     model = Model(META_CLASS_SIZE, ENSEMBLE_SIZE).to(DEVICE)

@@ -25,6 +25,7 @@ You should download these datasets by yourself, and extract them into `data` dir
 python train.py --num_epochs 30
 optional arguments:
 --data_name                   dataset name [default value is 'car'](choices=['car', 'cub', 'sop'])
+--crop_type                   crop data or not, it only works for car or cub dataset [default value is 'uncropped'](choices=['uncropped', 'cropped'])
 --recalls                     selected recall [default value is '1,2,4,8']
 --batch_size                  train batch size [default value is 16]
 --num_epochs                  train epochs number [default value is 20]
