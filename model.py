@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from torchvision.models.resnet import resnet18
+from torchvision.models.resnet import resnet50
 
 
 class Model(nn.Module):
@@ -12,7 +12,7 @@ class Model(nn.Module):
         self.meta_class_size, self.ensemble_size = meta_class_size, ensemble_size
 
         # common features
-        basic_model, self.common_extractor = resnet18(pretrained=True), []
+        basic_model, self.common_extractor = resnet50(pretrained=True), []
         for name, module in basic_model.named_children():
             if name == 'conv1' or name == 'bn1' or name == 'relu' or name == 'maxpool' or name == 'layer1':
                 self.common_extractor.append(module)
@@ -23,7 +23,7 @@ class Model(nn.Module):
         # individual features
         self.individual_extractors = []
         for i in range(ensemble_size):
-            basic_model, layers = resnet18(pretrained=True), []
+            basic_model, layers = resnet50(pretrained=True), []
             for name, module in basic_model.named_children():
                 if name == 'layer2' or name == 'layer3' or name == 'layer4' or name == 'avgpool':
                     layers.append(module)
@@ -34,7 +34,8 @@ class Model(nn.Module):
         self.individual_extractors = nn.ModuleList(self.individual_extractors)
 
         # individual classifiers
-        self.classifiers = nn.ModuleList([nn.Sequential(nn.Linear(512, meta_class_size)) for _ in range(ensemble_size)])
+        self.classifiers = nn.ModuleList(
+            [nn.Sequential(nn.Linear(512 * 4, meta_class_size)) for _ in range(ensemble_size)])
 
     def forward(self, x):
         common_feature = self.common_extractor(x)
