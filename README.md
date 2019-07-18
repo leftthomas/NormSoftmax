@@ -5,7 +5,7 @@ A PyTorch implementation of Diverse Capsule Network based on the paper [Diverse 
 - [Anaconda](https://www.anaconda.com/download/)
 - [PyTorch](https://pytorch.org)
 ```
-conda install pytorch torchvision -c pytorch
+conda install pytorch torchvision cudatoolkit=10.0 -c pytorch
 ```
 - capsule-layer
 ```
@@ -31,6 +31,7 @@ optional arguments:
 --num_epochs                  train epochs number [default value is 20]
 --ensemble_size               ensemble model size [default value is 48]
 --meta_class_size             meta class size [default value is 12]
+--gpu_ids                     selected gpu [default value is '0,1']
 ```
 
 ## Benchmarks
