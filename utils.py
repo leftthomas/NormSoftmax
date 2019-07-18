@@ -48,20 +48,18 @@ class ImageReader(Dataset):
             for label, image_list in data_dict.items():
                 if len(image_list) > max_size:
                     image_list = random.sample(image_list, max_size)
-                for img in image_list:
-                    self.images.append(img)
-                    meta_label = []
-                    for meta_id in meta_ids:
-                        meta_label.append(meta_id[class_to_idx[label]])
-                    meta_label = torch.tensor(meta_label)
-                    self.labels.append(meta_label)
+                self.images += image_list
+                meta_label = []
+                for meta_id in meta_ids:
+                    meta_label.append(meta_id[class_to_idx[label]])
+                meta_label = torch.tensor(meta_label)
+                self.labels += [meta_label] * len(image_list)
         else:
             self.transform = transforms.Compose([transforms.Resize((256, 256)), transforms.ToTensor(), normalize])
             self.images, self.labels = [], []
             for label, image_list in data_dict.items():
-                for img in image_list:
-                    self.images.append(img)
-                    self.labels.append(class_to_idx[label])
+                self.images += image_list
+                self.labels += [class_to_idx[label]] * len(image_list)
 
     def __getitem__(self, index):
         path, target = self.images[index], self.labels[index]
