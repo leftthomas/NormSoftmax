@@ -73,9 +73,9 @@ class ImageReader(Dataset):
         return len(self.images)
 
 
-def recall(feature_vectors, img_labels, rank):
-    num_images = len(img_labels)
-    img_labels = torch.tensor(img_labels)
+def recall(feature_vectors, feature_labels, rank, gallery_vectors=None, gallery_labels=None):
+    num_images = len(feature_labels)
+    feature_labels = torch.tensor(feature_labels)
     feature_vectors = feature_vectors.permute(1, 0, 2).contiguous()
     sim_matrix = feature_vectors.bmm(feature_vectors.permute(0, 2, 1).contiguous())
     sim_matrix = torch.sum(sim_matrix, dim=0)
@@ -84,6 +84,6 @@ def recall(feature_vectors, img_labels, rank):
     idx = sim_matrix.argsort(dim=-1, descending=True)
     acc_list = []
     for r in rank:
-        correct = (img_labels[idx[:, 0:r]] == img_labels.unsqueeze(dim=-1)).any(dim=-1).float()
+        correct = (feature_labels[idx[:, 0:r]] == feature_labels.unsqueeze(dim=-1)).any(dim=-1).float()
         acc_list.append((torch.sum(correct) / num_images).item())
     return acc_list

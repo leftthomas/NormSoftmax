@@ -13,9 +13,9 @@ from model import Model
 from utils import ImageReader, recall
 
 
-def train(net, data_loader, optim):
+def train(net, optim):
     net.train()
-    l_data, t_data, n_data, train_progress = 0, 0, 0, tqdm(data_loader)
+    l_data, t_data, n_data, train_progress = 0, 0, 0, tqdm(train_data_loader)
     for inputs, labels in train_progress:
         optim.zero_grad()
         out = net(inputs.to(device_ids[0]))
@@ -36,17 +36,27 @@ def train(net, data_loader, optim):
         torch.save(model.state_dict(), 'epochs/{}_{}_{}_model.pth'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE))
 
 
-def eval(net, data_loader, recalls):
+def eval(net, recalls):
     net.eval()
-    features = []
     with torch.no_grad():
-        for inputs, labels in data_loader:
+        test_features = []
+        for inputs, labels in test_data_loader:
             out = net(inputs.to(device_ids[0]))
             out = F.normalize(out, dim=-1)
-            features.append(out.cpu())
-    features = torch.cat(features, dim=0)
-    torch.save(features, 'results/{}_{}_{}_test_features.pth'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE))
-    acc_list = recall(features, test_data_set.labels, recalls)
+            test_features.append(out.cpu())
+        test_features = torch.cat(test_features, dim=0)
+        if DATA_NAME == 'isc':
+            gallery_features = []
+            for inputs, labels in gallery_data_loader:
+                out = net(inputs.to(device_ids[0]))
+                out = F.normalize(out, dim=-1)
+                gallery_features.append(out.cpu())
+            gallery_features = torch.cat(gallery_features, dim=0)
+
+    if DATA_NAME == 'isc':
+        acc_list = recall(test_features, test_data_set.labels, recalls, gallery_features, gallery_data_set.labels)
+    else:
+        acc_list = recall(test_features, test_data_set.labels, recalls)
     desc = ''
     for index, recall_id in enumerate(recalls):
         desc += 'R@{}:{:.2f}% '.format(recall_id, acc_list[index] * 100)
@@ -85,8 +95,11 @@ if __name__ == '__main__':
 
     train_data_set = ImageReader(DATA_NAME, 'train', CROP_TYPE, ENSEMBLE_SIZE, META_CLASS_SIZE)
     train_data_loader = DataLoader(train_data_set, BATCH_SIZE, shuffle=True, num_workers=8)
-    test_data_set = ImageReader(DATA_NAME, 'test', CROP_TYPE)
+    test_data_set = ImageReader(DATA_NAME, 'query' if DATA_NAME == 'isc' else 'test', CROP_TYPE)
     test_data_loader = DataLoader(test_data_set, BATCH_SIZE, shuffle=False, num_workers=8)
+    if DATA_NAME == 'isc':
+        gallery_data_set = ImageReader(DATA_NAME, 'gallery', CROP_TYPE)
+        gallery_data_loader = DataLoader(gallery_data_set, BATCH_SIZE, shuffle=False, num_workers=8)
 
     model = Model(META_CLASS_SIZE, ENSEMBLE_SIZE, MODEL_TYPE, device_ids)
     print("# trainable parameters:", sum(param.numel() if param.requires_grad else 0 for param in model.parameters()))
@@ -96,9 +109,9 @@ if __name__ == '__main__':
 
     best_acc = 0
     for epoch in range(1, NUM_EPOCHS + 1):
-        train(model, train_data_loader, optimizer)
+        train(model, optimizer)
         lr_scheduler.step(epoch)
-        eval(model, test_data_loader, recall_ids)
+        eval(model, recall_ids)
         # save statistics
         data_frame = pd.DataFrame(data=results, index=range(1, epoch + 1))
         data_frame.to_csv('statistics/{}_{}_{}_results.csv'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE),
