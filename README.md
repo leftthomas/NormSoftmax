@@ -11,6 +11,11 @@ conda install pytorch torchvision cudatoolkit=10.0 -c pytorch
 ```
 pip install git+https://github.com/leftthomas/CapsuleLayer.git@master
 ```
+- pretrainedmodels
+```
+pip install pretrainedmodels
+```
+
 
 ## Datasets
 [cars196](http://ai.stanford.edu/~jkrause/cars/car_dataset.html), [cub200](http://www.vision.caltech.edu/visipedia/CUB-200-2011.html)
@@ -27,7 +32,7 @@ optional arguments:
 --data_name                   dataset name [default value is 'car'](choices=['car', 'cub', 'sop'])
 --crop_type                   crop data or not, it only works for car or cub dataset [default value is 'uncropped'](choices=['uncropped', 'cropped'])
 --recalls                     selected recall [default value is '1,2,4,8']
---model_type                  backbone type [default value is 'resnet18'](choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'])
+--model_type                  backbone type [default value is 'resnet18'](choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d', 'se_resnet50', 'se_resnext50_32x4d'])
 --batch_size                  train batch size [default value is 12]
 --num_epochs                  train epochs number [default value is 20]
 --ensemble_size               ensemble model size [default value is 48]

@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from pretrainedmodels import se_resnet50, se_resnext50_32x4d
 from torchvision.models.resnet import resnet18, resnet34, resnet50, resnext50_32x4d
 
 
@@ -11,7 +12,8 @@ class Model(nn.Module):
 
         # backbone
         backbones = {'resnet18': (resnet18, 1), 'resnet34': (resnet34, 1), 'resnet50': (resnet50, 4),
-                     'resnext50_32x4d': (resnext50_32x4d, 4)}
+                     'resnext50_32x4d': (resnext50_32x4d, 4), 'se_resnet50': (se_resnet50, 4),
+                     'se_resnext50_32x4d': (se_resnext50_32x4d, 4)}
         backbone, expansion = backbones[model_type]
 
         # configs
@@ -20,7 +22,7 @@ class Model(nn.Module):
         # common features
         basic_model, self.common_extractor = backbone(pretrained=True), []
         for name, module in basic_model.named_children():
-            if name == 'conv1' or name == 'bn1' or name == 'relu' or name == 'maxpool' or name == 'layer1':
+            if name == 'conv1' or name == 'bn1' or name == 'relu' or name == 'maxpool' or name == 'layer0' or name == 'layer1':
                 self.common_extractor.append(module)
             else:
                 continue

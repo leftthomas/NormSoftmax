@@ -61,7 +61,8 @@ if __name__ == '__main__':
                         help='crop data or not, it only works for car or cub dataset')
     parser.add_argument('--recalls', default='1,2,4,8', type=str, help='selected recall')
     parser.add_argument('--model_type', default='resnet18', type=str,
-                        choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'], help='backbone type')
+                        choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d', 'se_resnet50',
+                                 'se_resnext50_32x4d'], help='backbone type')
     parser.add_argument('--batch_size', default=12, type=int, help='train batch size')
     parser.add_argument('--num_epochs', default=20, type=int, help='train epoch number')
     parser.add_argument('--ensemble_size', default=48, type=int, help='ensemble model size')
