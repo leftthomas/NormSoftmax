@@ -22,7 +22,7 @@ class Model(nn.Module):
         # common features
         basic_model, self.common_extractor = backbone(pretrained=True), []
         for name, module in basic_model.named_children():
-            if name == 'conv1' or name == 'bn1' or name == 'relu' or name == 'maxpool' or name == 'layer0' or name == 'layer1':
+            if name in ['conv1', 'bn1', 'relu', 'maxpool', 'layer0', 'layer1']:
                 self.common_extractor.append(module)
             else:
                 continue
