@@ -21,17 +21,21 @@ class Model(nn.Module):
         self.common_extractor = nn.Sequential(*self.common_extractor).cuda(device_ids[0])
 
         # individual features
-        self.individual_extractors = []
+        self.layer2, self.layer3, self.layer4 = [], [], []
         for i in range(ensemble_size):
-            basic_model, layers = resnext50_32x4d(pretrained=True), []
+            basic_model = resnext50_32x4d(pretrained=True)
             for name, module in basic_model.named_children():
-                if name == 'layer2' or name == 'layer3' or name == 'layer4' or name == 'avgpool':
-                    layers.append(module)
+                if name == 'layer2':
+                    self.layer2.append(module)
+                if name == 'layer3':
+                    self.layer3.append(module)
+                if name == 'layer4':
+                    self.layer4.append(module)
                 else:
                     continue
-            layers = nn.Sequential(*layers)
-            self.individual_extractors.append(layers)
-        self.individual_extractors = nn.ModuleList(self.individual_extractors).cuda(device_ids[1])
+        self.layer2 = nn.ModuleList(self.layer2).cuda(device_ids[0])
+        self.layer3 = nn.ModuleList(self.layer3).cuda(device_ids[0])
+        self.layer4 = nn.ModuleList(self.layer4).cuda(device_ids[1])
 
         # individual classifiers
         self.classifiers = nn.ModuleList(
@@ -39,10 +43,11 @@ class Model(nn.Module):
 
     def forward(self, x):
         common_feature = self.common_extractor(x)
-        common_feature = common_feature.cuda(self.device_ids[1])
         out = []
         for i in range(self.ensemble_size):
-            individual_feature = self.individual_extractors[i](common_feature).view(common_feature.size(0), -1)
+            individual_feature = self.layer3[i](self.layer2[i](common_feature))
+            individual_feature = individual_feature.cuda(self.device_ids[1])
+            individual_feature = self.layer4[i](individual_feature).view(individual_feature.size(0), -1)
             individual_feature = individual_feature.cuda(self.device_ids[0])
             individual_classes = self.classifiers[i](individual_feature)
             out.append(individual_classes)
