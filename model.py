@@ -35,7 +35,7 @@ class Model(nn.Module):
                 else:
                     continue
         self.layer2 = nn.ModuleList(self.layer2).cuda(device_ids[0])
-        self.layer3 = nn.ModuleList(self.layer3).cuda(device_ids[0])
+        self.layer3 = nn.ModuleList(self.layer3).cuda(device_ids[1])
         self.layer4 = nn.ModuleList(self.layer4).cuda(device_ids[1])
 
         # individual classifiers
@@ -46,8 +46,9 @@ class Model(nn.Module):
         common_feature = self.common_extractor(x)
         out = []
         for i in range(self.ensemble_size):
-            individual_feature = self.layer3[i](self.layer2[i](common_feature))
+            individual_feature = self.layer2[i](common_feature)
             individual_feature = individual_feature.cuda(self.device_ids[1])
+            individual_feature = self.layer3[i](individual_feature)
             individual_feature = self.layer4[i](individual_feature)
             individual_feature = F.adaptive_avg_pool2d(individual_feature, output_size=(1, 1))
             individual_feature = individual_feature.view(individual_feature.size(0), -1)
