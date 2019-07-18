@@ -36,11 +36,11 @@ class Model(nn.Module):
                     continue
         self.layer2 = nn.ModuleList(self.layer2).cuda(device_ids[0])
         self.layer3 = nn.ModuleList(self.layer3).cuda(device_ids[1])
-        self.layer4 = nn.ModuleList(self.layer4).cuda(device_ids[1])
+        self.layer4 = nn.ModuleList(self.layer4).cuda(device_ids[2])
 
         # individual classifiers
         self.classifiers = nn.ModuleList(
-            [nn.Sequential(nn.Linear(512 * 4, meta_class_size)) for _ in range(ensemble_size)]).cuda(device_ids[0])
+            [nn.Sequential(nn.Linear(512 * 4, meta_class_size)) for _ in range(ensemble_size)]).cuda(device_ids[2])
 
     def forward(self, x):
         common_feature = self.common_extractor(x)
@@ -49,10 +49,10 @@ class Model(nn.Module):
             individual_feature = self.layer2[i](common_feature)
             individual_feature = individual_feature.cuda(self.device_ids[1])
             individual_feature = self.layer3[i](individual_feature)
+            individual_feature = individual_feature.cuda(self.device_ids[2])
             individual_feature = self.layer4[i](individual_feature)
             individual_feature = F.adaptive_avg_pool2d(individual_feature, output_size=(1, 1))
             individual_feature = individual_feature.view(individual_feature.size(0), -1)
-            individual_feature = individual_feature.cuda(self.device_ids[0])
             individual_classes = self.classifiers[i](individual_feature)
             out.append(individual_classes)
         out = torch.stack(out, dim=1)
