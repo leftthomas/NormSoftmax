@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from torchvision.models.resnet import resnext50_32x4d
 
 
@@ -47,7 +48,9 @@ class Model(nn.Module):
         for i in range(self.ensemble_size):
             individual_feature = self.layer3[i](self.layer2[i](common_feature))
             individual_feature = individual_feature.cuda(self.device_ids[1])
-            individual_feature = self.layer4[i](individual_feature).view(individual_feature.size(0), -1)
+            individual_feature = self.layer4[i](individual_feature)
+            individual_feature = F.adaptive_avg_pool2d(individual_feature, output_size=(1, 1))
+            individual_feature = individual_feature.view(individual_feature.size(0), -1)
             individual_feature = individual_feature.cuda(self.device_ids[0])
             individual_classes = self.classifiers[i](individual_feature)
             out.append(individual_classes)
