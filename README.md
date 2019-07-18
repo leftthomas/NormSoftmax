@@ -1,5 +1,5 @@
-# DCN
-A PyTorch implementation of Diverse Capsule Network based on the paper [Diverse Capsule Network for Image Retrieval]().
+# SREML
+A PyTorch implementation of SREML based on the paper [Squeezed Randomized Ensembles for Metric Learning]().
 
 ## Requirements
 - [Anaconda](https://www.anaconda.com/download/)
@@ -22,23 +22,24 @@ You should download these datasets by yourself, and extract them into `data` dir
 ## Usage
 ### Train Model
 ```
-python train.py --num_epochs 30
+python train.py --data_name cub --model_type resnet34 --num_epochs 30
 optional arguments:
 --data_name                   dataset name [default value is 'car'](choices=['car', 'cub', 'sop'])
 --crop_type                   crop data or not, it only works for car or cub dataset [default value is 'uncropped'](choices=['uncropped', 'cropped'])
 --recalls                     selected recall [default value is '1,2,4,8']
---batch_size                  train batch size [default value is 16]
+--model_type                  backbone type [default value is 'resnet18'](choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'])
+--batch_size                  train batch size [default value is 12]
 --num_epochs                  train epochs number [default value is 20]
 --ensemble_size               ensemble model size [default value is 48]
 --meta_class_size             meta class size [default value is 12]
---gpu_ids                     selected gpu [default value is '0,1']
+--gpu_ids                     selected gpu [default value is '0,1,2']
 ```
 
 ## Benchmarks
-Adam optimizer is used with learning rate scheduling. The models are trained with batch size of 16 on one 
-NVIDIA Tesla V100 (32G) GPU.
+Adam optimizer is used with learning rate scheduling. The models are trained with batch size of 12 on three 
+NVIDIA Tesla V100 (32G) GPUs.
 
-The images are preprocessed with random resize, random crop, random horizontal flip, and normalize. 
+The images are preprocessed with resize (256, 256), random horizontal flip and normalize. 
 For `Cars196` and `CUB200` datasets, `20` epochs, ensemble size `48` and meta class size `12` are used. For `SOP` dataset,
 `20` epochs, ensemble size `48` and meta class size `500` is used.
 Here is the recall details:

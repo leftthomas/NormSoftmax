@@ -1,19 +1,24 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torchvision.models.resnet import resnext50_32x4d
+from torchvision.models.resnet import resnet18, resnet34, resnet50, resnext50_32x4d
 
 
 class Model(nn.Module):
 
-    def __init__(self, meta_class_size, ensemble_size, device_ids):
+    def __init__(self, meta_class_size, ensemble_size, model_type, device_ids):
         super(Model, self).__init__()
 
+        # backbone
+        backbones = {'resnet18': (resnet18, 1), 'resnet34': (resnet34, 1), 'resnet50': (resnet50, 4),
+                     'resnext50_32x4d': (resnext50_32x4d, 4)}
+        backbone, expansion = backbones[model_type]
+
         # configs
-        self.meta_class_size, self.ensemble_size, self.device_ids = meta_class_size, ensemble_size, device_ids
+        self.ensemble_size, self.device_ids = ensemble_size, device_ids
 
         # common features
-        basic_model, self.common_extractor = resnext50_32x4d(pretrained=True), []
+        basic_model, self.common_extractor = backbone(pretrained=True), []
         for name, module in basic_model.named_children():
             if name == 'conv1' or name == 'bn1' or name == 'relu' or name == 'maxpool' or name == 'layer1':
                 self.common_extractor.append(module)
@@ -24,7 +29,7 @@ class Model(nn.Module):
         # individual features
         self.layer2, self.layer3, self.layer4 = [], [], []
         for i in range(ensemble_size):
-            basic_model = resnext50_32x4d(pretrained=True)
+            basic_model = backbone(pretrained=True)
             for name, module in basic_model.named_children():
                 if name == 'layer2':
                     self.layer2.append(module)
@@ -39,8 +44,8 @@ class Model(nn.Module):
         self.layer4 = nn.ModuleList(self.layer4).cuda(device_ids[2])
 
         # individual classifiers
-        self.classifiers = nn.ModuleList(
-            [nn.Sequential(nn.Linear(512 * 4, meta_class_size)) for _ in range(ensemble_size)]).cuda(device_ids[2])
+        self.classifiers = nn.ModuleList([nn.Sequential(nn.Linear(512 * expansion, meta_class_size)) for _
+                                          in range(ensemble_size)]).cuda(device_ids[2])
 
     def forward(self, x):
         common_feature = self.common_extractor(x)
