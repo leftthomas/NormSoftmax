@@ -72,16 +72,24 @@ class ImageReader(Dataset):
 
 
 def recall(feature_vectors, feature_labels, rank, gallery_vectors=None, gallery_labels=None):
-    num_images = len(feature_labels)
+    num_features = len(feature_labels)
     feature_labels = torch.tensor(feature_labels)
     feature_vectors = feature_vectors.permute(1, 0, 2).contiguous()
-    sim_matrix = feature_vectors.bmm(feature_vectors.permute(0, 2, 1).contiguous())
-    sim_matrix = torch.sum(sim_matrix, dim=0)
-    sim_matrix[torch.eye(num_images).byte()] = -1
+    if gallery_vectors is None:
+        gallery_vectors = feature_vectors.permute(0, 2, 1).contiguous()
+    else:
+        gallery_vectors = gallery_vectors.permute(1, 2, 0).contiguous()
+    sim_matrix = feature_vectors.bmm(gallery_vectors)
+    sim_matrix = torch.mean(sim_matrix, dim=0)
+    if gallery_labels is None:
+        sim_matrix[torch.eye(num_features).byte()] = -1
+        gallery_labels = feature_labels
+    else:
+        gallery_labels = torch.tensor(gallery_labels)
 
     idx = sim_matrix.argsort(dim=-1, descending=True)
     acc_list = []
     for r in rank:
-        correct = (feature_labels[idx[:, 0:r]] == feature_labels.unsqueeze(dim=-1)).any(dim=-1).float()
-        acc_list.append((torch.sum(correct) / num_images).item())
+        correct = (gallery_labels[idx[:, 0:r]] == feature_labels.unsqueeze(dim=-1)).any(dim=-1).float()
+        acc_list.append((torch.sum(correct) / num_features).item())
     return acc_list
