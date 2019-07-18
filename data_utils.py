@@ -98,10 +98,39 @@ def process_sop_data(data_path):
     torch.save({'train': train_images, 'test': test_images}, '{}/{}_data_dicts.pth'.format(data_path, 'uncropped'))
 
 
+def process_isc_data(data_path):
+    if not os.path.exists('{}/{}'.format(data_path, 'uncropped')):
+        os.mkdir('{}/{}'.format(data_path, 'uncropped'))
+    # train_images, test_images = {}, {}
+    # for index, line in enumerate(open('{}/Ebay_train.txt'.format(data_path), 'r', encoding='utf-8')):
+    #     if index != 0:
+    #         _, label, _, img_name = line.split()
+    #         img = Image.open('{}/{}'.format(data_path, img_name)).convert('RGB')
+    #         img.save('{}/{}/{}'.format(data_path, 'uncropped', os.path.basename(img_name)))
+    #         if label in train_images:
+    #             train_images[label].append('{}/{}/{}'.format(data_path, 'uncropped', os.path.basename(img_name)))
+    #         else:
+    #             train_images[label] = ['{}/{}/{}'.format(data_path, 'uncropped', os.path.basename(img_name))]
+    #
+    # for index, line in enumerate(open('{}/Ebay_test.txt'.format(data_path), 'r', encoding='utf-8')):
+    #     if index != 0:
+    #         _, label, _, img_name = line.split()
+    #         img = Image.open('{}/{}'.format(data_path, img_name)).convert('RGB')
+    #         img.save('{}/{}/{}'.format(data_path, 'uncropped', os.path.basename(img_name)))
+    #         if label in test_images:
+    #             test_images[label].append('{}/{}/{}'.format(data_path, 'uncropped', os.path.basename(img_name)))
+    #         else:
+    #             test_images[label] = ['{}/{}/{}'.format(data_path, 'uncropped', os.path.basename(img_name))]
+    # torch.save({'train': train_images, 'test': test_images}, '{}/{}_data_dicts.pth'.format(data_path, 'uncropped'))
+    # TODO
+
+
 if __name__ == '__main__':
     process_car_data('data/car', 'uncropped')
     process_car_data('data/car', 'cropped')
     process_cub_data('data/cub', 'uncropped')
     process_cub_data('data/cub', 'cropped')
-    print('process sop dataset')
+    print('processing sop dataset')
     process_sop_data('data/sop')
+    print('processing isc dataset')
+    process_isc_data('data/isc')

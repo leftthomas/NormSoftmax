@@ -33,7 +33,7 @@ def train(net, data_loader, optim):
     global best_acc
     if t_data / n_data > best_acc:
         best_acc = t_data / n_data
-        torch.save(model.state_dict(), 'epochs/{}_model.pth'.format(DATA_NAME))
+        torch.save(model.state_dict(), 'epochs/{}_{}_{}_model.pth'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE))
 
 
 def eval(net, data_loader, recalls):
@@ -45,7 +45,7 @@ def eval(net, data_loader, recalls):
             out = F.normalize(out, dim=-1)
             features.append(out.cpu())
     features = torch.cat(features, dim=0)
-    torch.save(features, 'results/{}_test_features.pth'.format(DATA_NAME))
+    torch.save(features, 'results/{}_{}_{}_test_features.pth'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE))
     acc_list = recall(features, test_data_set.labels, recalls)
     desc = ''
     for index, recall_id in enumerate(recalls):
@@ -56,7 +56,8 @@ def eval(net, data_loader, recalls):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train Image Retrieval Model')
-    parser.add_argument('--data_name', default='car', type=str, choices=['car', 'cub', 'sop'], help='dataset name')
+    parser.add_argument('--data_name', default='car', type=str, choices=['car', 'cub', 'sop', 'isc'],
+                        help='dataset name')
     parser.add_argument('--crop_type', default='uncropped', type=str, choices=['uncropped', 'cropped'],
                         help='crop data or not, it only works for car or cub dataset')
     parser.add_argument('--recalls', default='1,2,4,8', type=str, help='selected recall')
@@ -100,4 +101,5 @@ if __name__ == '__main__':
         eval(model, test_data_loader, recall_ids)
         # save statistics
         data_frame = pd.DataFrame(data=results, index=range(1, epoch + 1))
-        data_frame.to_csv('statistics/{}_results.csv'.format(DATA_NAME), index_label='epoch')
+        data_frame.to_csv('statistics/{}_{}_{}_results.csv'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE),
+                          index_label='epoch')
