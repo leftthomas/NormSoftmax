@@ -53,8 +53,10 @@ def eval(net, recalls):
                 gallery_features.append(out.cpu())
             gallery_features = torch.cat(gallery_features, dim=0)
 
+    torch.save(test_features, 'results/{}_{}_{}_test_features.pth'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE))
     if DATA_NAME == 'isc':
         acc_list = recall(test_features, test_data_set.labels, recalls, gallery_features, gallery_data_set.labels)
+        torch.save(gallery_features, 'results/{}_{}_{}_gallery_features.pth'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE))
     else:
         acc_list = recall(test_features, test_data_set.labels, recalls)
     desc = ''
