@@ -123,7 +123,7 @@ Here is the recall details of `resnet18` backbone:
     <tr>
       <td align="center">R@1</td>
       <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">62.22%</td>
       <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
@@ -132,7 +132,7 @@ Here is the recall details of `resnet18` backbone:
     <tr>
       <td align="center">R@2</td>
       <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">73.26%</td>
       <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
@@ -141,7 +141,7 @@ Here is the recall details of `resnet18` backbone:
     <tr>
       <td align="center">R@4</td>
       <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">82.31%</td>
       <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
@@ -150,7 +150,7 @@ Here is the recall details of `resnet18` backbone:
     <tr>
       <td align="center">R@8</td>
       <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">89.52%</td>
       <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
@@ -159,7 +159,7 @@ Here is the recall details of `resnet18` backbone:
     <tr>
       <td align="center">R@10</td>
       <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">90.90%</td>
       <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
@@ -168,7 +168,7 @@ Here is the recall details of `resnet18` backbone:
     <tr>
       <td align="center">R@20</td>
       <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">94.55%</td>
       <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
@@ -177,7 +177,7 @@ Here is the recall details of `resnet18` backbone:
     <tr>
       <td align="center">R@30</td>
       <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">96.40%</td>
       <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
@@ -186,7 +186,7 @@ Here is the recall details of `resnet18` backbone:
     <tr>
       <td align="center">R@40</td>
       <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">97.15%</td>
       <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
@@ -195,7 +195,7 @@ Here is the recall details of `resnet18` backbone:
     <tr>
       <td align="center">R@50</td>
       <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">97.69%</td>
       <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
@@ -204,7 +204,7 @@ Here is the recall details of `resnet18` backbone:
     <tr>
       <td align="center">R@100</td>
       <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">98.82%</td>
       <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
@@ -213,7 +213,7 @@ Here is the recall details of `resnet18` backbone:
     <tr>
       <td align="center">R@1000</td>
       <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">99.98%</td>
       <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
