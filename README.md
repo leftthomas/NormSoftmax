@@ -27,7 +27,7 @@ You should download these datasets by yourself, and extract them into `data` dir
 ## Usage
 ### Train Model
 ```
-python train.py --data_name cub --model_type resnet34 --num_epochs 30
+python train.py --data_name cub --crop_type cropped --model_type resnet34 --num_epochs 30
 optional arguments:
 --data_name                   dataset name [default value is 'car'](choices=['car', 'cub', 'sop', 'isc'])
 --crop_type                   crop data or not, it only works for car or cub dataset [default value is 'uncropped'](choices=['uncropped', 'cropped'])
@@ -52,7 +52,7 @@ For `SOP` dataset, ensemble size `48` and meta class size `500` is used.
 
 For `In-shop` dataset, ensemble size `48` and meta class size `192` is used.
 
-Here is the recall details:
+Here is the recall details of `resnet18` backbone:
 
 <table>
   <thead>
