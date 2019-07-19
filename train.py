@@ -30,10 +30,6 @@ def train(net, optim):
             'Epoch {}/{} - Loss:{:.4f} - Acc:{:.2f}%'.format(epoch, NUM_EPOCHS, l_data / n_data, t_data / n_data * 100))
     results['train_loss'].append(l_data / n_data)
     results['train_accuracy'].append(t_data / n_data * 100)
-    global best_acc
-    if t_data / n_data > best_acc:
-        best_acc = t_data / n_data
-        torch.save(model.state_dict(), 'epochs/{}_{}_{}_model.pth'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE))
 
 
 def eval(net, recalls):
@@ -64,6 +60,10 @@ def eval(net, recalls):
         desc += 'R@{}:{:.2f}% '.format(recall_id, acc_list[index] * 100)
         results['test_recall@{}'.format(recall_ids[index])].append(acc_list[index] * 100)
     print(desc)
+    global best_recall
+    if acc_list[0] > best_recall:
+        best_recall = acc_list[0]
+        torch.save(model.state_dict(), 'epochs/{}_{}_{}_model.pth'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE))
 
 
 if __name__ == '__main__':
@@ -109,7 +109,7 @@ if __name__ == '__main__':
     lr_scheduler = MultiStepLR(optimizer, milestones=[int(NUM_EPOCHS * 0.5), int(NUM_EPOCHS * 0.7)], gamma=0.1)
     cel_criterion = CrossEntropyLoss()
 
-    best_acc = 0
+    best_recall = 0
     for epoch in range(1, NUM_EPOCHS + 1):
         train(model, optimizer)
         lr_scheduler.step(epoch)

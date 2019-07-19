@@ -48,7 +48,7 @@ The images are preprocessed with resize (256, 256), random horizontal flip and n
 
 For `CARS196` and `CUB200` datasets, ensemble size `48` and meta class size `12` are used. 
 
-For `SOP` dataset, ensemble size `48` and meta class size `500` is used.
+For `SOP` dataset, ensemble size `48` and meta class size `256` is used.
 
 For `In-shop` dataset, ensemble size `48` and meta class size `192` is used.
 
@@ -68,7 +68,7 @@ Here is the model parameter details:
   <tbody>
     <tr>
       <td align="center">CARS196</td>
-      <td align="center">/</td>
+      <td align="center">529,365,376</td>
       <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
@@ -77,7 +77,7 @@ Here is the model parameter details:
     </tr>
     <tr>
       <td align="center">CUB200</td>
-      <td align="center">/</td>
+      <td align="center">529,365,376</td>
       <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
@@ -86,7 +86,7 @@ Here is the model parameter details:
     </tr>
     <tr>
       <td align="center">SOP</td>
-      <td align="center">/</td>
+      <td align="center">535,373,632</td>
       <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
@@ -95,7 +95,7 @@ Here is the model parameter details:
     </tr>
     <tr>
       <td align="center">In-shop</td>
-      <td align="center">/</td>
+      <td align="center">533,797,696</td>
       <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
