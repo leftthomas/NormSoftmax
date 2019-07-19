@@ -70,7 +70,7 @@ if __name__ == '__main__':
                         help='dataset name')
     parser.add_argument('--crop_type', default='uncropped', type=str, choices=['uncropped', 'cropped'],
                         help='crop data or not, it only works for car or cub dataset')
-    parser.add_argument('--recalls', default='1,2,4,8', type=str, help='selected recall')
+    parser.add_argument('--recalls', default='1,2,4,8,10,20,30,40,50,100,1000', type=str, help='selected recall')
     parser.add_argument('--model_type', default='resnet18', type=str,
                         choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d', 'se_resnet50',
                                  'se_resnext50_32x4d'], help='backbone type')

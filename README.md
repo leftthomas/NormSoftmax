@@ -16,7 +16,6 @@ pip install git+https://github.com/leftthomas/CapsuleLayer.git@master
 pip install pretrainedmodels
 ```
 
-
 ## Datasets
 [CARS196](http://ai.stanford.edu/~jkrause/cars/car_dataset.html), [CUB200-2011](http://www.vision.caltech.edu/visipedia/CUB-200-2011.html), 
 [Standard Online Products](http://cvgl.stanford.edu/projects/lifted_struct/) and 
@@ -32,7 +31,7 @@ python train.py --data_name cub --model_type resnet34 --num_epochs 30
 optional arguments:
 --data_name                   dataset name [default value is 'car'](choices=['car', 'cub', 'sop', 'isc'])
 --crop_type                   crop data or not, it only works for car or cub dataset [default value is 'uncropped'](choices=['uncropped', 'cropped'])
---recalls                     selected recall [default value is '1,2,4,8']
+--recalls                     selected recall [default value is '1,2,4,8,10,20,30,40,50,100,1000']
 --model_type                  backbone type [default value is 'resnet18'](choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d', 'se_resnet50', 'se_resnext50_32x4d'])
 --batch_size                  train batch size [default value is 12]
 --num_epochs                  train epochs number [default value is 20]
@@ -49,7 +48,9 @@ The images are preprocessed with resize (256, 256), random horizontal flip and n
 
 For `CARS196` and `CUB200` datasets, ensemble size `48` and meta class size `12` are used. 
 
-For `SOP` and `In-shop` datasets , ensemble size `48` and meta class size `500` is used.
+For `SOP` dataset, ensemble size `48` and meta class size `500` is used.
+
+For `In-shop` dataset, ensemble size `48` and meta class size `192` is used.
 
 Here is the recall details:
 
@@ -59,6 +60,8 @@ Here is the recall details:
       <th>Dataset</th>
       <th>CARS196</th>
       <th>CUB200</th>
+      <th>CARS196 (Crop)</th>
+      <th>CUB200 (Crop)</th>
       <th>SOP</th>
       <th>In-shop</th>
     </tr>
@@ -70,11 +73,15 @@ Here is the recall details:
       <td align="center">64.16%</td>
       <td align="center">56.93%</td>
       <td align="center">56.93%</td>
+      <td align="center">56.93%</td>
+      <td align="center">56.93%</td>
     </tr>
     <tr>
       <td align="center">R@2</td>
       <td align="center">85.07%</td>
       <td align="center">64.16%</td>
+      <td align="center">56.93%</td>
+      <td align="center">56.93%</td>
       <td align="center">56.93%</td>
       <td align="center">56.93%</td>
     </tr>
@@ -84,11 +91,15 @@ Here is the recall details:
       <td align="center">64.16%</td>
       <td align="center">56.93%</td>
       <td align="center">56.93%</td>
+      <td align="center">56.93%</td>
+      <td align="center">56.93%</td>
     </tr>
     <tr>
       <td align="center">R@8</td>
       <td align="center">85.07%</td>
       <td align="center">64.16%</td>
+      <td align="center">56.93%</td>
+      <td align="center">56.93%</td>
       <td align="center">56.93%</td>
       <td align="center">56.93%</td>
     </tr>
@@ -98,11 +109,15 @@ Here is the recall details:
       <td align="center">64.16%</td>
       <td align="center">56.93%</td>
       <td align="center">56.93%</td>
+      <td align="center">56.93%</td>
+      <td align="center">56.93%</td>
     </tr>
     <tr>
       <td align="center">R@20</td>
       <td align="center">85.07%</td>
       <td align="center">64.16%</td>
+      <td align="center">56.93%</td>
+      <td align="center">56.93%</td>
       <td align="center">56.93%</td>
       <td align="center">56.93%</td>
     </tr>
@@ -112,11 +127,15 @@ Here is the recall details:
       <td align="center">64.16%</td>
       <td align="center">56.93%</td>
       <td align="center">56.93%</td>
+      <td align="center">56.93%</td>
+      <td align="center">56.93%</td>
     </tr>
     <tr>
       <td align="center">R@40</td>
       <td align="center">85.07%</td>
       <td align="center">64.16%</td>
+      <td align="center">56.93%</td>
+      <td align="center">56.93%</td>
       <td align="center">56.93%</td>
       <td align="center">56.93%</td>
     </tr>
@@ -126,6 +145,8 @@ Here is the recall details:
       <td align="center">64.16%</td>
       <td align="center">56.93%</td>
       <td align="center">56.93%</td>
+      <td align="center">56.93%</td>
+      <td align="center">56.93%</td>
     </tr>
     <tr>
       <td align="center">R@100</td>
@@ -133,11 +154,15 @@ Here is the recall details:
       <td align="center">64.16%</td>
       <td align="center">56.93%</td>
       <td align="center">56.93%</td>
+      <td align="center">56.93%</td>
+      <td align="center">56.93%</td>
     </tr>
     <tr>
       <td align="center">R@1000</td>
       <td align="center">85.07%</td>
       <td align="center">64.16%</td>
+      <td align="center">56.93%</td>
+      <td align="center">56.93%</td>
       <td align="center">56.93%</td>
       <td align="center">56.93%</td>
     </tr>
