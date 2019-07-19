@@ -5,19 +5,10 @@ from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
 
-rgb_mean = {'car': [0.4853, 0.4965, 0.4295], 'cub': [0.4707, 0.4601, 0.4549], 'sop': [0.5807, 0.5396, 0.5044]}
-rgb_std = {'car': [0.2237, 0.2193, 0.2568], 'cub': [0.2767, 0.2760, 0.2850], 'sop': [0.2901, 0.2974, 0.3095]}
-
-
-def get_transform(data_name, data_type):
-    normalize = transforms.Normalize(rgb_mean[data_name], rgb_std[data_name])
-    if data_type == 'train':
-        transform = transforms.Compose([transforms.Resize(int(256 * 1.1)), transforms.RandomCrop(256),
-                                        transforms.RandomHorizontalFlip(), transforms.ToTensor(), normalize])
-    else:
-        transform = transforms.Compose(
-            [transforms.Resize(256), transforms.CenterCrop(256), transforms.ToTensor(), normalize])
-    return transform
+rgb_mean = {'car': [0.4853, 0.4965, 0.4295], 'cub': [0.4707, 0.4601, 0.4549], 'sop': [0.5807, 0.5396, 0.5044],
+            'isc': [0.8324, 0.8109, 0.8041]}
+rgb_std = {'car': [0.2237, 0.2193, 0.2568], 'cub': [0.2767, 0.2760, 0.2850], 'sop': [0.2901, 0.2974, 0.3095],
+           'isc': [0.2206, 0.2378, 0.2444]}
 
 
 # random assign meta class for all classes
@@ -38,33 +29,37 @@ def create_id(meta_class_size, num_class):
     return idx_all
 
 
-def load_data(meta_id, idx_to_class, data_dict):
-    # balance data for each class
-    max_size = 300
-    meta_data_dict = {i: [] for i in range(max(meta_id) + 1)}
-    for i, c in idx_to_class.items():
-        meta_class_id = meta_id[i]
-        image_list = data_dict[c]
-        if len(image_list) > max_size:
-            image_list = random.sample(image_list, max_size)
-        meta_data_dict[meta_class_id] += image_list
-    return meta_data_dict
-
-
 class ImageReader(Dataset):
 
-    def __init__(self, data_dict, transform):
+    def __init__(self, data_name, data_type, crop_type='uncropped', ensemble_size=None, meta_class_size=None):
+        if crop_type == 'cropped' and data_name not in ['car', 'cub']:
+            raise NotImplementedError('cropped data only works for car or cub dataset')
 
-        classes = [c for c in sorted(data_dict)]
-        classes.sort()
-        class_to_idx = {classes[i]: i for i in range(len(classes))}
-        self.images, self.labels = [], []
-        for label in sorted(data_dict):
-            for img in data_dict[label]:
-                self.images.append(img)
-                self.labels.append(class_to_idx[label])
-
-        self.transform = transform
+        data_dict = torch.load('data/{}/{}_data_dicts.pth'.format(data_name, crop_type))[data_type]
+        class_to_idx = dict(zip(sorted(data_dict), range(len(data_dict))))
+        normalize = transforms.Normalize(rgb_mean[data_name], rgb_std[data_name])
+        if data_type == 'train':
+            self.transform = transforms.Compose([transforms.Resize((256, 256)), transforms.RandomHorizontalFlip(),
+                                                 transforms.ToTensor(), normalize])
+            meta_ids = [create_id(meta_class_size, len(data_dict)) for _ in range(ensemble_size)]
+            # balance data for each class
+            max_size = 300
+            self.images, self.labels = [], []
+            for label, image_list in data_dict.items():
+                if len(image_list) > max_size:
+                    image_list = random.sample(image_list, max_size)
+                self.images += image_list
+                meta_label = []
+                for meta_id in meta_ids:
+                    meta_label.append(meta_id[class_to_idx[label]])
+                meta_label = torch.tensor(meta_label)
+                self.labels += [meta_label] * len(image_list)
+        else:
+            self.transform = transforms.Compose([transforms.Resize((256, 256)), transforms.ToTensor(), normalize])
+            self.images, self.labels = [], []
+            for label, image_list in data_dict.items():
+                self.images += image_list
+                self.labels += [class_to_idx[label]] * len(image_list)
 
     def __getitem__(self, index):
         path, target = self.images[index], self.labels[index]
@@ -76,16 +71,25 @@ class ImageReader(Dataset):
         return len(self.images)
 
 
-def recall(feature_vectors, img_labels, rank):
-    num_images = len(img_labels)
-    img_labels = torch.tensor(img_labels)
-    sim_matrix = feature_vectors.bmm(feature_vectors.permute(0, 2, 1).contiguous())
-    sim_matrix = torch.sum(sim_matrix, 0)
-    sim_matrix[torch.eye(num_images).byte()] = -1
+def recall(feature_vectors, feature_labels, rank, gallery_vectors=None, gallery_labels=None):
+    num_features = len(feature_labels)
+    feature_labels = torch.tensor(feature_labels)
+    feature_vectors = feature_vectors.permute(1, 0, 2).contiguous()
+    if gallery_vectors is None:
+        gallery_vectors = feature_vectors.permute(0, 2, 1).contiguous()
+    else:
+        gallery_vectors = gallery_vectors.permute(1, 2, 0).contiguous()
+    sim_matrix = feature_vectors.bmm(gallery_vectors)
+    sim_matrix = torch.mean(sim_matrix, dim=0)
+    if gallery_labels is None:
+        sim_matrix[torch.eye(num_features).byte()] = -1
+        gallery_labels = feature_labels
+    else:
+        gallery_labels = torch.tensor(gallery_labels)
 
     idx = sim_matrix.argsort(dim=-1, descending=True)
     acc_list = []
     for r in rank:
-        correct = (img_labels[idx[:, 0:r]] == img_labels.unsqueeze(dim=-1)).any(dim=-1).float()
-        acc_list.append((torch.sum(correct) / num_images).item())
+        correct = (gallery_labels[idx[:, 0:r]] == feature_labels.unsqueeze(dim=-1)).any(dim=-1).float()
+        acc_list.append((torch.sum(correct) / num_features).item())
     return acc_list
