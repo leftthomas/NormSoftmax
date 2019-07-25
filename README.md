@@ -473,100 +473,100 @@ Here is the recall details of `resnext50_32x4d` backbone:
   <tbody>
     <tr>
       <td align="center">R@1</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">93.75%</td>
+      <td align="center">69.92%</td>
+      <td align="center">96.26%</td>
+      <td align="center">78.36%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@2</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">96.53%</td>
+      <td align="center">79.64%</td>
+      <td align="center">97.88%</td>
+      <td align="center">85.89%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@4</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">97.80%</td>
+      <td align="center">86.61%</td>
+      <td align="center">98.72%</td>
+      <td align="center">91.09%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@8</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">98.66%</td>
+      <td align="center">91.46%</td>
+      <td align="center">99.30%</td>
+      <td align="center">94.21%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@10</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">98.82%</td>
+      <td align="center">92.76%</td>
+      <td align="center">99.39%</td>
+      <td align="center">95.14%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@20</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">99.24%</td>
+      <td align="center">95.61%</td>
+      <td align="center">99.53%</td>
+      <td align="center">97.01%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@30</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">99.50%</td>
+      <td align="center">96.88%</td>
+      <td align="center">99.70%</td>
+      <td align="center">97.82%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@40</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">99.58%</td>
+      <td align="center">97.64%</td>
+      <td align="center">99.74%</td>
+      <td align="center">98.13%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@50</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">99.63%</td>
+      <td align="center">98.06%</td>
+      <td align="center">99.80%</td>
+      <td align="center">98.41%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@100</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">99.84%</td>
+      <td align="center">99.04%</td>
+      <td align="center">99.88%</td>
+      <td align="center">99.09%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@1000</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">100.00%</td>
+      <td align="center">99.98%</td>
+      <td align="center">100.00%</td>
+      <td align="center">99.97%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
