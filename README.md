@@ -72,7 +72,7 @@ Here is the model parameter details:
       <td align="center">1,011,079,808</td>
       <td align="center">1,118,974,592</td>
       <td align="center">1,094,093,696</td>
-      <td align="center">/</td>
+      <td align="center">1,239,268,784</td>
       <td align="center">/</td>
     </tr>
     <tr>
@@ -81,7 +81,7 @@ Here is the model parameter details:
       <td align="center">1,011,079,808</td>
       <td align="center">1,118,974,592</td>
       <td align="center">1,094,093,696</td>
-      <td align="center">/</td>
+      <td align="center">1,239,268,784</td>
       <td align="center">/</td>
     </tr>
     <tr>
