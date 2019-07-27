@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from pretrainedmodels import se_resnet50, se_resnext50_32x4d
 from torchvision.models.resnet import resnet18, resnet34, resnet50, resnext50_32x4d
 
 
@@ -11,16 +10,15 @@ class Model(nn.Module):
         super(Model, self).__init__()
 
         # backbone
-        backbones = {'resnet18': (resnet18, 1, True), 'resnet34': (resnet34, 1, True), 'resnet50': (resnet50, 4, True),
-                     'resnext50_32x4d': (resnext50_32x4d, 4, True), 'se_resnet50': (se_resnet50, 4, 'imagenet'),
-                     'se_resnext50_32x4d': (se_resnext50_32x4d, 4, 'imagenet')}
-        backbone, expansion, pretrained = backbones[model_type]
+        backbones = {'resnet18': (resnet18, 1), 'resnet34': (resnet34, 1), 'resnet50': (resnet50, 4),
+                     'resnext50_32x4d': (resnext50_32x4d, 4)}
+        backbone, expansion = backbones[model_type]
 
         # configs
         self.ensemble_size, self.device_ids = ensemble_size, device_ids
 
         # common features
-        basic_model, self.common_extractor = backbone(pretrained=pretrained), []
+        basic_model, self.common_extractor = backbone(pretrained=True), []
         for name, module in basic_model.named_children():
             if name in ['conv1', 'bn1', 'relu', 'maxpool', 'layer0', 'layer1']:
                 self.common_extractor.append(module)
@@ -31,7 +29,7 @@ class Model(nn.Module):
         # individual features
         self.layer2, self.layer3, self.layer4 = [], [], []
         for i in range(ensemble_size):
-            basic_model = backbone(pretrained=pretrained)
+            basic_model = backbone(pretrained=True)
             for name, module in basic_model.named_children():
                 if name == 'layer2':
                     self.layer2.append(module)
