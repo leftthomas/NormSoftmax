@@ -78,27 +78,18 @@ def process_sop_data(data_path):
     if not os.path.exists('{}/uncropped'.format(data_path)):
         os.mkdir('{}/uncropped'.format(data_path))
     train_images, test_images = {}, {}
-    for index, line in enumerate(open('{}/Ebay_train.txt'.format(data_path), 'r', encoding='utf-8')):
-        if index != 0:
-            _, label, _, img_name = line.split()
-            img = Image.open('{}/{}'.format(data_path, img_name)).convert('RGB')
-            save_name = '{}/uncropped/{}'.format(data_path, os.path.basename(img_name))
-            img.save(save_name)
-            if label in train_images:
-                train_images[label].append(save_name)
-            else:
-                train_images[label] = [save_name]
-
-    for index, line in enumerate(open('{}/Ebay_test.txt'.format(data_path), 'r', encoding='utf-8')):
-        if index != 0:
-            _, label, _, img_name = line.split()
-            img = Image.open('{}/{}'.format(data_path, img_name)).convert('RGB')
-            save_name = '{}/uncropped/{}'.format(data_path, os.path.basename(img_name))
-            img.save(save_name)
-            if label in test_images:
-                test_images[label].append(save_name)
-            else:
-                test_images[label] = [save_name]
+    data_tuple = {'train': train_images, 'test': test_images}
+    for data_type, image_list in data_tuple.items():
+        for index, line in enumerate(open('{}/Ebay_{}.txt'.format(data_path, data_type), 'r', encoding='utf-8')):
+            if index != 0:
+                _, label, _, img_name = line.split()
+                img = Image.open('{}/{}'.format(data_path, img_name)).convert('RGB')
+                save_name = '{}/uncropped/{}'.format(data_path, os.path.basename(img_name))
+                img.save(save_name)
+                if label in image_list:
+                    image_list[label].append(save_name)
+                else:
+                    image_list[label] = [save_name]
     torch.save({'train': train_images, 'test': test_images}, '{}/uncropped_data_dicts.pth'.format(data_path))
 
 
