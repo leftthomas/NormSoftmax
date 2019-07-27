@@ -73,7 +73,7 @@ Here is the model parameter details:
       <td align="center">1,118,974,592</td>
       <td align="center">1,094,093,696</td>
       <td align="center">1,239,268,784</td>
-      <td align="center">/</td>
+      <td align="center">1,214,387,888</td>
     </tr>
     <tr>
       <td align="center">CUB200</td>
@@ -82,7 +82,7 @@ Here is the model parameter details:
       <td align="center">1,118,974,592</td>
       <td align="center">1,094,093,696</td>
       <td align="center">1,239,268,784</td>
-      <td align="center">/</td>
+      <td align="center">1,214,387,888</td>
     </tr>
     <tr>
       <td align="center">SOP</td>
@@ -707,100 +707,100 @@ Here is the recall details of `se_resnext50_32x4d` backbone:
   <tbody>
     <tr>
       <td align="center">R@1</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">92.73%</td>
+      <td align="center">69.68%</td>
+      <td align="center">95.77%</td>
+      <td align="center">77.40%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@2</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">95.90%</td>
+      <td align="center">79.24%</td>
+      <td align="center">97.82%</td>
+      <td align="center">84.98%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@4</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">97.31%</td>
+      <td align="center">85.90%</td>
+      <td align="center">98.66%</td>
+      <td align="center">90.50%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@8</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">98.51%</td>
+      <td align="center">91.44%</td>
+      <td align="center">99.14%</td>
+      <td align="center">93.96%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@10</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">98.73%</td>
+      <td align="center">92.69%</td>
+      <td align="center">99.27%</td>
+      <td align="center">94.75%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@20</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">99.37%</td>
+      <td align="center">95.54%</td>
+      <td align="center">99.58%</td>
+      <td align="center">96.84%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@30</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">99.52%</td>
+      <td align="center">96.94%</td>
+      <td align="center">99.67%</td>
+      <td align="center">97.75%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@40</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">99.67%</td>
+      <td align="center">97.67%</td>
+      <td align="center">99.70%</td>
+      <td align="center">98.26%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@50</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">99.72%</td>
+      <td align="center">98.13%</td>
+      <td align="center">99.70%</td>
+      <td align="center">98.51%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@100</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">99.83%</td>
+      <td align="center">98.97%</td>
+      <td align="center">99.83%</td>
+      <td align="center">99.14%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@1000</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">100.00%</td>
+      <td align="center">99.98%</td>
+      <td align="center">100.00%</td>
+      <td align="center">99.97%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
