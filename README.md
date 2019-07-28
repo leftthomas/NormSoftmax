@@ -25,7 +25,6 @@ optional arguments:
 --crop_type                   crop data or not, it only works for car or cub dataset [default value is 'uncropped'](choices=['uncropped', 'cropped'])
 --recalls                     selected recall [default value is '1,2,4,8,10,20,30,40,50,100,1000']
 --model_type                  backbone type [default value is 'resnet18'](choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'])
---with_se                     add SE block or not [default value is 'yes'](choices=['yes', 'no'])
 --batch_size                  train batch size [default value is 12]
 --num_epochs                  train epochs number [default value is 20]
 --ensemble_size               ensemble model size [default value is 48]
