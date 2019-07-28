@@ -61,7 +61,8 @@ def eval(net, recalls):
     global best_recall
     if acc_list[0] > best_recall:
         best_recall = acc_list[0]
-        torch.save(model.state_dict(), 'epochs/{}_{}_{}_model.pth'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE))
+        torch.save(model.state_dict(), 'epochs/{}_{}_{}_model.pth'.format(DATA_NAME, CROP_TYPE, 'se_{}'.format(
+            MODEL_TYPE) if WITH_SE else MODEL_TYPE))
 
 
 if __name__ == '__main__':
@@ -115,5 +116,5 @@ if __name__ == '__main__':
         eval(model, recall_ids)
         # save statistics
         data_frame = pd.DataFrame(data=results, index=range(1, epoch + 1))
-        data_frame.to_csv('statistics/{}_{}_{}_results.csv'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE),
-                          index_label='epoch')
+        data_frame.to_csv('statistics/{}_{}_{}_results.csv'.format(DATA_NAME, CROP_TYPE, 'se_{}'.format(
+            MODEL_TYPE) if WITH_SE else MODEL_TYPE), index_label='epoch')

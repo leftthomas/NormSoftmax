@@ -1,5 +1,5 @@
-# SREML
-A PyTorch implementation of SREML based on the paper [Squeezed Randomized Ensembles for Metric Learning]().
+# AREIR
+A PyTorch implementation of AREIR based on the paper [Attentional Randomized Ensembles for Image Retrieval]().
 
 ## Requirements
 - [Anaconda](https://www.anaconda.com/download/)

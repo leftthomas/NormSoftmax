@@ -40,7 +40,7 @@ class AttentionBlock(nn.Module):
         l_ = self.W_l(l)
         # gate feature up-sample
         g_ = self.W_g(g)
-        g_ = F.interpolate(g_, scale_factor=self.up_factor, mode='bilinear', align_corners=False)
+        g_ = F.interpolate(g_, scale_factor=self.up_factor, mode='bicubic', align_corners=False)
         # c is heat map
         c = self.phi(F.relu(l_ + g_))
         # compute spatial attention map
@@ -106,9 +106,9 @@ class Model(nn.Module):
             layer4_feature = self.layer4[i](layer3_feature)
             g1 = self.attention1[i](layer2_feature.cuda(self.device_ids[2]), layer4_feature.cuda(self.device_ids[2]))
             g2 = self.attention2[i](layer3_feature.cuda(self.device_ids[2]), layer4_feature.cuda(self.device_ids[2]))
-            g1 = F.adaptive_avg_pool2d(g1, output_size=(1, 1)).view(batch_size, -1)
-            g2 = F.adaptive_avg_pool2d(g2, output_size=(1, 1)).view(batch_size, -1)
-            g3 = F.adaptive_avg_pool2d(layer4_feature.cuda(self.device_ids[2]), output_size=(1, 1)).view(batch_size, -1)
+            g1 = F.adaptive_max_pool2d(g1, output_size=(1, 1)).view(batch_size, -1)
+            g2 = F.adaptive_max_pool2d(g2, output_size=(1, 1)).view(batch_size, -1)
+            g3 = F.adaptive_max_pool2d(layer4_feature.cuda(self.device_ids[2]), output_size=(1, 1)).view(batch_size, -1)
             global_feature = torch.cat([g1, g2, g3], dim=-1)
             classes = self.classifiers[i](global_feature)
             out.append(classes)
