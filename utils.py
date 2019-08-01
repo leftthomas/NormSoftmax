@@ -1,3 +1,4 @@
+import os
 import random
 
 import torch
@@ -41,7 +42,12 @@ class ImageReader(Dataset):
         if data_type == 'train':
             self.transform = transforms.Compose([transforms.Resize((256, 256)), transforms.RandomHorizontalFlip(),
                                                  transforms.ToTensor(), normalize])
-            meta_ids = [create_id(meta_class_size, len(data_dict)) for _ in range(ensemble_size)]
+            ids_name = 'results/{}_{}_{}_{}_ids.pth'.format(data_name, crop_type, ensemble_size, meta_class_size)
+            if os.path.exists(ids_name):
+                meta_ids = torch.load(ids_name)
+            else:
+                meta_ids = [create_id(meta_class_size, len(data_dict)) for _ in range(ensemble_size)]
+                torch.save(meta_ids, ids_name)
             # balance data for each class
             max_size = 300
             self.images, self.labels = [], []
