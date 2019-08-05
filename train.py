@@ -69,8 +69,8 @@ def eval(net, recalls):
         data_base['gallery_labels'] = gallery_data_set.labels if DATA_NAME == 'isc' else test_data_set.labels
         data_base['gallery_features'] = gallery_features if DATA_NAME == 'isc' else test_features
         torch.save(model.state_dict(), 'epochs/{}_{}_{}_model.pth'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE))
-        torch.save(data_base, 'results/{}_{}_{}_data_base.pth'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE, ENSEMBLE_SIZE,
-                                                                      META_CLASS_SIZE))
+        torch.save(data_base, 'results/{}_{}_{}_{}_{}_data_base.pth'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE,
+                                                                            ENSEMBLE_SIZE, META_CLASS_SIZE))
 
 
 if __name__ == '__main__':
