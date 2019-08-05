@@ -59,9 +59,18 @@ def eval(net, recalls):
         results['test_recall@{}'.format(recall_ids[index])].append(acc_list[index] * 100)
     print(desc)
     global best_recall
+    data_base = {}
     if acc_list[0] > best_recall:
         best_recall = acc_list[0]
+        data_base['test_images'] = test_data_set.images
+        data_base['test_labels'] = test_data_set.labels
+        data_base['test_features'] = test_features
+        data_base['gallery_images'] = gallery_data_set.images if DATA_NAME == 'isc' else test_data_set.images
+        data_base['gallery_labels'] = gallery_data_set.labels if DATA_NAME == 'isc' else test_data_set.labels
+        data_base['gallery_features'] = gallery_features if DATA_NAME == 'isc' else test_features
         torch.save(model.state_dict(), 'epochs/{}_{}_{}_model.pth'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE))
+        torch.save(data_base, 'results/{}_{}_{}_data_base.pth'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE, ENSEMBLE_SIZE,
+                                                                      META_CLASS_SIZE))
 
 
 if __name__ == '__main__':
