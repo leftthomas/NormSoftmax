@@ -32,6 +32,15 @@ optional arguments:
 --gpu_ids                     selected gpu [default value is '0,1,2']
 ```
 
+### Inference Demo
+```
+python inference.py --retrieval_num 10
+optional arguments:
+--query_img_name              query image name [default value is 'data/car/uncropped/008055.jpg']
+--data_base                   queried database [default value is 'car_uncropped_resnet18_48_12_data_base.pth']
+--retrieval_num               retrieval number [default value is 8]
+```
+
 ## Benchmarks
 Adam optimizer is used with learning rate scheduling. The models are trained with batch size `12`, `20` epochs on three 
 NVIDIA Tesla V100 (32G) GPUs.
