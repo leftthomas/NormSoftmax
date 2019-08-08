@@ -19,7 +19,7 @@ def train(net, optim):
     for inputs, labels in train_progress:
         optim.zero_grad()
         out = net(inputs.to(device_ids[0]))
-        loss = cel_criterion(out.permute(0, 2, 1).contiguous(), labels.to(device_ids[2]))
+        loss = cel_criterion(out.permute(0, 2, 1).contiguous(), labels.to(device_ids[0]))
         loss.backward()
         optim.step()
         pred = torch.argmax(out, dim=-1)
@@ -89,7 +89,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_epochs', default=20, type=int, help='train epoch number')
     parser.add_argument('--ensemble_size', default=48, type=int, help='ensemble model size')
     parser.add_argument('--meta_class_size', default=12, type=int, help='meta class size')
-    parser.add_argument('--gpu_ids', default='0,1,2', type=str, help='selected gpu')
+    parser.add_argument('--gpu_ids', default='0,1', type=str, help='selected gpu')
 
     opt = parser.parse_args()
 
@@ -98,8 +98,8 @@ if __name__ == '__main__':
     GPU_IDS, MODEL_TYPE, WITH_SE = opt.gpu_ids, opt.model_type, opt.with_se
     WITH_SE = True if WITH_SE == 'yes' else False
     recall_ids, device_ids = [int(k) for k in RECALLS.split(',')], [int(gpu) for gpu in GPU_IDS.split(',')]
-    if len(device_ids) != 3:
-        raise NotImplementedError('make sure gpu_ids contains three devices')
+    if len(device_ids) != 2:
+        raise NotImplementedError('make sure gpu_ids contains two devices')
 
     results = {'train_loss': [], 'train_accuracy': []}
     for index, recall_id in enumerate(recall_ids):

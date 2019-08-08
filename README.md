@@ -30,7 +30,7 @@ optional arguments:
 --num_epochs                  train epochs number [default value is 20]
 --ensemble_size               ensemble model size [default value is 48]
 --meta_class_size             meta class size [default value is 12]
---gpu_ids                     selected gpu [default value is '0,1,2']
+--gpu_ids                     selected gpu [default value is '0,1']
 ```
 
 ### Inference Demo
@@ -43,7 +43,7 @@ optional arguments:
 ```
 
 ## Benchmarks
-Adam optimizer is used with learning rate scheduling. The models are trained with batch size `12`, `20` epochs on three 
+Adam optimizer is used with learning rate scheduling. The models are trained with batch size `12`, `20` epochs on two 
 NVIDIA Tesla V100 (32G) GPUs.
 
 The images are preprocessed with resize (256, 256), random horizontal flip and normalize. 
