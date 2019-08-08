@@ -22,7 +22,7 @@ class SEBlock(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, meta_class_size, ensemble_size, model_type, device_ids):
+    def __init__(self, meta_class_size, ensemble_size, model_type, with_se, device_ids):
         super(Model, self).__init__()
 
         # backbone
@@ -48,7 +48,10 @@ class Model(nn.Module):
             basic_model = backbone(pretrained=True)
             for name, module in basic_model.named_children():
                 if name == 'layer2':
-                    self.layer2.append(nn.Sequential(module, SEBlock(128 * expansion, reduction=8)))
+                    if with_se:
+                        self.layer2.append(nn.Sequential(module, SEBlock(128 * expansion, reduction=8)))
+                    else:
+                        self.layer2.append(nn.Sequential(module))
                 if name == 'layer3':
                     self.layer3.append(module)
                 if name == 'layer4':

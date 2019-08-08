@@ -68,9 +68,11 @@ def eval(net, recalls):
         data_base['gallery_images'] = gallery_data_set.images if DATA_NAME == 'isc' else test_data_set.images
         data_base['gallery_labels'] = gallery_data_set.labels if DATA_NAME == 'isc' else test_data_set.labels
         data_base['gallery_features'] = gallery_features if DATA_NAME == 'isc' else test_features
-        torch.save(model.state_dict(), 'epochs/{}_{}_{}_model.pth'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE))
-        torch.save(data_base, 'results/{}_{}_{}_{}_{}_data_base.pth'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE,
-                                                                            ENSEMBLE_SIZE, META_CLASS_SIZE))
+        torch.save(model.state_dict(), 'epochs/{}_{}_{}_model.pth'
+                   .format(DATA_NAME, CROP_TYPE, MODEL_TYPE + '_se' if WITH_SE else MODEL_TYPE))
+        torch.save(data_base, 'results/{}_{}_{}_{}_{}_data_base.pth'
+                   .format(DATA_NAME, CROP_TYPE, MODEL_TYPE + '_se' if WITH_SE else MODEL_TYPE, ENSEMBLE_SIZE,
+                           META_CLASS_SIZE))
 
 
 if __name__ == '__main__':
@@ -82,6 +84,7 @@ if __name__ == '__main__':
     parser.add_argument('--recalls', default='1,2,4,8,10,20,30,40,50,100,1000', type=str, help='selected recall')
     parser.add_argument('--model_type', default='resnet18', type=str,
                         choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'], help='backbone type')
+    parser.add_argument('--with_se', default='yes', type=str, choices=['yes', 'no'], help='use se block or not')
     parser.add_argument('--batch_size', default=12, type=int, help='train batch size')
     parser.add_argument('--num_epochs', default=20, type=int, help='train epoch number')
     parser.add_argument('--ensemble_size', default=48, type=int, help='ensemble model size')
@@ -92,7 +95,8 @@ if __name__ == '__main__':
 
     DATA_NAME, RECALLS, BATCH_SIZE, NUM_EPOCHS = opt.data_name, opt.recalls, opt.batch_size, opt.num_epochs
     ENSEMBLE_SIZE, META_CLASS_SIZE, CROP_TYPE = opt.ensemble_size, opt.meta_class_size, opt.crop_type
-    GPU_IDS, MODEL_TYPE = opt.gpu_ids, opt.model_type
+    GPU_IDS, MODEL_TYPE, WITH_SE = opt.gpu_ids, opt.model_type, opt.with_se
+    WITH_SE = True if WITH_SE == 'yes' else False
     recall_ids, device_ids = [int(k) for k in RECALLS.split(',')], [int(gpu) for gpu in GPU_IDS.split(',')]
     if len(device_ids) != 3:
         raise NotImplementedError('make sure gpu_ids contains three devices')
@@ -109,7 +113,7 @@ if __name__ == '__main__':
         gallery_data_set = ImageReader(DATA_NAME, 'gallery', CROP_TYPE)
         gallery_data_loader = DataLoader(gallery_data_set, BATCH_SIZE, shuffle=False, num_workers=8)
 
-    model = Model(META_CLASS_SIZE, ENSEMBLE_SIZE, MODEL_TYPE, device_ids)
+    model = Model(META_CLASS_SIZE, ENSEMBLE_SIZE, MODEL_TYPE, WITH_SE, device_ids)
     print("# trainable parameters:", sum(param.numel() if param.requires_grad else 0 for param in model.parameters()))
     optimizer = Adam(model.parameters(), lr=1e-4)
     lr_scheduler = MultiStepLR(optimizer, milestones=[int(NUM_EPOCHS * 0.5), int(NUM_EPOCHS * 0.7)], gamma=0.1)
@@ -122,5 +126,6 @@ if __name__ == '__main__':
         eval(model, recall_ids)
         # save statistics
         data_frame = pd.DataFrame(data=results, index=range(1, epoch + 1))
-        data_frame.to_csv('statistics/{}_{}_{}_results.csv'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE),
+        data_frame.to_csv('statistics/{}_{}_{}_results.csv'
+                          .format(DATA_NAME, CROP_TYPE, MODEL_TYPE + '_se' if WITH_SE else MODEL_TYPE),
                           index_label='epoch')
