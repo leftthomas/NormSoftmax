@@ -85,7 +85,7 @@ if __name__ == '__main__':
     parser.add_argument('--model_type', default='resnet18', type=str,
                         choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'], help='backbone type')
     parser.add_argument('--with_se', default='yes', type=str, choices=['yes', 'no'], help='use se block or not')
-    parser.add_argument('--batch_size', default=12, type=int, help='train batch size')
+    parser.add_argument('--batch_size', default=8, type=int, help='train batch size')
     parser.add_argument('--num_epochs', default=20, type=int, help='train epoch number')
     parser.add_argument('--ensemble_size', default=48, type=int, help='ensemble model size')
     parser.add_argument('--meta_class_size', default=12, type=int, help='meta class size')

@@ -26,7 +26,7 @@ optional arguments:
 --recalls                     selected recall [default value is '1,2,4,8,10,20,30,40,50,100,1000']
 --model_type                  backbone type [default value is 'resnet18'](choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'])
 --with_se                     use se block or not [default value is 'yes'](choices=['yes', 'no'])
---batch_size                  train batch size [default value is 12]
+--batch_size                  train batch size [default value is 8]
 --num_epochs                  train epochs number [default value is 20]
 --ensemble_size               ensemble model size [default value is 48]
 --meta_class_size             meta class size [default value is 12]
