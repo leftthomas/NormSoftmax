@@ -66,9 +66,11 @@ class Model(nn.Module):
     def forward(self, x):
         batch_size = x.size(0)
         common_feature = self.common_extractor(x)
+        branch_weight = torch.rand(self.ensemble_size, device=x.device)
+        branch_weight = F.softmax(branch_weight, dim=-1)
         out = []
         for i in range(self.ensemble_size):
-            layer2_feature = self.layer2[i](common_feature)
+            layer2_feature = self.layer2[i](branch_weight[i] * common_feature)
             layer3_feature = self.layer3[i](layer2_feature.cuda(self.device_ids[1]))
             layer4_feature = self.layer4[i](layer3_feature.cuda(self.device_ids[2]))
             global_feature = F.adaptive_avg_pool2d(layer4_feature, output_size=(1, 1)).view(batch_size, -1)
