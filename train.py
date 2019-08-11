@@ -24,7 +24,7 @@ def train(net, optim):
         optim.step()
         pred = torch.argmax(out, dim=-1)
         l_data += loss.item()
-        t_data += torch.sum(pred.cpu() == labels).item() / ENSEMBLE_SIZE
+        t_data += torch.sum((pred.cpu() == labels).float()).item() / ENSEMBLE_SIZE
         n_data += len(labels)
         train_progress.set_description(
             'Epoch {}/{} - Loss:{:.4f} - Acc:{:.2f}%'.format(epoch, NUM_EPOCHS, l_data / n_data, t_data / n_data * 100))
