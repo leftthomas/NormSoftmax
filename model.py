@@ -22,7 +22,7 @@ class SEBlock(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, meta_class_size, ensemble_size, model_type, device_ids):
+    def __init__(self, meta_class_size, ensemble_size, model_type, with_se, device_ids):
         super(Model, self).__init__()
 
         # backbone
@@ -48,7 +48,10 @@ class Model(nn.Module):
             basic_model = backbone(pretrained=True)
             for name, module in basic_model.named_children():
                 if name == 'layer2':
-                    self.layer2.append(nn.Sequential(module, SEBlock(128 * expansion, reduction=8)))
+                    if with_se:
+                        self.layer2.append(nn.Sequential(module, SEBlock(128 * expansion, reduction=8)))
+                    else:
+                        self.layer2.append(nn.Sequential(module))
                 if name == 'layer3':
                     self.layer3.append(module)
                 if name == 'layer4':
@@ -57,21 +60,24 @@ class Model(nn.Module):
                     continue
         self.layer2 = nn.ModuleList(self.layer2).cuda(device_ids[0])
         self.layer3 = nn.ModuleList(self.layer3).cuda(device_ids[1])
-        self.layer4 = nn.ModuleList(self.layer4).cuda(device_ids[2])
+        self.layer4 = nn.ModuleList(self.layer4).cuda(device_ids[1])
 
         # individual classifiers
         self.classifiers = nn.ModuleList([nn.Linear(512 * expansion, meta_class_size) for _ in
-                                          range(ensemble_size)]).cuda(device_ids[2])
+                                          range(ensemble_size)]).cuda(device_ids[0])
 
     def forward(self, x):
         batch_size = x.size(0)
         common_feature = self.common_extractor(x)
+        branch_weight = torch.rand(self.ensemble_size, device=x.device)
+        branch_weight = F.softmax(branch_weight, dim=-1)
         out = []
         for i in range(self.ensemble_size):
-            layer2_feature = self.layer2[i](common_feature)
+            layer2_feature = self.layer2[i](branch_weight[i] * common_feature)
             layer3_feature = self.layer3[i](layer2_feature.cuda(self.device_ids[1]))
-            layer4_feature = self.layer4[i](layer3_feature.cuda(self.device_ids[2]))
-            global_feature = F.adaptive_avg_pool2d(layer4_feature, output_size=(1, 1)).view(batch_size, -1)
+            layer4_feature = self.layer4[i](layer3_feature)
+            global_feature = F.adaptive_avg_pool2d(layer4_feature.cuda(self.device_ids[0]), output_size=(1, 1)).view(
+                batch_size, -1)
             classes = self.classifiers[i](global_feature)
             out.append(classes)
         out = torch.stack(out, dim=1)

@@ -89,7 +89,7 @@ def recall(feature_vectors, feature_labels, rank, gallery_vectors=None, gallery_
     sim_matrix = feature_vectors.bmm(gallery_vectors)
     sim_matrix = torch.mean(sim_matrix, dim=0)
     if gallery_labels is None:
-        sim_matrix[torch.eye(num_features).byte()] = -1
+        sim_matrix[torch.eye(num_features).bool()] = -1
         gallery_labels = feature_labels
     else:
         gallery_labels = torch.tensor(gallery_labels)
