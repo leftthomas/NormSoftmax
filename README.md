@@ -63,6 +63,10 @@ Here is the model parameter details:
       <th>resnet34</th>
       <th>resnet50</th>
       <th>resnext50_32x4d</th>
+      <th>se-resnet18</th>
+      <th>se-resnet34</th>
+      <th>se-resnet50</th>
+      <th>se-resnext50_32x4d</th>
     </tr>
   </thead>
   <tbody>
@@ -72,6 +76,10 @@ Here is the model parameter details:
       <td align="center">1,011,079,808</td>
       <td align="center">1,118,974,592</td>
       <td align="center">1,094,093,696</td>
+      <td align="center">529,561,984</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">CUB200</td>
@@ -79,9 +87,17 @@ Here is the model parameter details:
       <td align="center">1,011,079,808</td>
       <td align="center">1,118,974,592</td>
       <td align="center">1,094,093,696</td>
+      <td align="center">529,561,984</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">SOP</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
@@ -90,6 +106,10 @@ Here is the model parameter details:
     <tr>
       <td align="center">In-shop</td>
       <td align="center">533,797,696</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
