@@ -71,7 +71,8 @@ class ImageReader(Dataset):
         path, target = self.images[index], self.labels[index]
         img = Image.open(path).convert('RGB')
         img = self.transform(img)
-        return img, target
+        img_name = os.path.basename(path)
+        return img, target, img_name
 
     def __len__(self):
         return len(self.images)
@@ -98,4 +99,4 @@ def recall(feature_vectors, feature_labels, rank, gallery_vectors=None, gallery_
     for r in rank:
         correct = (gallery_labels[idx[:, 0:r]] == feature_labels.unsqueeze(dim=-1)).any(dim=-1).float()
         acc_list.append((torch.sum(correct) / num_features).item())
-    return acc_list
+    return acc_list, idx
