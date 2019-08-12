@@ -4,18 +4,7 @@ import torch
 from PIL import Image
 from scipy.io import loadmat
 from tqdm import tqdm
-import json
 
-
-def write_json(data, path):
-    with open(path, 'w', encoding='utf-8') as f:
-        f.write(json.dumps(data))
-
-
-def read_json(path):
-    with open(path, 'r', encoding='utf-8') as f:
-        data = json.loads(f.read())
-    return data
 
 def read_txt(path, data_num):
     data = {}
