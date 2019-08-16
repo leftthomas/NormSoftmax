@@ -271,7 +271,7 @@ Here is the results of uncropped `CUB200` dataset:
       <td align="center">79.05%</td>
       <td align="center">71.83%</td>
       <td align="center">71.49%</td>
-      <td align="center">/</td>
+      <td align="center">75.24%</td>
     </tr>
     <tr>
       <td align="center">R@2</td>
@@ -282,7 +282,7 @@ Here is the results of uncropped `CUB200` dataset:
       <td align="center">86.75%</td>
       <td align="center">81.01%</td>
       <td align="center">80.81%</td>
-      <td align="center">/</td>
+      <td align="center">83.71%</td>
     </tr>
     <tr>
       <td align="center">R@4</td>
@@ -293,7 +293,7 @@ Here is the results of uncropped `CUB200` dataset:
       <td align="center">91.63%</td>
       <td align="center">87.32%</td>
       <td align="center">87.14%</td>
-      <td align="center">/</td>
+      <td align="center">89.58%</td>
     </tr>
     <tr>
       <td align="center">R@8</td>
@@ -304,7 +304,7 @@ Here is the results of uncropped `CUB200` dataset:
       <td align="center">95.26%</td>
       <td align="center">91.69%</td>
       <td align="center">91.95%</td>
-      <td align="center">/</td>
+      <td align="center">93.23%</td>
     </tr>
   </tbody>
 </table>
@@ -335,7 +335,7 @@ Here is the results of cropped `CUB200` dataset:
       <td align="center">87.09%</td>
       <td align="center">85.04%</td>
       <td align="center">84.54%</td>
-      <td align="center">/</td>
+      <td align="center">85.06%</td>
     </tr>
     <tr>
       <td align="center">R@2</td>
@@ -346,7 +346,7 @@ Here is the results of cropped `CUB200` dataset:
       <td align="center">92.10%</td>
       <td align="center">90.33%</td>
       <td align="center">90.01%</td>
-      <td align="center">/</td>
+      <td align="center">90.77%</td>
     </tr>
     <tr>
       <td align="center">R@4</td>
@@ -357,7 +357,7 @@ Here is the results of cropped `CUB200` dataset:
       <td align="center">94.89%</td>
       <td align="center">93.79%</td>
       <td align="center">93.38%</td>
-      <td align="center">/</td>
+      <td align="center">94.06%</td>
     </tr>
     <tr>
       <td align="center">R@8</td>
@@ -368,7 +368,7 @@ Here is the results of cropped `CUB200` dataset:
       <td align="center">97.10%</td>
       <td align="center">96.27%</td>
       <td align="center">95.86%</td>
-      <td align="center">/</td>
+      <td align="center">96.39%</td>
     </tr>
   </tbody>
 </table>
