@@ -43,7 +43,7 @@ optional arguments:
 ```
 
 ## Benchmarks
-Adam optimizer is used with learning rate scheduling. The models are trained with batch size `12`, `20` epochs on two 
+Adam optimizer is used with learning rate scheduling. The models are trained with batch size `8`, `20` epochs on two 
 NVIDIA Tesla V100 (32G) GPUs.
 
 The images are preprocessed with resize (256, 256), random horizontal flip and normalize. 
@@ -117,468 +117,406 @@ Here is the model parameter details:
   </tbody>
 </table>
 
-Here is the recall details of `resnet18` backbone:
+Here is the results of uncropped `CARS196` dataset:
 
 <table>
   <thead>
     <tr>
-      <th>Dataset</th>
-      <th>CARS196</th>
-      <th>CUB200</th>
-      <th>CARS196 (Crop)</th>
-      <th>CUB200 (Crop)</th>
-      <th>SOP</th>
-      <th>In-shop</th>
+      <th>Backbone</th>
+      <th>resnet18</th>
+      <th>resnet34</th>
+      <th>resnet50</th>
+      <th>resnext50_32x4d</th>
+      <th>se-resnet18</th>
+      <th>se-resnet34</th>
+      <th>se-resnet50</th>
+      <th>se-resnext50_32x4d</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td align="center">R@1</td>
-      <td align="center">89.85%</td>
-      <td align="center">62.22%</td>
-      <td align="center">94.33%</td>
-      <td align="center">73.48%</td>
+      <td align="center">93.16%</td>
       <td align="center">/</td>
-      <td align="center">83.88%</td>
-    </tr>
-    <tr>
-      <td align="center">R@2</td>
-      <td align="center">93.99%</td>
-      <td align="center">73.26%</td>
-      <td align="center">96.96%</td>
-      <td align="center">82.26%</td>
       <td align="center">/</td>
-      <td align="center">89.15%</td>
-    </tr>
-    <tr>
-      <td align="center">R@4</td>
-      <td align="center">96.25%</td>
-      <td align="center">82.31%</td>
-      <td align="center">98.32%</td>
-      <td align="center">88.79%</td>
       <td align="center">/</td>
-      <td align="center">92.52%</td>
-    </tr>
-    <tr>
-      <td align="center">R@8</td>
-      <td align="center">97.88%</td>
-      <td align="center">89.52%</td>
-      <td align="center">99.07%</td>
-      <td align="center">93.11%</td>
-      <td align="center">/</td>
-      <td align="center">94.99%</td>
-    </tr>
-    <tr>
-      <td align="center">R@10</td>
-      <td align="center">98.23%</td>
-      <td align="center">90.90%</td>
-      <td align="center">99.20%</td>
-      <td align="center">94.07%</td>
-      <td align="center">/</td>
-      <td align="center">95.62%</td>
-    </tr>
-    <tr>
-      <td align="center">R@20</td>
-      <td align="center">99.03%</td>
-      <td align="center">94.55%</td>
-      <td align="center">99.56%</td>
-      <td align="center">96.47%</td>
-      <td align="center">/</td>
-      <td align="center">96.83%</td>
-    </tr>
-    <tr>
-      <td align="center">R@30</td>
-      <td align="center">99.30%</td>
-      <td align="center">96.40%</td>
-      <td align="center">99.67%</td>
-      <td align="center">97.33%</td>
-      <td align="center">/</td>
-      <td align="center">97.46%</td>
-    </tr>
-    <tr>
-      <td align="center">R@40</td>
-      <td align="center">99.57%</td>
-      <td align="center">97.15%</td>
-      <td align="center">99.72%</td>
-      <td align="center">98.02%</td>
-      <td align="center">/</td>
-      <td align="center">97.85%</td>
-    </tr>
-    <tr>
-      <td align="center">R@50</td>
-      <td align="center">99.63%</td>
-      <td align="center">97.69%</td>
-      <td align="center">99.75%</td>
-      <td align="center">98.40%</td>
-      <td align="center">/</td>
-      <td align="center">98.13%</td>
-    </tr>
-    <tr>
-      <td align="center">R@100</td>
-      <td align="center">99.84%</td>
-      <td align="center">98.82%</td>
-      <td align="center">99.85%</td>
-      <td align="center">99.24%</td>
-      <td align="center">/</td>
-      <td align="center">98.72%</td>
-    </tr>
-    <tr>
-      <td align="center">R@1000</td>
-      <td align="center">100.00%</td>
-      <td align="center">99.98%</td>
-      <td align="center">100.00%</td>
-      <td align="center">99.97%</td>
-      <td align="center">/</td>
-      <td align="center">99.74%</td>
-    </tr>
-  </tbody>
-</table>
-
-Here is the recall details of `resnet34` backbone:
-
-<table>
-  <thead>
-    <tr>
-      <th>Dataset</th>
-      <th>CARS196</th>
-      <th>CUB200</th>
-      <th>CARS196 (Crop)</th>
-      <th>CUB200 (Crop)</th>
-      <th>SOP</th>
-      <th>In-shop</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td align="center">R@1</td>
-      <td align="center">91.23%</td>
-      <td align="center">64.53%</td>
-      <td align="center">95.46%</td>
-      <td align="center">74.05%</td>
-      <td align="center">/</td>
+      <td align="center">93.28%</td>
+      <td align="center">93.64%</td>
+      <td align="center">93.57%</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@2</td>
-      <td align="center">95.06%</td>
-      <td align="center">73.92%</td>
-      <td align="center">97.52%</td>
-      <td align="center">82.92%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@4</td>
-      <td align="center">97.15%</td>
-      <td align="center">81.89%</td>
-      <td align="center">98.52%</td>
-      <td align="center">89.10%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@8</td>
-      <td align="center">98.20%</td>
-      <td align="center">88.22%</td>
-      <td align="center">99.05%</td>
-      <td align="center">93.59%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@10</td>
-      <td align="center">98.46%</td>
-      <td align="center">90.21%</td>
-      <td align="center">99.21%</td>
-      <td align="center">94.48%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@20</td>
-      <td align="center">99.08%</td>
-      <td align="center">94.06%</td>
-      <td align="center">99.58%</td>
-      <td align="center">96.59%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@30</td>
-      <td align="center">99.29%</td>
-      <td align="center">95.83%</td>
-      <td align="center">99.72%</td>
-      <td align="center">97.65%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@40</td>
-      <td align="center">99.48%</td>
-      <td align="center">96.94%</td>
-      <td align="center">99.75%</td>
-      <td align="center">98.09%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@50</td>
-      <td align="center">99.52%</td>
-      <td align="center">97.50%</td>
-      <td align="center">99.78%</td>
-      <td align="center">98.36%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@100</td>
-      <td align="center">99.77%</td>
-      <td align="center">98.89%</td>
-      <td align="center">99.88%</td>
-      <td align="center">99.05%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@1000</td>
-      <td align="center">100.00%</td>
-      <td align="center">99.98%</td>
-      <td align="center">100.00%</td>
-      <td align="center">99.95%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-    </tr>
-  </tbody>
-</table>
-
-Here is the recall details of `resnet50` backbone:
-
-<table>
-  <thead>
-    <tr>
-      <th>Dataset</th>
-      <th>CARS196</th>
-      <th>CUB200</th>
-      <th>CARS196 (Crop)</th>
-      <th>CUB200 (Crop)</th>
-      <th>SOP</th>
-      <th>In-shop</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td align="center">R@1</td>
-      <td align="center">93.09%</td>
-      <td align="center">66.19%</td>
-      <td align="center">95.87%</td>
-      <td align="center">76.69%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@2</td>
-      <td align="center">96.11%</td>
-      <td align="center">76.38%</td>
-      <td align="center">97.74%</td>
-      <td align="center">84.45%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@4</td>
-      <td align="center">97.58%</td>
-      <td align="center">84.45%</td>
-      <td align="center">98.56%</td>
-      <td align="center">89.67%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@8</td>
-      <td align="center">98.41%</td>
-      <td align="center">90.12%</td>
-      <td align="center">99.18%</td>
-      <td align="center">93.25%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@10</td>
-      <td align="center">98.67%</td>
-      <td align="center">91.81%</td>
-      <td align="center">99.26%</td>
-      <td align="center">94.41%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@20</td>
-      <td align="center">99.42%</td>
-      <td align="center">95.02%</td>
-      <td align="center">99.56%</td>
       <td align="center">96.56%</td>
       <td align="center">/</td>
       <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@30</td>
-      <td align="center">99.59%</td>
-      <td align="center">96.61%</td>
-      <td align="center">99.69%</td>
-      <td align="center">97.55%</td>
       <td align="center">/</td>
+      <td align="center">96.32%</td>
+      <td align="center">96.40%</td>
+      <td align="center">96.14%</td>
       <td align="center">/</td>
     </tr>
     <tr>
-      <td align="center">R@40</td>
-      <td align="center">99.69%</td>
-      <td align="center">97.52%</td>
-      <td align="center">99.74%</td>
-      <td align="center">98.19%</td>
+      <td align="center">R@4</td>
+      <td align="center">98.28%</td>
       <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">98.07%</td>
+      <td align="center">98.06%</td>
+      <td align="center">97.69%</td>
       <td align="center">/</td>
     </tr>
     <tr>
-      <td align="center">R@50</td>
-      <td align="center">99.75%</td>
+      <td align="center">R@8</td>
+      <td align="center">99.00%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">98.97%</td>
+      <td align="center">98.91%</td>
+      <td align="center">98.76%</td>
+      <td align="center">/</td>
+    </tr>
+  </tbody>
+</table>
+
+Here is the results of cropped `CARS196` dataset:
+
+<table>
+  <thead>
+    <tr>
+      <th>Backbone</th>
+      <th>resnet18</th>
+      <th>resnet34</th>
+      <th>resnet50</th>
+      <th>resnext50_32x4d</th>
+      <th>se-resnet18</th>
+      <th>se-resnet34</th>
+      <th>se-resnet50</th>
+      <th>se-resnext50_32x4d</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center">R@1</td>
+      <td align="center">96.36%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">96.69%</td>
+      <td align="center">96.46%</td>
+      <td align="center">96.37%</td>
+      <td align="center">/</td>
+    </tr>
+    <tr>
+      <td align="center">R@2</td>
+      <td align="center">98.13%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">98.24%</td>
       <td align="center">98.01%</td>
-      <td align="center">99.77%</td>
-      <td align="center">98.50%</td>
+      <td align="center">97.97%</td>
+      <td align="center">/</td>
+    </tr>
+    <tr>
+      <td align="center">R@4</td>
+      <td align="center">98.91%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">98.99%</td>
+      <td align="center">98.89%</td>
+      <td align="center">98.72%</td>
+      <td align="center">/</td>
+    </tr>
+    <tr>
+      <td align="center">R@8</td>
+      <td align="center">99.40%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">99.36%</td>
+      <td align="center">99.25%</td>
+      <td align="center">99.26%</td>
+      <td align="center">/</td>
+    </tr>
+  </tbody>
+</table>
+
+Here is the results of uncropped `CUB200` dataset:
+
+<table>
+  <thead>
+    <tr>
+      <th>Backbone</th>
+      <th>resnet18</th>
+      <th>resnet34</th>
+      <th>resnet50</th>
+      <th>resnext50_32x4d</th>
+      <th>se-resnet18</th>
+      <th>se-resnet34</th>
+      <th>se-resnet50</th>
+      <th>se-resnext50_32x4d</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center">R@1</td>
+      <td align="center">79.05%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">79.05%</td>
+      <td align="center">/</td>
+      <td align="center">71.49%</td>
+      <td align="center">/</td>
+    </tr>
+    <tr>
+      <td align="center">R@2</td>
+      <td align="center">86.51%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">86.75%</td>
+      <td align="center">/</td>
+      <td align="center">80.81%</td>
+      <td align="center">/</td>
+    </tr>
+    <tr>
+      <td align="center">R@4</td>
+      <td align="center">91.37%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">91.63%</td>
+      <td align="center">/</td>
+      <td align="center">87.14%</td>
+      <td align="center">/</td>
+    </tr>
+    <tr>
+      <td align="center">R@8</td>
+      <td align="center">94.85%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">95.26%</td>
+      <td align="center">/</td>
+      <td align="center">91.95%</td>
+      <td align="center">/</td>
+    </tr>
+  </tbody>
+</table>
+
+Here is the results of cropped `CUB200` dataset:
+
+<table>
+  <thead>
+    <tr>
+      <th>Backbone</th>
+      <th>resnet18</th>
+      <th>resnet34</th>
+      <th>resnet50</th>
+      <th>resnext50_32x4d</th>
+      <th>se-resnet18</th>
+      <th>se-resnet34</th>
+      <th>se-resnet50</th>
+      <th>se-resnext50_32x4d</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center">R@1</td>
+      <td align="center">87.63%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">87.09%</td>
+      <td align="center">/</td>
+      <td align="center">84.54%</td>
+      <td align="center">/</td>
+    </tr>
+    <tr>
+      <td align="center">R@2</td>
+      <td align="center">92.30%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">92.10%</td>
+      <td align="center">/</td>
+      <td align="center">90.01%</td>
+      <td align="center">/</td>
+    </tr>
+    <tr>
+      <td align="center">R@4</td>
+      <td align="center">95.53%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">94.89%</td>
+      <td align="center">/</td>
+      <td align="center">93.38%</td>
+      <td align="center">/</td>
+    </tr>
+    <tr>
+      <td align="center">R@8</td>
+      <td align="center">97.30%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">97.10%</td>
+      <td align="center">/</td>
+      <td align="center">95.86%</td>
+      <td align="center">/</td>
+    </tr>
+  </tbody>
+</table>
+
+Here is the results of `SOP` dataset:
+
+<table>
+  <thead>
+    <tr>
+      <th>Backbone</th>
+      <th>resnet18</th>
+      <th>resnet34</th>
+      <th>resnet50</th>
+      <th>resnext50_32x4d</th>
+      <th>se-resnet18</th>
+      <th>se-resnet34</th>
+      <th>se-resnet50</th>
+      <th>se-resnext50_32x4d</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center">R@1</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+    </tr>
+    <tr>
+      <td align="center">R@10</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@100</td>
-      <td align="center">99.86%</td>
-      <td align="center">99.02%</td>
-      <td align="center">99.88%</td>
-      <td align="center">99.09%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@1000</td>
-      <td align="center">100.00%</td>
-      <td align="center">99.97%</td>
-      <td align="center">100.00%</td>
-      <td align="center">99.97%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
   </tbody>
 </table>
 
-Here is the recall details of `resnext50_32x4d` backbone:
+Here is the results of `In-shop` dataset:
 
 <table>
   <thead>
     <tr>
-      <th>Dataset</th>
-      <th>CARS196</th>
-      <th>CUB200</th>
-      <th>CARS196 (Crop)</th>
-      <th>CUB200 (Crop)</th>
-      <th>SOP</th>
-      <th>In-shop</th>
+      <th>Backbone</th>
+      <th>resnet18</th>
+      <th>resnet34</th>
+      <th>resnet50</th>
+      <th>resnext50_32x4d</th>
+      <th>se-resnet18</th>
+      <th>se-resnet34</th>
+      <th>se-resnet50</th>
+      <th>se-resnext50_32x4d</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td align="center">R@1</td>
-      <td align="center">93.75%</td>
-      <td align="center">69.92%</td>
-      <td align="center">96.26%</td>
-      <td align="center">78.36%</td>
       <td align="center">/</td>
       <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@2</td>
-      <td align="center">96.53%</td>
-      <td align="center">79.64%</td>
-      <td align="center">97.88%</td>
-      <td align="center">85.89%</td>
       <td align="center">/</td>
       <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@4</td>
-      <td align="center">97.80%</td>
-      <td align="center">86.61%</td>
-      <td align="center">98.72%</td>
-      <td align="center">91.09%</td>
       <td align="center">/</td>
       <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@8</td>
-      <td align="center">98.66%</td>
-      <td align="center">91.46%</td>
-      <td align="center">99.30%</td>
-      <td align="center">94.21%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@10</td>
-      <td align="center">98.82%</td>
-      <td align="center">92.76%</td>
-      <td align="center">99.39%</td>
-      <td align="center">95.14%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@20</td>
-      <td align="center">99.24%</td>
-      <td align="center">95.61%</td>
-      <td align="center">99.53%</td>
-      <td align="center">97.01%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@30</td>
-      <td align="center">99.50%</td>
-      <td align="center">96.88%</td>
-      <td align="center">99.70%</td>
-      <td align="center">97.82%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@40</td>
-      <td align="center">99.58%</td>
-      <td align="center">97.64%</td>
-      <td align="center">99.74%</td>
-      <td align="center">98.13%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@50</td>
-      <td align="center">99.63%</td>
-      <td align="center">98.06%</td>
-      <td align="center">99.80%</td>
-      <td align="center">98.41%</td>
       <td align="center">/</td>
       <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@100</td>
-      <td align="center">99.84%</td>
-      <td align="center">99.04%</td>
-      <td align="center">99.88%</td>
-      <td align="center">99.09%</td>
       <td align="center">/</td>
       <td align="center">/</td>
-    </tr>
-    <tr>
-      <td align="center">R@1000</td>
-      <td align="center">100.00%</td>
-      <td align="center">99.98%</td>
-      <td align="center">100.00%</td>
-      <td align="center">99.97%</td>
+      <td align="center">/</td>
+      <td align="center">/</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
