@@ -77,9 +77,9 @@ Here is the model parameter details:
       <td align="center">1,118,974,592</td>
       <td align="center">1,094,093,696</td>
       <td align="center">529,561,984</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">1,011,276,416</td>
+      <td align="center">1,122,120,320</td>
+      <td align="center">1,097,239,424</td>
     </tr>
     <tr>
       <td align="center">CUB200</td>
@@ -88,9 +88,9 @@ Here is the model parameter details:
       <td align="center">1,118,974,592</td>
       <td align="center">1,094,093,696</td>
       <td align="center">529,561,984</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">1,011,276,416</td>
+      <td align="center">1,122,120,320</td>
+      <td align="center">1,097,239,424</td>
     </tr>
     <tr>
       <td align="center">SOP</td>
