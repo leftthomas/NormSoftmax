@@ -137,7 +137,7 @@ Here is the results of uncropped `CARS196` dataset:
     <tr>
       <td align="center">R@1</td>
       <td align="center">93.16%</td>
-      <td align="center">/</td>
+      <td align="center">93.65%</td>
       <td align="center">93.75%</td>
       <td align="center">/</td>
       <td align="center">93.28%</td>
@@ -148,7 +148,7 @@ Here is the results of uncropped `CARS196` dataset:
     <tr>
       <td align="center">R@2</td>
       <td align="center">96.56%</td>
-      <td align="center">/</td>
+      <td align="center">96.26%</td>
       <td align="center">96.45%</td>
       <td align="center">/</td>
       <td align="center">96.32%</td>
@@ -159,7 +159,7 @@ Here is the results of uncropped `CARS196` dataset:
     <tr>
       <td align="center">R@4</td>
       <td align="center">98.28%</td>
-      <td align="center">/</td>
+      <td align="center">97.80%</td>
       <td align="center">97.81%</td>
       <td align="center">/</td>
       <td align="center">98.07%</td>
@@ -170,7 +170,7 @@ Here is the results of uncropped `CARS196` dataset:
     <tr>
       <td align="center">R@8</td>
       <td align="center">99.00%</td>
-      <td align="center">/</td>
+      <td align="center">98.78%</td>
       <td align="center">98.77%</td>
       <td align="center">/</td>
       <td align="center">98.97%</td>
@@ -201,7 +201,7 @@ Here is the results of cropped `CARS196` dataset:
     <tr>
       <td align="center">R@1</td>
       <td align="center">96.36%</td>
-      <td align="center">/</td>
+      <td align="center">96.51%</td>
       <td align="center">96.40%</td>
       <td align="center">/</td>
       <td align="center">96.69%</td>
@@ -212,7 +212,7 @@ Here is the results of cropped `CARS196` dataset:
     <tr>
       <td align="center">R@2</td>
       <td align="center">98.13%</td>
-      <td align="center">/</td>
+      <td align="center">97.95%</td>
       <td align="center">97.96%</td>
       <td align="center">/</td>
       <td align="center">98.24%</td>
@@ -223,7 +223,7 @@ Here is the results of cropped `CARS196` dataset:
     <tr>
       <td align="center">R@4</td>
       <td align="center">98.91%</td>
-      <td align="center">/</td>
+      <td align="center">98.82%</td>
       <td align="center">98.82%</td>
       <td align="center">/</td>
       <td align="center">98.99%</td>
@@ -234,7 +234,7 @@ Here is the results of cropped `CARS196` dataset:
     <tr>
       <td align="center">R@8</td>
       <td align="center">99.40%</td>
-      <td align="center">/</td>
+      <td align="center">99.39%</td>
       <td align="center">99.23%</td>
       <td align="center">/</td>
       <td align="center">99.36%</td>
@@ -267,7 +267,7 @@ Here is the results of uncropped `CUB200` dataset:
       <td align="center">79.05%</td>
       <td align="center">71.15%</td>
       <td align="center">72.97%</td>
-      <td align="center">/</td>
+      <td align="center">76.37%</td>
       <td align="center">79.05%</td>
       <td align="center">71.83%</td>
       <td align="center">71.49%</td>
@@ -278,7 +278,7 @@ Here is the results of uncropped `CUB200` dataset:
       <td align="center">86.51%</td>
       <td align="center">80.91%</td>
       <td align="center">81.70%</td>
-      <td align="center">/</td>
+      <td align="center">84.05%</td>
       <td align="center">86.75%</td>
       <td align="center">81.01%</td>
       <td align="center">80.81%</td>
@@ -289,7 +289,7 @@ Here is the results of uncropped `CUB200` dataset:
       <td align="center">91.37%</td>
       <td align="center">87.27%</td>
       <td align="center">88.13%</td>
-      <td align="center">/</td>
+      <td align="center">89.70%</td>
       <td align="center">91.63%</td>
       <td align="center">87.32%</td>
       <td align="center">87.14%</td>
@@ -300,7 +300,7 @@ Here is the results of uncropped `CUB200` dataset:
       <td align="center">94.85%</td>
       <td align="center">92.18%</td>
       <td align="center">92.64%</td>
-      <td align="center">/</td>
+      <td align="center">93.40%</td>
       <td align="center">95.26%</td>
       <td align="center">91.69%</td>
       <td align="center">91.95%</td>
@@ -331,7 +331,7 @@ Here is the results of cropped `CUB200` dataset:
       <td align="center">87.63%</td>
       <td align="center">84.50%</td>
       <td align="center">84.25%</td>
-      <td align="center">/</td>
+      <td align="center">84.37%</td>
       <td align="center">87.09%</td>
       <td align="center">85.04%</td>
       <td align="center">84.54%</td>
@@ -342,7 +342,7 @@ Here is the results of cropped `CUB200` dataset:
       <td align="center">92.30%</td>
       <td align="center">90.29%</td>
       <td align="center">89.82%</td>
-      <td align="center">/</td>
+      <td align="center">89.97%</td>
       <td align="center">92.10%</td>
       <td align="center">90.33%</td>
       <td align="center">90.01%</td>
@@ -353,7 +353,7 @@ Here is the results of cropped `CUB200` dataset:
       <td align="center">95.53%</td>
       <td align="center">93.53%</td>
       <td align="center">93.60%</td>
-      <td align="center">/</td>
+      <td align="center">93.72%</td>
       <td align="center">94.89%</td>
       <td align="center">93.79%</td>
       <td align="center">93.38%</td>
@@ -364,7 +364,7 @@ Here is the results of cropped `CUB200` dataset:
       <td align="center">97.30%</td>
       <td align="center">95.93%</td>
       <td align="center">95.98%</td>
-      <td align="center">/</td>
+      <td align="center">96.03%</td>
       <td align="center">97.10%</td>
       <td align="center">96.27%</td>
       <td align="center">95.86%</td>
