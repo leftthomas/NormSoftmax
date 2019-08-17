@@ -19,15 +19,15 @@ You should download these datasets by yourself, and extract them into `data` dir
 ## Usage
 ### Train Model
 ```
-python train.py --data_name cub --crop_type cropped --model_type resnet34 --num_epochs 30
+python train.py --data_name cub --crop_type cropped --model_type resnet34 --num_epochs 20
 optional arguments:
 --data_name                   dataset name [default value is 'car'](choices=['car', 'cub', 'sop', 'isc'])
 --crop_type                   crop data or not, it only works for car or cub dataset [default value is 'uncropped'](choices=['uncropped', 'cropped'])
---recalls                     selected recall [default value is '1,2,4,8,10,20,30,40,50,100,1000']
+--recalls                     selected recall [default value is '1,2,4,8']
 --model_type                  backbone type [default value is 'resnet18'](choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'])
 --with_se                     use se block or not [default value is 'yes'](choices=['yes', 'no'])
---batch_size                  train batch size [default value is 8]
---num_epochs                  train epochs number [default value is 20]
+--batch_size                  train batch size [default value is 12]
+--num_epochs                  train epochs number [default value is 10]
 --ensemble_size               ensemble model size [default value is 48]
 --meta_class_size             meta class size [default value is 12]
 --gpu_ids                     selected gpu [default value is '0,1']
@@ -43,7 +43,7 @@ optional arguments:
 ```
 
 ## Benchmarks
-Adam optimizer is used with learning rate scheduling. The models are trained with batch size `8`, `20` epochs on two 
+Adam optimizer is used with learning rate scheduling. The models are trained with batch size `12`, `10` epochs on two 
 NVIDIA Tesla V100 (32G) GPUs.
 
 The images are preprocessed with resize (256, 256), random horizontal flip and normalize. 

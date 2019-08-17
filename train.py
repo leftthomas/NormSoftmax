@@ -2,7 +2,6 @@ import argparse
 
 import pandas as pd
 import torch
-import torch.nn.functional as F
 from torch.nn import CrossEntropyLoss
 from torch.optim import Adam
 from torch.optim.lr_scheduler import MultiStepLR
@@ -11,6 +10,8 @@ from tqdm import tqdm
 
 from model import Model
 from utils import ImageReader, recall
+
+torch.backends.cudnn.benchmark = True
 
 
 def train(net, optim):
@@ -38,14 +39,12 @@ def eval(net, recalls):
         test_features = []
         for inputs, labels in test_data_loader:
             out = net(inputs.to(device_ids[0]))
-            out = F.normalize(out, dim=-1)
             test_features.append(out.cpu())
         test_features = torch.cat(test_features, dim=0)
         if DATA_NAME == 'isc':
             gallery_features = []
             for inputs, labels in gallery_data_loader:
                 out = net(inputs.to(device_ids[0]))
-                out = F.normalize(out, dim=-1)
                 gallery_features.append(out.cpu())
             gallery_features = torch.cat(gallery_features, dim=0)
 
@@ -81,12 +80,12 @@ if __name__ == '__main__':
                         help='dataset name')
     parser.add_argument('--crop_type', default='uncropped', type=str, choices=['uncropped', 'cropped'],
                         help='crop data or not, it only works for car or cub dataset')
-    parser.add_argument('--recalls', default='1,2,4,8,10,20,30,40,50,100,1000', type=str, help='selected recall')
+    parser.add_argument('--recalls', default='1,2,4,8', type=str, help='selected recall')
     parser.add_argument('--model_type', default='resnet18', type=str,
                         choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'], help='backbone type')
     parser.add_argument('--with_se', default='yes', type=str, choices=['yes', 'no'], help='use se block or not')
-    parser.add_argument('--batch_size', default=8, type=int, help='train batch size')
-    parser.add_argument('--num_epochs', default=20, type=int, help='train epoch number')
+    parser.add_argument('--batch_size', default=12, type=int, help='train batch size')
+    parser.add_argument('--num_epochs', default=10, type=int, help='train epoch number')
     parser.add_argument('--ensemble_size', default=48, type=int, help='ensemble model size')
     parser.add_argument('--meta_class_size', default=12, type=int, help='meta class size')
     parser.add_argument('--gpu_ids', default='0,1', type=str, help='selected gpu')

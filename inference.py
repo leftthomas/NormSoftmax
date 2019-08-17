@@ -1,5 +1,6 @@
 import argparse
 import os
+import shutil
 
 import torch
 from PIL import Image, ImageDraw
@@ -39,8 +40,9 @@ if __name__ == '__main__':
     idx = sim_matrix.argsort(dim=-1, descending=True)
 
     result_path = 'results/{}'.format(QUERY_IMG_NAME.split('/')[-1].split('.')[0])
-    if not os.path.exists(result_path):
-        os.mkdir(result_path)
+    if os.path.exists(result_path):
+        shutil.rmtree(result_path)
+    os.mkdir(result_path)
     query_image.save('{}/query_img.jpg'.format(result_path))
     for num, index in enumerate(idx[:RETRIEVAL_NUM]):
         retrieval_image = Image.open(gallery_images[index.item()]).convert('RGB') \
@@ -53,5 +55,4 @@ if __name__ == '__main__':
             draw.rectangle((0, 0, 255, 255), outline='green', width=5)
         else:
             draw.rectangle((0, 0, 255, 255), outline='red', width=5)
-        draw.text((10, 10), '%.4f' % retrieval_prob, fill=(255, 0, 0))
-        retrieval_image.save('{}/retrieval_img_{}.jpg'.format(result_path, num + 1))
+        retrieval_image.save('{}/retrieval_img_{}_{}.jpg'.format(result_path, num + 1, '%.4f' % retrieval_prob))

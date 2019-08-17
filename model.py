@@ -81,4 +81,5 @@ class Model(nn.Module):
             classes = self.classifiers[i](global_feature)
             out.append(classes)
         out = torch.stack(out, dim=1)
+        out = F.normalize(out, dim=-1)
         return out
