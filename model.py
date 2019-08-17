@@ -49,22 +49,19 @@ class Model(nn.Module):
             for name, module in basic_model.named_children():
                 if name == 'layer2':
                     if with_se:
-                        self.layer2.append(nn.Sequential(module, SEBlock(128 * expansion, reduction=8)))
+                        self.layer2.append(nn.Sequential(module, SEBlock(128 * expansion, 8)).cuda(device_ids[0]))
                     else:
-                        self.layer2.append(nn.Sequential(module))
+                        self.layer2.append(nn.Sequential(module).cuda(device_ids[0]))
                 if name == 'layer3':
-                    self.layer3.append(module)
+                    self.layer3.append(module.cuda(device_ids[0 if i < ensemble_size / 2 else 1]))
                 if name == 'layer4':
-                    self.layer4.append(module)
+                    self.layer4.append(module.cuda(device_ids[0 if i < ensemble_size / 2 else 1]))
                 else:
                     continue
-        self.layer2 = nn.ModuleList(self.layer2).cuda(device_ids[0])
-        self.layer3 = nn.ModuleList(self.layer3).cuda(device_ids[1])
-        self.layer4 = nn.ModuleList(self.layer4).cuda(device_ids[1])
 
         # individual classifiers
-        self.classifiers = nn.ModuleList([nn.Linear(512 * expansion, meta_class_size) for _ in
-                                          range(ensemble_size)]).cuda(device_ids[0])
+        self.classifiers = [nn.Linear(512 * expansion, meta_class_size).cuda(device_ids[0])
+                            for _ in range(ensemble_size)]
 
     def forward(self, x):
         batch_size = x.size(0)
@@ -74,7 +71,8 @@ class Model(nn.Module):
         out = []
         for i in range(self.ensemble_size):
             layer2_feature = self.layer2[i](branch_weight[i] * common_feature)
-            layer3_feature = self.layer3[i](layer2_feature.cuda(self.device_ids[1]))
+            layer3_feature = self.layer3[i](
+                layer2_feature.cuda(self.device_ids[0 if i < self.ensemble_size / 2 else 1]))
             layer4_feature = self.layer4[i](layer3_feature)
             global_feature = F.adaptive_avg_pool2d(layer4_feature.cuda(self.device_ids[0]), output_size=(1, 1)).view(
                 batch_size, -1)
