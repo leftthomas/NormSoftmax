@@ -59,9 +59,13 @@ class Model(nn.Module):
                 else:
                     continue
 
+        self.layer2 = nn.ModuleList(self.layer2)
+        self.layer3 = nn.ModuleList(self.layer3)
+        self.layer4 = nn.ModuleList(self.layer4)
+
         # individual classifiers
-        self.classifiers = [nn.Linear(512 * expansion, meta_class_size).cuda(device_ids[1])
-                            for _ in range(ensemble_size)]
+        self.classifiers = nn.ModuleList([nn.Linear(512 * expansion, meta_class_size).cuda(device_ids[1])
+                                          for _ in range(ensemble_size)])
 
     def forward(self, x):
         batch_size = x.size(0)
@@ -79,5 +83,4 @@ class Model(nn.Module):
             classes = self.classifiers[i](global_feature)
             out.append(classes)
         out = torch.stack(out, dim=1)
-        out = F.normalize(out, dim=-1)
         return out
