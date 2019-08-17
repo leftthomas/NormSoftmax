@@ -20,7 +20,7 @@ def train(net, optim):
     for inputs, labels in train_progress:
         optim.zero_grad()
         out = net(inputs.to(device_ids[0]))
-        loss = cel_criterion(out.permute(0, 2, 1).contiguous(), labels.to(device_ids[0]))
+        loss = cel_criterion(out.permute(0, 2, 1).contiguous(), labels.to(device_ids[1]))
         loss.backward()
         optim.step()
         pred = torch.argmax(out, dim=-1)

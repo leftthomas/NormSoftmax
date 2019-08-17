@@ -53,14 +53,14 @@ class Model(nn.Module):
                     else:
                         self.layer2.append(nn.Sequential(module).cuda(device_ids[0]))
                 if name == 'layer3':
-                    self.layer3.append(module.cuda(device_ids[0 if i < ensemble_size / 2 else 1]))
+                    self.layer3.append(module.cuda(device_ids[0 if i < ensemble_size / 8 else 1]))
                 if name == 'layer4':
-                    self.layer4.append(module.cuda(device_ids[0 if i < ensemble_size / 2 else 1]))
+                    self.layer4.append(module.cuda(device_ids[0 if i < ensemble_size / 8 else 1]))
                 else:
                     continue
 
         # individual classifiers
-        self.classifiers = [nn.Linear(512 * expansion, meta_class_size).cuda(device_ids[0])
+        self.classifiers = [nn.Linear(512 * expansion, meta_class_size).cuda(device_ids[1])
                             for _ in range(ensemble_size)]
 
     def forward(self, x):
@@ -72,9 +72,9 @@ class Model(nn.Module):
         for i in range(self.ensemble_size):
             layer2_feature = self.layer2[i](branch_weight[i] * common_feature)
             layer3_feature = self.layer3[i](
-                layer2_feature.cuda(self.device_ids[0 if i < self.ensemble_size / 2 else 1]))
+                layer2_feature.cuda(self.device_ids[0 if i < self.ensemble_size / 8 else 1]))
             layer4_feature = self.layer4[i](layer3_feature)
-            global_feature = F.adaptive_avg_pool2d(layer4_feature.cuda(self.device_ids[0]), output_size=(1, 1)).view(
+            global_feature = F.adaptive_avg_pool2d(layer4_feature.cuda(self.device_ids[1]), output_size=(1, 1)).view(
                 batch_size, -1)
             classes = self.classifiers[i](global_feature)
             out.append(classes)
