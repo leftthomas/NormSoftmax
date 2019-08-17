@@ -94,25 +94,25 @@ Here is the model parameter details:
     </tr>
     <tr>
       <td align="center">SOP</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">541,381,888</td>
+      <td align="center">1,023,096,320</td>
+      <td align="center">1,166,970,368</td>
+      <td align="center">1,142,089,472</td>
+      <td align="center">541,578,496</td>
+      <td align="center">1,023,292,928</td>
+      <td align="center">1,170,116,096</td>
+      <td align="center">1,145,235,200</td>
     </tr>
     <tr>
       <td align="center">In-shop</td>
       <td align="center">533,797,696</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">1,015,512,128</td>
+      <td align="center">1,136,677,952</td>
+      <td align="center">1,111,797,056</td>
+      <td align="center">533,994,304</td>
+      <td align="center">1,015,708,736</td>
+      <td align="center">1,139,823,680</td>
+      <td align="center">1,114,942,784</td>
     </tr>
   </tbody>
 </table>

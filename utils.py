@@ -85,7 +85,13 @@ def recall(feature_vectors, feature_labels, rank, gallery_vectors=None, gallery_
         gallery_vectors = feature_vectors.permute(0, 2, 1).contiguous()
     else:
         gallery_vectors = gallery_vectors.permute(1, 2, 0).contiguous()
-    sim_matrix = feature_vectors.bmm(gallery_vectors)
+
+    # avoid OOM error
+    sim_matrix = []
+    for feature_vector in torch.chunk(feature_vectors, chunks=2, dim=1):
+        sim_matrix.append(feature_vector.bmm(gallery_vectors))
+    sim_matrix = torch.cat(sim_matrix, dim=1)
+
     sim_matrix = torch.mean(sim_matrix, dim=0)
     if gallery_labels is None:
         sim_matrix[torch.eye(num_features).bool()] = -1
