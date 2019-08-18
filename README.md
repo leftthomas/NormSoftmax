@@ -26,7 +26,7 @@ optional arguments:
 --recalls                     selected recall [default value is '1,2,4,8']
 --model_type                  backbone type [default value is 'resnet18'](choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'])
 --with_se                     use se block or not [default value is 'yes'](choices=['yes', 'no'])
---batch_size                  train batch size [default value is 12]
+--batch_size                  train batch size [default value is 10]
 --num_epochs                  train epochs number [default value is 10]
 --ensemble_size               ensemble model size [default value is 48]
 --meta_class_size             meta class size [default value is 12]
@@ -43,14 +43,14 @@ optional arguments:
 ```
 
 ## Benchmarks
-Adam optimizer is used with learning rate scheduling. The models are trained with batch size `12`, `10` epochs on two 
+Adam optimizer is used with learning rate scheduling. The models are trained with batch size `10`, `10` epochs on two 
 NVIDIA Tesla V100 (32G) GPUs.
 
 The images are preprocessed with resize (256, 256), random horizontal flip and normalize. 
 
 For `CARS196` and `CUB200` datasets, ensemble size `48` and meta class size `12` are used. 
 
-For `SOP` dataset, ensemble size `48` and meta class size `500` is used.
+For `SOP` dataset, ensemble size `48` and meta class size `256` is used.
 
 For `In-shop` dataset, ensemble size `48` and meta class size `192` is used.
 
@@ -94,14 +94,14 @@ Here is the model parameter details:
     </tr>
     <tr>
       <td align="center">SOP</td>
-      <td align="center">541,381,888</td>
-      <td align="center">1,023,096,320</td>
-      <td align="center">1,166,970,368</td>
-      <td align="center">1,142,089,472</td>
-      <td align="center">541,578,496</td>
-      <td align="center">1,023,292,928</td>
-      <td align="center">1,170,116,096</td>
-      <td align="center">1,145,235,200</td>
+      <td align="center">535,373,632</td>
+      <td align="center">1,017,088,064</td>
+      <td align="center">1,142,972,480</td>
+      <td align="center">1,118,091,584</td>
+      <td align="center">535,570,240</td>
+      <td align="center">1,017,284,672</td>
+      <td align="center">1,146,118,208</td>
+      <td align="center">1,121,237,312</td>
     </tr>
     <tr>
       <td align="center">In-shop</td>
@@ -139,7 +139,7 @@ Here is the results of uncropped `CARS196` dataset:
       <td align="center">93.16%</td>
       <td align="center">93.65%</td>
       <td align="center">93.75%</td>
-      <td align="center">/</td>
+      <td align="center">94.51%</td>
       <td align="center">93.28%</td>
       <td align="center">93.64%</td>
       <td align="center">93.57%</td>
@@ -150,7 +150,7 @@ Here is the results of uncropped `CARS196` dataset:
       <td align="center">96.56%</td>
       <td align="center">96.26%</td>
       <td align="center">96.45%</td>
-      <td align="center">/</td>
+      <td align="center">96.93%</td>
       <td align="center">96.32%</td>
       <td align="center">96.40%</td>
       <td align="center">96.14%</td>
@@ -161,7 +161,7 @@ Here is the results of uncropped `CARS196` dataset:
       <td align="center">98.28%</td>
       <td align="center">97.80%</td>
       <td align="center">97.81%</td>
-      <td align="center">/</td>
+      <td align="center">98.02%</td>
       <td align="center">98.07%</td>
       <td align="center">98.06%</td>
       <td align="center">97.69%</td>
@@ -172,7 +172,7 @@ Here is the results of uncropped `CARS196` dataset:
       <td align="center">99.00%</td>
       <td align="center">98.78%</td>
       <td align="center">98.77%</td>
-      <td align="center">/</td>
+      <td align="center">98.76%</td>
       <td align="center">98.97%</td>
       <td align="center">98.91%</td>
       <td align="center">98.76%</td>
@@ -203,7 +203,7 @@ Here is the results of cropped `CARS196` dataset:
       <td align="center">96.36%</td>
       <td align="center">96.51%</td>
       <td align="center">96.40%</td>
-      <td align="center">/</td>
+      <td align="center">96.67%</td>
       <td align="center">96.69%</td>
       <td align="center">96.46%</td>
       <td align="center">96.37%</td>
@@ -214,7 +214,7 @@ Here is the results of cropped `CARS196` dataset:
       <td align="center">98.13%</td>
       <td align="center">97.95%</td>
       <td align="center">97.96%</td>
-      <td align="center">/</td>
+      <td align="center">98.20%</td>
       <td align="center">98.24%</td>
       <td align="center">98.01%</td>
       <td align="center">97.97%</td>
@@ -225,7 +225,7 @@ Here is the results of cropped `CARS196` dataset:
       <td align="center">98.91%</td>
       <td align="center">98.82%</td>
       <td align="center">98.82%</td>
-      <td align="center">/</td>
+      <td align="center">98.79%</td>
       <td align="center">98.99%</td>
       <td align="center">98.89%</td>
       <td align="center">98.72%</td>
@@ -236,7 +236,7 @@ Here is the results of cropped `CARS196` dataset:
       <td align="center">99.40%</td>
       <td align="center">99.39%</td>
       <td align="center">99.23%</td>
-      <td align="center">/</td>
+      <td align="center">99.27%</td>
       <td align="center">99.36%</td>
       <td align="center">99.25%</td>
       <td align="center">99.26%</td>
