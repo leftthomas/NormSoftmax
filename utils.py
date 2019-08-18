@@ -89,10 +89,9 @@ def recall(feature_vectors, feature_labels, rank, gallery_vectors=None, gallery_
     # avoid OOM error
     sim_matrix = []
     for feature_vector in torch.chunk(feature_vectors, chunks=16, dim=1):
-        sim_matrix.append(feature_vector.bmm(gallery_vectors))
-    sim_matrix = torch.cat(sim_matrix, dim=1)
+        sim_matrix.append(torch.mean(feature_vector.bmm(gallery_vectors), dim=0))
+    sim_matrix = torch.cat(sim_matrix, dim=0)
 
-    sim_matrix = torch.mean(sim_matrix, dim=0)
     if gallery_labels is None:
         sim_matrix[torch.eye(num_features).bool()] = -1
         gallery_labels = feature_labels
