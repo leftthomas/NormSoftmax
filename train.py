@@ -12,8 +12,6 @@ from tqdm import tqdm
 from model import Model
 from utils import ImageReader, recall
 
-torch.backends.cudnn.benchmark = True
-
 
 def train(net, optim):
     net.train()
