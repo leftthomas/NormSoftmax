@@ -458,66 +458,66 @@ Here is the results of `In-shop` dataset:
       <td align="center">R@1</td>
       <td align="center">75.15%</td>
       <td align="center">82.25%</td>
-      <td align="center">/</td>
+      <td align="center">70.77%</td>
       <td align="center">/</td>
       <td align="center">75.55%</td>
       <td align="center">82.44%</td>
-      <td align="center">/</td>
+      <td align="center">64.96%</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@10</td>
       <td align="center">92.40%</td>
       <td align="center">94.81%</td>
-      <td align="center">/</td>
+      <td align="center">89.63%</td>
       <td align="center">/</td>
       <td align="center">92.29%</td>
       <td align="center">94.79%</td>
-      <td align="center">/</td>
+      <td align="center">86.89%</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@20</td>
       <td align="center">94.64%</td>
       <td align="center">96.48%</td>
-      <td align="center">/</td>
+      <td align="center">92.83%</td>
       <td align="center">/</td>
       <td align="center">94.57%</td>
       <td align="center">96.45%</td>
-      <td align="center">/</td>
+      <td align="center">90.53%</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@30</td>
       <td align="center">95.72%</td>
       <td align="center">97.21%</td>
-      <td align="center">/</td>
+      <td align="center">94.20%</td>
       <td align="center">/</td>
       <td align="center">95.62%</td>
       <td align="center">97.17%</td>
-      <td align="center">/</td>
+      <td align="center">92.33%</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@40</td>
       <td align="center">96.38%</td>
       <td align="center">97.66%</td>
-      <td align="center">/</td>
+      <td align="center">95.06%</td>
       <td align="center">/</td>
       <td align="center">96.27%</td>
       <td align="center">97.71%</td>
-      <td align="center">/</td>
+      <td align="center">93.44%</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@50</td>
       <td align="center">96.83%</td>
       <td align="center">98.00%</td>
-      <td align="center">/</td>
+      <td align="center">95.63%</td>
       <td align="center">/</td>
       <td align="center">96.81%</td>
       <td align="center">97.97%</td>
-      <td align="center">/</td>
+      <td align="center">94.19%</td>
       <td align="center">/</td>
     </tr>
   </tbody>
