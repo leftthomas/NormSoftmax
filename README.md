@@ -27,7 +27,7 @@ optional arguments:
 --model_type                  backbone type [default value is 'resnet18'](choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'])
 --with_se                     use se block or not [default value is 'yes'](choices=['yes', 'no'])
 --batch_size                  train batch size [default value is 10]
---num_epochs                  train epochs number [default value is 10]
+--num_epochs                  train epochs number [default value is 20]
 --ensemble_size               ensemble model size [default value is 48]
 --meta_class_size             meta class size [default value is 12]
 --gpu_ids                     selected gpu [default value is '0,1']
@@ -43,7 +43,7 @@ optional arguments:
 ```
 
 ## Benchmarks
-Adam optimizer is used with learning rate scheduling. The models are trained with batch size `10`, `10` epochs on two 
+Adam optimizer is used with learning rate scheduling. The models are trained with batch size `10`, `20` epochs on two 
 NVIDIA Tesla V100 (32G) GPUs.
 
 The images are preprocessed with resize (256, 256), random horizontal flip and normalize. 
@@ -392,45 +392,45 @@ Here is the results of `SOP` dataset:
   <tbody>
     <tr>
       <td align="center">R@1</td>
+      <td align="center">90.69%</td>
+      <td align="center">90.86%</td>
       <td align="center">/</td>
       <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">90.18%</td>
+      <td align="center">90.70%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@10</td>
+      <td align="center">96.07%</td>
+      <td align="center">95.91%</td>
       <td align="center">/</td>
       <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">95.84%</td>
+      <td align="center">95.63%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@100</td>
+      <td align="center">98.11%</td>
+      <td align="center">98.01%</td>
       <td align="center">/</td>
       <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">98.06%</td>
+      <td align="center">97.88%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
     <tr>
       <td align="center">R@1000</td>
+      <td align="center">99.29%</td>
+      <td align="center">99.22%</td>
       <td align="center">/</td>
       <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">99.20%</td>
+      <td align="center">99.18%</td>
       <td align="center">/</td>
       <td align="center">/</td>
     </tr>
@@ -459,66 +459,66 @@ Here is the results of `In-shop` dataset:
       <td align="center">75.15%</td>
       <td align="center">82.25%</td>
       <td align="center">70.77%</td>
-      <td align="center">/</td>
+      <td align="center">70.77%</td>
       <td align="center">75.55%</td>
       <td align="center">82.44%</td>
       <td align="center">64.96%</td>
-      <td align="center">/</td>
+      <td align="center">87.00%</td>
     </tr>
     <tr>
       <td align="center">R@10</td>
       <td align="center">92.40%</td>
       <td align="center">94.81%</td>
       <td align="center">89.63%</td>
-      <td align="center">/</td>
+      <td align="center">89.63%</td>
       <td align="center">92.29%</td>
       <td align="center">94.79%</td>
       <td align="center">86.89%</td>
-      <td align="center">/</td>
+      <td align="center">96.51%</td>
     </tr>
     <tr>
       <td align="center">R@20</td>
       <td align="center">94.64%</td>
       <td align="center">96.48%</td>
       <td align="center">92.83%</td>
-      <td align="center">/</td>
+      <td align="center">92.83%</td>
       <td align="center">94.57%</td>
       <td align="center">96.45%</td>
       <td align="center">90.53%</td>
-      <td align="center">/</td>
+      <td align="center">97.65%</td>
     </tr>
     <tr>
       <td align="center">R@30</td>
       <td align="center">95.72%</td>
       <td align="center">97.21%</td>
       <td align="center">94.20%</td>
-      <td align="center">/</td>
+      <td align="center">94.20%</td>
       <td align="center">95.62%</td>
       <td align="center">97.17%</td>
       <td align="center">92.33%</td>
-      <td align="center">/</td>
+      <td align="center">98.11%</td>
     </tr>
     <tr>
       <td align="center">R@40</td>
       <td align="center">96.38%</td>
       <td align="center">97.66%</td>
       <td align="center">95.06%</td>
-      <td align="center">/</td>
+      <td align="center">95.06%</td>
       <td align="center">96.27%</td>
       <td align="center">97.71%</td>
       <td align="center">93.44%</td>
-      <td align="center">/</td>
+      <td align="center">98.49%</td>
     </tr>
     <tr>
       <td align="center">R@50</td>
       <td align="center">96.83%</td>
       <td align="center">98.00%</td>
       <td align="center">95.63%</td>
-      <td align="center">/</td>
+      <td align="center">95.63%</td>
       <td align="center">96.81%</td>
       <td align="center">97.97%</td>
       <td align="center">94.19%</td>
-      <td align="center">/</td>
+      <td align="center">98.68%</td>
     </tr>
   </tbody>
 </table>
