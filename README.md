@@ -19,7 +19,7 @@ You should download these datasets by yourself, and extract them into `data` dir
 ## Usage
 ### Train Model
 ```
-python train.py --data_name cub --crop_type cropped --model_type resnet34 --num_epochs 20
+python train.py --data_name cub --crop_type cropped --model_type resnet34 --num_epochs 50
 optional arguments:
 --data_name                   dataset name [default value is 'car'](choices=['car', 'cub', 'sop', 'isc'])
 --crop_type                   crop data or not, it only works for car or cub dataset [default value is 'uncropped'](choices=['uncropped', 'cropped'])
@@ -49,7 +49,7 @@ The images are preprocessed with resize (256, 256), random horizontal flip and n
 
 For `CARS196` and `CUB200` datasets, ensemble size `48` and meta class size `12` are used. 
 
-For `SOP` dataset, ensemble size `48` and meta class size `256` is used.
+For `SOP` dataset, ensemble size `48` and meta class size `500` is used.
 
 For `In-shop` dataset, ensemble size `48` and meta class size `192` is used.
 
@@ -62,10 +62,6 @@ Here is the model parameter details:
       <th>resnet34</th>
       <th>resnet50</th>
       <th>resnext50_32x4d</th>
-      <th>se-resnet18</th>
-      <th>se-resnet34</th>
-      <th>se-resnet50</th>
-      <th>se-resnext50_32x4d</th>
     </tr>
   </thead>
   <tbody>
@@ -75,10 +71,6 @@ Here is the model parameter details:
       <td align="center">1,011,079,808</td>
       <td align="center">1,118,974,592</td>
       <td align="center">1,094,093,696</td>
-      <td align="center">529,561,984</td>
-      <td align="center">1,011,276,416</td>
-      <td align="center">1,122,120,320</td>
-      <td align="center">1,097,239,424</td>
     </tr>
     <tr>
       <td align="center">CUB200</td>
@@ -86,21 +78,13 @@ Here is the model parameter details:
       <td align="center">1,011,079,808</td>
       <td align="center">1,118,974,592</td>
       <td align="center">1,094,093,696</td>
-      <td align="center">529,561,984</td>
-      <td align="center">1,011,276,416</td>
-      <td align="center">1,122,120,320</td>
-      <td align="center">1,097,239,424</td>
     </tr>
     <tr>
       <td align="center">SOP</td>
-      <td align="center">535,373,632</td>
-      <td align="center">1,017,088,064</td>
-      <td align="center">1,142,972,480</td>
-      <td align="center">1,118,091,584</td>
-      <td align="center">535,570,240</td>
-      <td align="center">1,017,284,672</td>
-      <td align="center">1,146,118,208</td>
-      <td align="center">1,121,237,312</td>
+      <td align="center">541,381,888</td>
+      <td align="center">1,023,096,320</td>
+      <td align="center">1,166,970,368</td>
+      <td align="center">1,142,089,472</td>
     </tr>
     <tr>
       <td align="center">In-shop</td>
@@ -108,10 +92,6 @@ Here is the model parameter details:
       <td align="center">1,015,512,128</td>
       <td align="center">1,136,677,952</td>
       <td align="center">1,111,797,056</td>
-      <td align="center">533,994,304</td>
-      <td align="center">1,015,708,736</td>
-      <td align="center">1,139,823,680</td>
-      <td align="center">1,114,942,784</td>
     </tr>
   </tbody>
 </table>
@@ -126,10 +106,6 @@ Here is the results of uncropped `CARS196` dataset:
       <th>resnet34</th>
       <th>resnet50</th>
       <th>resnext50_32x4d</th>
-      <th>se-resnet18</th>
-      <th>se-resnet34</th>
-      <th>se-resnet50</th>
-      <th>se-resnext50_32x4d</th>
     </tr>
   </thead>
   <tbody>
@@ -139,10 +115,6 @@ Here is the results of uncropped `CARS196` dataset:
       <td align="center">93.65%</td>
       <td align="center">93.75%</td>
       <td align="center">94.51%</td>
-      <td align="center">93.28%</td>
-      <td align="center">93.64%</td>
-      <td align="center">93.57%</td>
-      <td align="center">94.45%</td>
     </tr>
     <tr>
       <td align="center">R@2</td>
@@ -150,10 +122,6 @@ Here is the results of uncropped `CARS196` dataset:
       <td align="center">96.26%</td>
       <td align="center">96.45%</td>
       <td align="center">96.93%</td>
-      <td align="center">96.32%</td>
-      <td align="center">96.40%</td>
-      <td align="center">96.14%</td>
-      <td align="center">96.91%</td>
     </tr>
     <tr>
       <td align="center">R@4</td>
@@ -161,10 +129,6 @@ Here is the results of uncropped `CARS196` dataset:
       <td align="center">97.80%</td>
       <td align="center">97.81%</td>
       <td align="center">98.02%</td>
-      <td align="center">98.07%</td>
-      <td align="center">98.06%</td>
-      <td align="center">97.69%</td>
-      <td align="center">98.12%</td>
     </tr>
     <tr>
       <td align="center">R@8</td>
@@ -172,10 +136,6 @@ Here is the results of uncropped `CARS196` dataset:
       <td align="center">98.78%</td>
       <td align="center">98.77%</td>
       <td align="center">98.76%</td>
-      <td align="center">98.97%</td>
-      <td align="center">98.91%</td>
-      <td align="center">98.76%</td>
-      <td align="center">98.84%</td>
     </tr>
   </tbody>
 </table>
@@ -190,10 +150,6 @@ Here is the results of cropped `CARS196` dataset:
       <th>resnet34</th>
       <th>resnet50</th>
       <th>resnext50_32x4d</th>
-      <th>se-resnet18</th>
-      <th>se-resnet34</th>
-      <th>se-resnet50</th>
-      <th>se-resnext50_32x4d</th>
     </tr>
   </thead>
   <tbody>
@@ -203,10 +159,6 @@ Here is the results of cropped `CARS196` dataset:
       <td align="center">96.51%</td>
       <td align="center">96.40%</td>
       <td align="center">96.67%</td>
-      <td align="center">96.69%</td>
-      <td align="center">96.46%</td>
-      <td align="center">96.37%</td>
-      <td align="center">96.68%</td>
     </tr>
     <tr>
       <td align="center">R@2</td>
@@ -214,10 +166,7 @@ Here is the results of cropped `CARS196` dataset:
       <td align="center">97.95%</td>
       <td align="center">97.96%</td>
       <td align="center">98.20%</td>
-      <td align="center">98.24%</td>
-      <td align="center">98.01%</td>
-      <td align="center">97.97%</td>
-      <td align="center">98.13%</td>
+    </tr>
     </tr>
     <tr>
       <td align="center">R@4</td>
@@ -225,10 +174,6 @@ Here is the results of cropped `CARS196` dataset:
       <td align="center">98.82%</td>
       <td align="center">98.82%</td>
       <td align="center">98.79%</td>
-      <td align="center">98.99%</td>
-      <td align="center">98.89%</td>
-      <td align="center">98.72%</td>
-      <td align="center">98.86%</td>
     </tr>
     <tr>
       <td align="center">R@8</td>
@@ -236,11 +181,6 @@ Here is the results of cropped `CARS196` dataset:
       <td align="center">99.39%</td>
       <td align="center">99.23%</td>
       <td align="center">99.27%</td>
-      <td align="center">99.36%</td>
-      <td align="center">99.25%</td>
-      <td align="center">99.26%</td>
-      <td align="center">99.31</td>
-    </tr>
   </tbody>
 </table>
 
@@ -254,10 +194,6 @@ Here is the results of uncropped `CUB200` dataset:
       <th>resnet34</th>
       <th>resnet50</th>
       <th>resnext50_32x4d</th>
-      <th>se-resnet18</th>
-      <th>se-resnet34</th>
-      <th>se-resnet50</th>
-      <th>se-resnext50_32x4d</th>
     </tr>
   </thead>
   <tbody>
@@ -267,10 +203,6 @@ Here is the results of uncropped `CUB200` dataset:
       <td align="center">71.15%</td>
       <td align="center">72.97%</td>
       <td align="center">76.37%</td>
-      <td align="center">79.05%</td>
-      <td align="center">71.83%</td>
-      <td align="center">71.49%</td>
-      <td align="center">75.24%</td>
     </tr>
     <tr>
       <td align="center">R@2</td>
@@ -278,10 +210,6 @@ Here is the results of uncropped `CUB200` dataset:
       <td align="center">80.91%</td>
       <td align="center">81.70%</td>
       <td align="center">84.05%</td>
-      <td align="center">86.75%</td>
-      <td align="center">81.01%</td>
-      <td align="center">80.81%</td>
-      <td align="center">83.71%</td>
     </tr>
     <tr>
       <td align="center">R@4</td>
@@ -289,10 +217,6 @@ Here is the results of uncropped `CUB200` dataset:
       <td align="center">87.27%</td>
       <td align="center">88.13%</td>
       <td align="center">89.70%</td>
-      <td align="center">91.63%</td>
-      <td align="center">87.32%</td>
-      <td align="center">87.14%</td>
-      <td align="center">89.58%</td>
     </tr>
     <tr>
       <td align="center">R@8</td>
@@ -300,10 +224,6 @@ Here is the results of uncropped `CUB200` dataset:
       <td align="center">92.18%</td>
       <td align="center">92.64%</td>
       <td align="center">93.40%</td>
-      <td align="center">95.26%</td>
-      <td align="center">91.69%</td>
-      <td align="center">91.95%</td>
-      <td align="center">93.23%</td>
     </tr>
   </tbody>
 </table>
@@ -318,10 +238,6 @@ Here is the results of cropped `CUB200` dataset:
       <th>resnet34</th>
       <th>resnet50</th>
       <th>resnext50_32x4d</th>
-      <th>se-resnet18</th>
-      <th>se-resnet34</th>
-      <th>se-resnet50</th>
-      <th>se-resnext50_32x4d</th>
     </tr>
   </thead>
   <tbody>
@@ -331,10 +247,6 @@ Here is the results of cropped `CUB200` dataset:
       <td align="center">84.50%</td>
       <td align="center">84.25%</td>
       <td align="center">84.37%</td>
-      <td align="center">87.09%</td>
-      <td align="center">85.04%</td>
-      <td align="center">84.54%</td>
-      <td align="center">85.06%</td>
     </tr>
     <tr>
       <td align="center">R@2</td>
@@ -342,10 +254,6 @@ Here is the results of cropped `CUB200` dataset:
       <td align="center">90.29%</td>
       <td align="center">89.82%</td>
       <td align="center">89.97%</td>
-      <td align="center">92.10%</td>
-      <td align="center">90.33%</td>
-      <td align="center">90.01%</td>
-      <td align="center">90.77%</td>
     </tr>
     <tr>
       <td align="center">R@4</td>
@@ -353,10 +261,6 @@ Here is the results of cropped `CUB200` dataset:
       <td align="center">93.53%</td>
       <td align="center">93.60%</td>
       <td align="center">93.72%</td>
-      <td align="center">94.89%</td>
-      <td align="center">93.79%</td>
-      <td align="center">93.38%</td>
-      <td align="center">94.06%</td>
     </tr>
     <tr>
       <td align="center">R@8</td>
@@ -364,10 +268,6 @@ Here is the results of cropped `CUB200` dataset:
       <td align="center">95.93%</td>
       <td align="center">95.98%</td>
       <td align="center">96.03%</td>
-      <td align="center">97.10%</td>
-      <td align="center">96.27%</td>
-      <td align="center">95.86%</td>
-      <td align="center">96.39%</td>
     </tr>
   </tbody>
 </table>
@@ -382,10 +282,6 @@ Here is the results of `SOP` dataset:
       <th>resnet34</th>
       <th>resnet50</th>
       <th>resnext50_32x4d</th>
-      <th>se-resnet18</th>
-      <th>se-resnet34</th>
-      <th>se-resnet50</th>
-      <th>se-resnext50_32x4d</th>
     </tr>
   </thead>
   <tbody>
@@ -395,10 +291,6 @@ Here is the results of `SOP` dataset:
       <td align="center">90.86%</td>
       <td align="center">83.27%</td>
       <td align="center">85.82%</td>
-      <td align="center">90.18%</td>
-      <td align="center">90.70%</td>
-      <td align="center">81.84%</td>
-      <td align="center">84.97%</td>
     </tr>
     <tr>
       <td align="center">R@10</td>
@@ -406,10 +298,6 @@ Here is the results of `SOP` dataset:
       <td align="center">95.91%</td>
       <td align="center">89.00%</td>
       <td align="center">91.31%</td>
-      <td align="center">95.84%</td>
-      <td align="center">95.63%</td>
-      <td align="center">87.90%</td>
-      <td align="center">90.68%</td>
     </tr>
     <tr>
       <td align="center">R@100</td>
@@ -417,10 +305,6 @@ Here is the results of `SOP` dataset:
       <td align="center">98.01%</td>
       <td align="center">92.70%</td>
       <td align="center">94.59%</td>
-      <td align="center">98.06%</td>
-      <td align="center">97.88%</td>
-      <td align="center">91.84%</td>
-      <td align="center">94.02%</td>
     </tr>
     <tr>
       <td align="center">R@1000</td>
@@ -428,10 +312,6 @@ Here is the results of `SOP` dataset:
       <td align="center">99.22%</td>
       <td align="center">96.27%</td>
       <td align="center">97.21%</td>
-      <td align="center">99.20%</td>
-      <td align="center">99.18%</td>
-      <td align="center">95.72%</td>
-      <td align="center">96.92%</td>
     </tr>
   </tbody>
 </table>
@@ -446,10 +326,6 @@ Here is the results of `In-shop` dataset:
       <th>resnet34</th>
       <th>resnet50</th>
       <th>resnext50_32x4d</th>
-      <th>se-resnet18</th>
-      <th>se-resnet34</th>
-      <th>se-resnet50</th>
-      <th>se-resnext50_32x4d</th>
     </tr>
   </thead>
   <tbody>
@@ -459,10 +335,6 @@ Here is the results of `In-shop` dataset:
       <td align="center">82.25%</td>
       <td align="center">70.77%</td>
       <td align="center">70.77%</td>
-      <td align="center">75.55%</td>
-      <td align="center">82.44%</td>
-      <td align="center">64.96%</td>
-      <td align="center">87.00%</td>
     </tr>
     <tr>
       <td align="center">R@10</td>
@@ -470,10 +342,6 @@ Here is the results of `In-shop` dataset:
       <td align="center">94.81%</td>
       <td align="center">89.63%</td>
       <td align="center">89.63%</td>
-      <td align="center">92.29%</td>
-      <td align="center">94.79%</td>
-      <td align="center">86.89%</td>
-      <td align="center">96.51%</td>
     </tr>
     <tr>
       <td align="center">R@20</td>
@@ -481,10 +349,6 @@ Here is the results of `In-shop` dataset:
       <td align="center">96.48%</td>
       <td align="center">92.83%</td>
       <td align="center">92.83%</td>
-      <td align="center">94.57%</td>
-      <td align="center">96.45%</td>
-      <td align="center">90.53%</td>
-      <td align="center">97.65%</td>
     </tr>
     <tr>
       <td align="center">R@30</td>
@@ -492,10 +356,6 @@ Here is the results of `In-shop` dataset:
       <td align="center">97.21%</td>
       <td align="center">94.20%</td>
       <td align="center">94.20%</td>
-      <td align="center">95.62%</td>
-      <td align="center">97.17%</td>
-      <td align="center">92.33%</td>
-      <td align="center">98.11%</td>
     </tr>
     <tr>
       <td align="center">R@40</td>
@@ -503,10 +363,6 @@ Here is the results of `In-shop` dataset:
       <td align="center">97.66%</td>
       <td align="center">95.06%</td>
       <td align="center">95.06%</td>
-      <td align="center">96.27%</td>
-      <td align="center">97.71%</td>
-      <td align="center">93.44%</td>
-      <td align="center">98.49%</td>
     </tr>
     <tr>
       <td align="center">R@50</td>
@@ -514,10 +370,6 @@ Here is the results of `In-shop` dataset:
       <td align="center">98.00%</td>
       <td align="center">95.63%</td>
       <td align="center">95.63%</td>
-      <td align="center">96.81%</td>
-      <td align="center">97.97%</td>
-      <td align="center">94.19%</td>
-      <td align="center">98.68%</td>
     </tr>
   </tbody>
 </table>
