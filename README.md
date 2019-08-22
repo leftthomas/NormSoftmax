@@ -25,7 +25,6 @@ optional arguments:
 --crop_type                   crop data or not, it only works for car or cub dataset [default value is 'uncropped'](choices=['uncropped', 'cropped'])
 --recalls                     selected recall [default value is '1,2,4,8']
 --model_type                  backbone type [default value is 'resnet18'](choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'])
---with_se                     use se block or not [default value is 'yes'](choices=['yes', 'no'])
 --batch_size                  train batch size [default value is 10]
 --num_epochs                  train epochs number [default value is 20]
 --ensemble_size               ensemble model size [default value is 48]
@@ -394,45 +393,45 @@ Here is the results of `SOP` dataset:
       <td align="center">R@1</td>
       <td align="center">90.69%</td>
       <td align="center">90.86%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">83.27%</td>
+      <td align="center">85.82%</td>
       <td align="center">90.18%</td>
       <td align="center">90.70%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">81.84%</td>
+      <td align="center">84.97%</td>
     </tr>
     <tr>
       <td align="center">R@10</td>
       <td align="center">96.07%</td>
       <td align="center">95.91%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">89.00%</td>
+      <td align="center">91.31%</td>
       <td align="center">95.84%</td>
       <td align="center">95.63%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">87.90%</td>
+      <td align="center">90.68%</td>
     </tr>
     <tr>
       <td align="center">R@100</td>
       <td align="center">98.11%</td>
       <td align="center">98.01%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">92.70%</td>
+      <td align="center">94.59%</td>
       <td align="center">98.06%</td>
       <td align="center">97.88%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">91.84%</td>
+      <td align="center">94.02%</td>
     </tr>
     <tr>
       <td align="center">R@1000</td>
       <td align="center">99.29%</td>
       <td align="center">99.22%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">96.27%</td>
+      <td align="center">97.21%</td>
       <td align="center">99.20%</td>
       <td align="center">99.18%</td>
-      <td align="center">/</td>
-      <td align="center">/</td>
+      <td align="center">95.72%</td>
+      <td align="center">96.92%</td>
     </tr>
   </tbody>
 </table>

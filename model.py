@@ -4,25 +4,8 @@ import torch.nn.functional as F
 from torchvision.models.resnet import resnet18, resnet34, resnet50, resnext50_32x4d
 
 
-class SEBlock(nn.Module):
-    def __init__(self, channel, reduction=16):
-        super(SEBlock, self).__init__()
-        self.avg_pool = nn.AdaptiveAvgPool2d(1)
-        self.fc = nn.Sequential(
-            nn.Linear(channel, channel // reduction, bias=False),
-            nn.ReLU(inplace=True),
-            nn.Linear(channel // reduction, channel, bias=False),
-            nn.Sigmoid())
-
-    def forward(self, x):
-        b, c, _, _ = x.size()
-        y = self.avg_pool(x).view(b, c)
-        y = self.fc(y).view(b, c, 1, 1)
-        return x * y
-
-
 class Model(nn.Module):
-    def __init__(self, meta_class_size, ensemble_size, model_type, with_se, device_ids):
+    def __init__(self, meta_class_size, ensemble_size, model_type, device_ids):
         super(Model, self).__init__()
 
         # backbone
@@ -48,10 +31,7 @@ class Model(nn.Module):
             basic_model = backbone(pretrained=True)
             for name, module in basic_model.named_children():
                 if name == 'layer2':
-                    if with_se:
-                        self.layer2.append(nn.Sequential(module, SEBlock(128 * expansion, 8)).cuda(device_ids[0]))
-                    else:
-                        self.layer2.append(nn.Sequential(module).cuda(device_ids[0]))
+                    self.layer2.append(nn.Sequential(module).cuda(device_ids[0]))
                 if name == 'layer3':
                     self.layer3.append(module.cuda(device_ids[0 if i < ensemble_size / 6 else 1]))
                 if name == 'layer4':
