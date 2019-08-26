@@ -68,7 +68,8 @@ def eval(net, recalls):
         data_base['gallery_images'] = gallery_data_set.images if DATA_NAME == 'isc' else test_data_set.images
         data_base['gallery_labels'] = gallery_data_set.labels if DATA_NAME == 'isc' else test_data_set.labels
         data_base['gallery_features'] = gallery_features if DATA_NAME == 'isc' else test_features
-        torch.save(model.state_dict(), 'epochs/{}_{}_{}_model.pth'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE))
+        torch.save(model.state_dict(), 'epochs/{}_{}_{}_{}_{}_model.pth'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE,
+                                                                                ENSEMBLE_SIZE, META_CLASS_SIZE))
         torch.save(data_base, 'results/{}_{}_{}_{}_{}_data_base.pth'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE,
                                                                             ENSEMBLE_SIZE, META_CLASS_SIZE))
 
@@ -122,5 +123,5 @@ if __name__ == '__main__':
         eval(model, recall_ids)
         # save statistics
         data_frame = pd.DataFrame(data=results, index=range(1, epoch + 1))
-        data_frame.to_csv('statistics/{}_{}_{}_results.csv'.format(DATA_NAME, CROP_TYPE, MODEL_TYPE),
-                          index_label='epoch')
+        data_frame.to_csv('statistics/{}_{}_{}_{}_{}_results.csv'.
+                          format(DATA_NAME, CROP_TYPE, MODEL_TYPE, ENSEMBLE_SIZE, META_CLASS_SIZE), index_label='epoch')
