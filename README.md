@@ -111,31 +111,31 @@ Here is the results of uncropped `CARS196` dataset:
   <tbody>
     <tr>
       <td align="center">R@1</td>
-      <td align="center">93.16%</td>
-      <td align="center">93.65%</td>
-      <td align="center">93.75%</td>
-      <td align="center">94.51%</td>
+      <td align="center">94.47%</td>
+      <td align="center">94.23%</td>
+      <td align="center">94.32%</td>
+      <td align="center">95.01%</td>
     </tr>
     <tr>
       <td align="center">R@2</td>
-      <td align="center">96.56%</td>
-      <td align="center">96.26%</td>
-      <td align="center">96.45%</td>
-      <td align="center">96.93%</td>
+      <td align="center">97.21%</td>
+      <td align="center">96.75%</td>
+      <td align="center">96.94%</td>
+      <td align="center">97.26%</td>
     </tr>
     <tr>
       <td align="center">R@4</td>
-      <td align="center">98.28%</td>
-      <td align="center">97.80%</td>
-      <td align="center">97.81%</td>
-      <td align="center">98.02%</td>
+      <td align="center">98.60%</td>
+      <td align="center">98.20%</td>
+      <td align="center">98.30%</td>
+      <td align="center">98.20%</td>
     </tr>
     <tr>
       <td align="center">R@8</td>
-      <td align="center">99.00%</td>
-      <td align="center">98.78%</td>
-      <td align="center">98.77%</td>
-      <td align="center">98.76%</td>
+      <td align="center">99.37%</td>
+      <td align="center">98.94%</td>
+      <td align="center">98.97%</td>
+      <td align="center">98.94%</td>
     </tr>
   </tbody>
 </table>
@@ -155,32 +155,32 @@ Here is the results of cropped `CARS196` dataset:
   <tbody>
     <tr>
       <td align="center">R@1</td>
-      <td align="center">96.36%</td>
-      <td align="center">96.51%</td>
-      <td align="center">96.40%</td>
-      <td align="center">96.67%</td>
+      <td align="center">96.78%</td>
+      <td align="center">96.59%</td>
+      <td align="center">96.56%</td>
+      <td align="center">96.81%</td>
     </tr>
     <tr>
       <td align="center">R@2</td>
-      <td align="center">98.13%</td>
-      <td align="center">97.95%</td>
-      <td align="center">97.96%</td>
-      <td align="center">98.20%</td>
+      <td align="center">98.38%</td>
+      <td align="center">98.16%</td>
+      <td align="center">98.09%</td>
+      <td align="center">98.18%</td>
     </tr>
     </tr>
     <tr>
       <td align="center">R@4</td>
-      <td align="center">98.91%</td>
-      <td align="center">98.82%</td>
-      <td align="center">98.82%</td>
-      <td align="center">98.79%</td>
+      <td align="center">99.08%</td>
+      <td align="center">98.89%</td>
+      <td align="center">98.73%</td>
+      <td align="center">98.88%</td>
     </tr>
     <tr>
       <td align="center">R@8</td>
-      <td align="center">99.40%</td>
-      <td align="center">99.39%</td>
-      <td align="center">99.23%</td>
+      <td align="center">99.47%</td>
       <td align="center">99.27%</td>
+      <td align="center">99.26%</td>
+      <td align="center">99.41%</td>
   </tbody>
 </table>
 
@@ -199,31 +199,31 @@ Here is the results of uncropped `CUB200` dataset:
   <tbody>
     <tr>
       <td align="center">R@1</td>
-      <td align="center">79.05%</td>
-      <td align="center">71.15%</td>
-      <td align="center">72.97%</td>
-      <td align="center">76.37%</td>
+      <td align="center">81.99%</td>
+      <td align="center">73.68%</td>
+      <td align="center">75.25%</td>
+      <td align="center">78.39%</td>
     </tr>
     <tr>
       <td align="center">R@2</td>
-      <td align="center">86.51%</td>
-      <td align="center">80.91%</td>
-      <td align="center">81.70%</td>
-      <td align="center">84.05%</td>
+      <td align="center">88.49%</td>
+      <td align="center">81.55%</td>
+      <td align="center">83.52%</td>
+      <td align="center">85.35%</td>
     </tr>
     <tr>
       <td align="center">R@4</td>
-      <td align="center">91.37%</td>
-      <td align="center">87.27%</td>
-      <td align="center">88.13%</td>
-      <td align="center">89.70%</td>
+      <td align="center">92.52%</td>
+      <td align="center">87.67%</td>
+      <td align="center">89.26%</td>
+      <td align="center">90.11%</td>
     </tr>
     <tr>
       <td align="center">R@8</td>
-      <td align="center">94.85%</td>
-      <td align="center">92.18%</td>
-      <td align="center">92.64%</td>
-      <td align="center">93.40%</td>
+      <td align="center">95.59%</td>
+      <td align="center">92.02%</td>
+      <td align="center">93.21%</td>
+      <td align="center">93.75%</td>
     </tr>
   </tbody>
 </table>
@@ -243,31 +243,31 @@ Here is the results of cropped `CUB200` dataset:
   <tbody>
     <tr>
       <td align="center">R@1</td>
-      <td align="center">87.63%</td>
-      <td align="center">84.50%</td>
-      <td align="center">84.25%</td>
-      <td align="center">84.37%</td>
+      <td align="center">88.99%</td>
+      <td align="center">86.24%</td>
+      <td align="center">85.48%</td>
+      <td align="center">86.36%</td>
     </tr>
     <tr>
       <td align="center">R@2</td>
-      <td align="center">92.30%</td>
-      <td align="center">90.29%</td>
-      <td align="center">89.82%</td>
-      <td align="center">89.97%</td>
+      <td align="center">92.94%</td>
+      <td align="center">91.51%</td>
+      <td align="center">91.34%</td>
+      <td align="center">91.32%</td>
     </tr>
     <tr>
       <td align="center">R@4</td>
       <td align="center">95.53%</td>
-      <td align="center">93.53%</td>
-      <td align="center">93.60%</td>
-      <td align="center">93.72%</td>
+      <td align="center">94.43%</td>
+      <td align="center">94.70%</td>
+      <td align="center">94.75%</td>
     </tr>
     <tr>
       <td align="center">R@8</td>
-      <td align="center">97.30%</td>
-      <td align="center">95.93%</td>
-      <td align="center">95.98%</td>
-      <td align="center">96.03%</td>
+      <td align="center">97.65%</td>
+      <td align="center">96.44%</td>
+      <td align="center">96.78%</td>
+      <td align="center">96.47%</td>
     </tr>
   </tbody>
 </table>
@@ -331,45 +331,45 @@ Here is the results of `In-shop` dataset:
   <tbody>
     <tr>
       <td align="center">R@1</td>
-      <td align="center">75.15%</td>
-      <td align="center">82.25%</td>
-      <td align="center">70.77%</td>
-      <td align="center">70.77%</td>
+      <td align="center">77.11%</td>
+      <td align="center">83.38%</td>
+      <td align="center">77.20%</td>
+      <td align="center">88.02%</td>
     </tr>
     <tr>
       <td align="center">R@10</td>
-      <td align="center">92.40%</td>
-      <td align="center">94.81%</td>
-      <td align="center">89.63%</td>
-      <td align="center">89.63%</td>
+      <td align="center">92.91%</td>
+      <td align="center">95.33%</td>
+      <td align="center">92.81%</td>
+      <td align="center">96.83%</td>
     </tr>
     <tr>
       <td align="center">R@20</td>
-      <td align="center">94.64%</td>
-      <td align="center">96.48%</td>
-      <td align="center">92.83%</td>
-      <td align="center">92.83%</td>
+      <td align="center">94.86%</td>
+      <td align="center">96.82%</td>
+      <td align="center">94.90%</td>
+      <td align="center">97.74%</td>
     </tr>
     <tr>
       <td align="center">R@30</td>
-      <td align="center">95.72%</td>
-      <td align="center">97.21%</td>
-      <td align="center">94.20%</td>
-      <td align="center">94.20%</td>
+      <td align="center">95.80%</td>
+      <td align="center">97.38%</td>
+      <td align="center">95.87%</td>
+      <td align="center">98.22%</td>
     </tr>
     <tr>
       <td align="center">R@40</td>
-      <td align="center">96.38%</td>
-      <td align="center">97.66%</td>
-      <td align="center">95.06%</td>
-      <td align="center">95.06%</td>
+      <td align="center">96.40%</td>
+      <td align="center">97.77%</td>
+      <td align="center">96.48%</td>
+      <td align="center">98.57%</td>
     </tr>
     <tr>
       <td align="center">R@50</td>
-      <td align="center">96.83%</td>
-      <td align="center">98.00%</td>
-      <td align="center">95.63%</td>
-      <td align="center">95.63%</td>
+      <td align="center">96.80%</td>
+      <td align="center">98.08%</td>
+      <td align="center">97.00%</td>
+      <td align="center">98.76%</td>
     </tr>
   </tbody>
 </table>
