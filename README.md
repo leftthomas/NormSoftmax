@@ -42,16 +42,16 @@ optional arguments:
 ```
 
 ## Benchmarks
-Adam optimizer is used with learning rate scheduling. The models are trained with batch size `10`, `20` epochs on two 
+Adam optimizer is used with learning rate scheduling. The models are trained with batch size `10` on two 
 NVIDIA Tesla V100 (32G) GPUs.
 
 The images are preprocessed with resize (256, 256), random horizontal flip and normalize. 
 
-For `CARS196` and `CUB200` datasets, ensemble size `48` and meta class size `12` are used. 
+For `CARS196` and `CUB200` datasets, ensemble size `48`, meta class size `12` and `20` epochs are used. 
 
-For `SOP` dataset, ensemble size `48` and meta class size `500` is used.
+For `SOP` dataset, ensemble size `48`, meta class size `500` and `50` epochs are used.
 
-For `In-shop` dataset, ensemble size `48` and meta class size `192` is used.
+For `In-shop` dataset, ensemble size `48`, meta class size `192` and `50` epochs are used.
 
 Here is the model parameter details:
 <table>
