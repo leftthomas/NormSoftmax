@@ -54,7 +54,6 @@ class Model(nn.Module):
             branch_weight = torch.rand(self.ensemble_size, device=x.device)
         else:
             branch_weight = torch.ones(self.ensemble_size, device=x.device)
-        branch_weight = F.softmax(branch_weight, dim=-1)
         out = []
         for i in range(self.ensemble_size):
             layer2_feature = self.layer2[i](branch_weight[i] * common_feature)
