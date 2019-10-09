@@ -5,7 +5,7 @@ from torchvision.models.resnet import resnet18, resnet34, resnet50, resnext50_32
 
 
 class Model(nn.Module):
-    def __init__(self, meta_class_size, ensemble_size, model_type, device_ids):
+    def __init__(self, meta_class_size, ensemble_size, model_type, with_random, device_ids):
         super(Model, self).__init__()
 
         # backbone
@@ -14,7 +14,7 @@ class Model(nn.Module):
         backbone, expansion = backbones[model_type]
 
         # configs
-        self.ensemble_size, self.device_ids = ensemble_size, device_ids
+        self.ensemble_size, self.with_random, self.device_ids = ensemble_size, with_random, device_ids
 
         # common features
         basic_model, self.common_extractor = backbone(pretrained=True), []
@@ -50,7 +50,10 @@ class Model(nn.Module):
     def forward(self, x):
         batch_size = x.size(0)
         common_feature = self.common_extractor(x)
-        branch_weight = torch.rand(self.ensemble_size, device=x.device)
+        if self.with_random:
+            branch_weight = torch.rand(self.ensemble_size, device=x.device)
+        else:
+            branch_weight = torch.ones(self.ensemble_size, device=x.device)
         branch_weight = F.softmax(branch_weight, dim=-1)
         out = []
         for i in range(self.ensemble_size):

@@ -25,6 +25,7 @@ optional arguments:
 --crop_type                   crop data or not, it only works for car or cub dataset [default value is 'uncropped'](choices=['uncropped', 'cropped'])
 --recalls                     selected recall [default value is '1,2,4,8']
 --model_type                  backbone type [default value is 'resnet18'](choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'])
+--with_random                 with branch random weight or not [default value is False]
 --batch_size                  train batch size [default value is 10]
 --num_epochs                  train epochs number [default value is 20]
 --ensemble_size               ensemble model size [default value is 48]
@@ -37,7 +38,7 @@ optional arguments:
 python inference.py --retrieval_num 10
 optional arguments:
 --query_img_name              query image name [default value is 'data/car/uncropped/008055.jpg']
---data_base                   queried database [default value is 'car_uncropped_resnet18_48_12_data_base.pth']
+--data_base                   queried database [default value is 'car_uncropped_random_resnet18_48_12_data_base.pth']
 --retrieval_num               retrieval number [default value is 8]
 ```
 
