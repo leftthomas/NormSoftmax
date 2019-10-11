@@ -52,6 +52,7 @@ class Model(nn.Module):
         common_feature = self.common_extractor(x)
         if self.with_random:
             branch_weight = torch.rand(self.ensemble_size, device=x.device)
+            branch_weight = F.softmax(branch_weight, dim=-1)
         else:
             branch_weight = torch.ones(self.ensemble_size, device=x.device)
         out = []
