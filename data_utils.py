@@ -100,7 +100,7 @@ def process_isc_data(data_path):
     for index, line in enumerate(open('{}/Eval/list_eval_partition.txt'.format(data_path), 'r', encoding='utf-8')):
         if index > 1:
             img_name, label, status = line.split()
-            img = Image.open('{}/Img/{}'.format(data_path, img_name)).convert('RGB')
+            img = Image.open('{}/Img/{}'.format(data_path, img_name.replace('img/', 'img_highres/'))).convert('RGB')
             save_name = '{}/uncropped/{}_{}'.format(data_path, img_name.split('/')[-2], os.path.basename(img_name))
             img.save(save_name)
             if status == 'train':
