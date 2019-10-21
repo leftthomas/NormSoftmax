@@ -1,5 +1,6 @@
-import os
+import math
 import random
+from itertools import product
 
 import torch
 from PIL import Image
@@ -13,26 +14,38 @@ rgb_std = {'car': [0.2237, 0.2193, 0.2568], 'cub': [0.2767, 0.2760, 0.2850], 'so
 
 
 # random assign meta class for all classes
-def create_id(meta_class_size, num_class):
+def create_random_id(meta_class_size, num_class, ensemble_size):
     multiple = num_class // meta_class_size
     remain = num_class % meta_class_size
     if remain != 0:
         multiple += 1
 
-    idx_all = []
-    for _ in range(multiple):
-        idx_base = [j for j in range(meta_class_size)]
-        random.shuffle(idx_base)
-        idx_all += idx_base
+    idxes = []
+    for _ in range(ensemble_size):
+        idx_all = []
+        for _ in range(multiple):
+            idx_base = [j for j in range(meta_class_size)]
+            random.shuffle(idx_base)
+            idx_all += idx_base
 
-    idx_all = idx_all[:num_class]
-    random.shuffle(idx_all)
-    return idx_all
+        idx_all = idx_all[:num_class]
+        random.shuffle(idx_all)
+        idxes.append(idx_all)
+    return idxes
+
+
+# fixed assign meta class for all classes
+def create_fixed_id(meta_class_size, num_class, ensemble_size):
+    assert math.pow(meta_class_size, ensemble_size) >= num_class, 'make sure meta_class_size^ensemble_size >= num_class'
+    idxes, idx_all = [], list(product(range(meta_class_size), repeat=ensemble_size))
+    idx_all = random.sample(idx_all, num_class)
+    idxes = list(zip(*idx_all))
+    return idxes
 
 
 class ImageReader(Dataset):
 
-    def __init__(self, data_name, data_type, crop_type='uncropped', ensemble_size=None, meta_class_size=None):
+    def __init__(self, data_name, data_type, crop_type, label_type='fixed', ensemble_size=None, meta_class_size=None):
         if crop_type == 'cropped' and data_name not in ['car', 'cub']:
             raise NotImplementedError('cropped data only works for car or cub dataset')
 
@@ -42,12 +55,12 @@ class ImageReader(Dataset):
         if data_type == 'train':
             self.transform = transforms.Compose([transforms.Resize((256, 256)), transforms.RandomHorizontalFlip(),
                                                  transforms.ToTensor(), normalize])
-            ids_name = 'results/{}_{}_{}_ids.pth'.format(data_name, ensemble_size, meta_class_size)
-            if os.path.exists(ids_name):
-                meta_ids = torch.load(ids_name)
+            ids_name = 'results/{}_{}_{}_{}_ids.pth'.format(data_name, label_type, ensemble_size, meta_class_size)
+            if label_type == 'fixed':
+                meta_ids = create_fixed_id(meta_class_size, len(data_dict), ensemble_size)
             else:
-                meta_ids = [create_id(meta_class_size, len(data_dict)) for _ in range(ensemble_size)]
-                torch.save(meta_ids, ids_name)
+                meta_ids = create_random_id(meta_class_size, len(data_dict), ensemble_size)
+            torch.save(meta_ids, ids_name)
             # balance data for each class
             max_size = 300
             self.images, self.labels = [], []

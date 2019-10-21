@@ -68,10 +68,10 @@ def eval(net, recalls):
         data_base['gallery_images'] = gallery_data_set.images if DATA_NAME == 'isc' else test_data_set.images
         data_base['gallery_labels'] = gallery_data_set.labels if DATA_NAME == 'isc' else test_data_set.labels
         data_base['gallery_features'] = gallery_features if DATA_NAME == 'isc' else test_features
-        torch.save(model.state_dict(), 'epochs/{}_{}_{}_{}_{}_{}_model.pth'
-                   .format(DATA_NAME, CROP_TYPE, random_flag, MODEL_TYPE, ENSEMBLE_SIZE, META_CLASS_SIZE))
-        torch.save(data_base, 'results/{}_{}_{}_{}_{}_{}_data_base.pth'
-                   .format(DATA_NAME, CROP_TYPE, random_flag, MODEL_TYPE, ENSEMBLE_SIZE, META_CLASS_SIZE))
+        torch.save(model.state_dict(), 'epochs/{}_{}_{}_{}_{}_{}_{}_model.pth'
+                   .format(DATA_NAME, CROP_TYPE, LABEL_TYPE, random_flag, MODEL_TYPE, ENSEMBLE_SIZE, META_CLASS_SIZE))
+        torch.save(data_base, 'results/{}_{}_{}_{}_{}_{}_{}_data_base.pth'
+                   .format(DATA_NAME, CROP_TYPE, LABEL_TYPE, random_flag, MODEL_TYPE, ENSEMBLE_SIZE, META_CLASS_SIZE))
 
 
 if __name__ == '__main__':
@@ -80,6 +80,8 @@ if __name__ == '__main__':
                         help='dataset name')
     parser.add_argument('--crop_type', default='uncropped', type=str, choices=['uncropped', 'cropped'],
                         help='crop data or not, it only works for car or cub dataset')
+    parser.add_argument('--label_type', default='fixed', type=str, choices=['fixed', 'random'],
+                        help='assign label with random method or fixed method')
     parser.add_argument('--recalls', default='1,2,4,8', type=str, help='selected recall')
     parser.add_argument('--model_type', default='resnet18', type=str,
                         choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'], help='backbone type')
@@ -94,17 +96,16 @@ if __name__ == '__main__':
 
     DATA_NAME, RECALLS, BATCH_SIZE, NUM_EPOCHS = opt.data_name, opt.recalls, opt.batch_size, opt.num_epochs
     ENSEMBLE_SIZE, META_CLASS_SIZE, CROP_TYPE = opt.ensemble_size, opt.meta_class_size, opt.crop_type
-    GPU_IDS, MODEL_TYPE, WITH_RANDOM = opt.gpu_ids, opt.model_type, opt.with_random
+    GPU_IDS, MODEL_TYPE, LABEL_TYPE, WITH_RANDOM = opt.gpu_ids, opt.model_type, opt.label_type, opt.with_random
     random_flag = 'random' if WITH_RANDOM else 'unrandom'
     recall_ids, device_ids = [int(k) for k in RECALLS.split(',')], [int(gpu) for gpu in GPU_IDS.split(',')]
-    if len(device_ids) != 2:
-        raise NotImplementedError('make sure gpu_ids contains two devices')
+    assert len(device_ids) == 2, 'make sure gpu_ids contains two devices'
 
     results = {'train_loss': [], 'train_accuracy': []}
     for index, recall_id in enumerate(recall_ids):
         results['test_recall@{}'.format(recall_ids[index])] = []
 
-    train_data_set = ImageReader(DATA_NAME, 'train', CROP_TYPE, ENSEMBLE_SIZE, META_CLASS_SIZE)
+    train_data_set = ImageReader(DATA_NAME, 'train', CROP_TYPE, LABEL_TYPE, ENSEMBLE_SIZE, META_CLASS_SIZE)
     train_data_loader = DataLoader(train_data_set, BATCH_SIZE, shuffle=True, num_workers=8)
     test_data_set = ImageReader(DATA_NAME, 'query' if DATA_NAME == 'isc' else 'test', CROP_TYPE)
     test_data_loader = DataLoader(test_data_set, BATCH_SIZE, shuffle=False, num_workers=8)
@@ -125,6 +126,6 @@ if __name__ == '__main__':
         eval(model, recall_ids)
         # save statistics
         data_frame = pd.DataFrame(data=results, index=range(1, epoch + 1))
-        data_frame.to_csv('statistics/{}_{}_{}_{}_{}_{}_results.csv'
-                          .format(DATA_NAME, CROP_TYPE, random_flag, MODEL_TYPE,
+        data_frame.to_csv('statistics/{}_{}_{}_{}_{}_{}_{}_results.csv'
+                          .format(DATA_NAME, CROP_TYPE, LABEL_TYPE, random_flag, MODEL_TYPE,
                                   ENSEMBLE_SIZE, META_CLASS_SIZE), index_label='epoch')
