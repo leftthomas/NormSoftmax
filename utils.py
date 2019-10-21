@@ -43,6 +43,7 @@ def create_fixed_id(meta_class_size, num_class, ensemble_size):
             idx_all.append(idx)
         else:
             break
+    random.shuffle(idx_all)
     idxes = list(zip(*idx_all))
     return idxes
 
