@@ -37,8 +37,7 @@ def create_random_id(meta_class_size, num_class, ensemble_size):
 # fixed assign meta class for all classes
 def create_fixed_id(meta_class_size, num_class, ensemble_size):
     assert math.pow(meta_class_size, ensemble_size) >= num_class, 'make sure meta_class_size^ensemble_size >= num_class'
-    idxes, idx_all = [], list(product(range(meta_class_size), repeat=ensemble_size))
-    idx_all = random.sample(idx_all, num_class)
+    idx_all = random.sample(list(product(range(meta_class_size), repeat=ensemble_size)), num_class)
     idxes = list(zip(*idx_all))
     return idxes
 
