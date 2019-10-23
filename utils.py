@@ -1,6 +1,5 @@
 import math
 import random
-from itertools import product
 
 import torch
 from PIL import Image
@@ -37,9 +36,29 @@ def create_random_id(meta_class_size, num_class, ensemble_size):
 # fixed assign meta class for all classes
 def create_fixed_id(meta_class_size, num_class, ensemble_size):
     assert math.pow(meta_class_size, ensemble_size) >= num_class, 'make sure meta_class_size^ensemble_size >= num_class'
-    idx_all = random.sample(list(product(range(meta_class_size), repeat=ensemble_size)), num_class)
-    idxes = list(zip(*idx_all))
+    assert meta_class_size <= num_class, 'make sure meta_class_size <= num_class'
+    idxes = []
+    for i in range(meta_class_size):
+        idxes.append([i] * ensemble_size)
+    while num_class > len(idxes):
+        if num_class - meta_class_size <= 2:
+            idxes.append([i for i in range(meta_class_size)])
+        if num_class - meta_class_size == 2:
+            idxes.append([meta_class_size - i - 1 for i in range(meta_class_size)])
     return idxes
+
+
+# compute code using ratio
+def compute_code_entropy(codes):
+    codes = list(zip(*codes))
+    total_code_num, valid_code_num = (len(codes) * (len(codes) - 1) * len(codes[0])) // 2, 0
+    for i in range(len(codes)):
+        for j in range(i + 1, len(codes)):
+            code, ref_code = codes[i], codes[j]
+            for k in range(len(code)):
+                valid_code_num += 1 if code[k] != ref_code[k] else 0
+    print('code using ratio is {}/{}--{:.2f}% '.format(valid_code_num, total_code_num,
+                                                       valid_code_num / total_code_num * 100))
 
 
 class ImageReader(Dataset):
@@ -59,7 +78,9 @@ class ImageReader(Dataset):
                 meta_ids = create_fixed_id(meta_class_size, len(data_dict), ensemble_size)
             else:
                 meta_ids = create_random_id(meta_class_size, len(data_dict), ensemble_size)
+            compute_code_entropy(meta_ids)
             torch.save(meta_ids, ids_name)
+
             # balance data for each class
             max_size = 300
             self.images, self.labels = [], []

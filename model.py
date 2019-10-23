@@ -47,6 +47,16 @@ class Model(nn.Module):
         self.classifiers = nn.ModuleList([nn.Linear(512 * expansion, meta_class_size).cuda(device_ids[1])
                                           for _ in range(ensemble_size)])
 
+        print("# trainable common feature parameters:",
+              sum(param.numel() if param.requires_grad else 0 for param in self.common_extractor.parameters()))
+        print("# trainable individual feature parameters:",
+              (sum(param.numel() if param.requires_grad else 0 for param in self.layer2.parameters()) + sum(
+                  param.numel() if param.requires_grad else 0 for param in self.layer3.parameters()) + sum(
+                  param.numel() if param.requires_grad else 0 for param in self.layer4.parameters())) // ensemble_size)
+        print("# trainable individual classifier parameters:",
+              sum(param.numel() if param.requires_grad else 0 for param in
+                  self.classifiers.parameters()) // ensemble_size)
+
     def forward(self, x):
         batch_size = x.size(0)
         common_feature = self.common_extractor(x)
