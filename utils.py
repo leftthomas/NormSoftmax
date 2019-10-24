@@ -65,7 +65,7 @@ def create_fixed_id(meta_class_size, num_class, ensemble_size):
             if remain != 0:
                 multiple += 1
             idxes.append((all_idx * multiple)[:ensemble_size])
-    random.shuffle(idxes)
+    idxes = list(zip(*idxes[:num_class]))
     return idxes
 
 
