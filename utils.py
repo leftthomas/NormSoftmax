@@ -38,27 +38,35 @@ def create_fixed_id(meta_class_size, num_class, ensemble_size):
     assert math.pow(meta_class_size, ensemble_size) >= num_class, 'make sure meta_class_size^ensemble_size >= num_class'
     assert meta_class_size <= num_class, 'make sure meta_class_size <= num_class'
     idxes = []
+    # step 1: add all exclude code
     for i in range(meta_class_size):
         idxes.append([i] * ensemble_size)
-    while num_class > len(idxes):
-        if num_class - meta_class_size <= 2:
-            idxes.append([i for i in range(meta_class_size)])
-        if num_class - meta_class_size == 2:
-            idxes.append([meta_class_size - i - 1 for i in range(meta_class_size)])
+    # step 2: add only one same code
+    for i in range(meta_class_size):
+        idxes.append([(i + k) % meta_class_size for k in range(ensemble_size)])
+    # step 3: add least one same code
+    idx = [i for i in range(meta_class_size)]
+    for i in range(1, meta_class_size - 2):
+        for j in range(meta_class_size):
+            reduced_idx = idx[j:] + idx[:j]
+            all_idx = [reduced_idx[0]]
+            index, count = 0, 1
+            while len(all_idx) < meta_class_size:
+                re_index = (index + (i + 1) * count) % meta_class_size
+                value = reduced_idx[re_index]
+                if value not in all_idx:
+                    all_idx.append(value)
+                    count += 1
+                else:
+                    index += 1
+                    count = 1
+            multiple = ensemble_size // meta_class_size
+            remain = ensemble_size % meta_class_size
+            if remain != 0:
+                multiple += 1
+            idxes.append((all_idx * multiple)[:ensemble_size])
+    random.shuffle(idxes)
     return idxes
-
-
-# compute code using ratio
-def compute_code_entropy(codes):
-    codes = list(zip(*codes))
-    total_code_num, valid_code_num = (len(codes) * (len(codes) - 1) * len(codes[0])) // 2, 0
-    for i in range(len(codes)):
-        for j in range(i + 1, len(codes)):
-            code, ref_code = codes[i], codes[j]
-            for k in range(len(code)):
-                valid_code_num += 1 if code[k] != ref_code[k] else 0
-    print('code using ratio is {}/{}--{:.2f}% '.format(valid_code_num, total_code_num,
-                                                       valid_code_num / total_code_num * 100))
 
 
 class ImageReader(Dataset):
@@ -78,7 +86,6 @@ class ImageReader(Dataset):
                 meta_ids = create_fixed_id(meta_class_size, len(data_dict), ensemble_size)
             else:
                 meta_ids = create_random_id(meta_class_size, len(data_dict), ensemble_size)
-            compute_code_entropy(meta_ids)
             torch.save(meta_ids, ids_name)
 
             # balance data for each class
