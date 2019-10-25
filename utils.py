@@ -1,4 +1,5 @@
 import math
+import os
 import random
 
 import torch
@@ -40,6 +41,7 @@ def create_fixed_id(meta_class_size, num_class, ensemble_size):
     assert meta_class_size <= num_class, 'make sure meta_class_size <= num_class'
     idxes = create_random_id(meta_class_size, num_class, ensemble_size)
     while check_assign_conflict(idxes):
+        print('try to random assign label again')
         idxes = create_random_id(meta_class_size, num_class, ensemble_size)
     return idxes
 
@@ -50,7 +52,7 @@ def check_assign_conflict(idxes):
         print('random assigned labels have no conflicts')
         return False
     else:
-        print('random assigned labels have conflicts, try to assign again')
+        print('random assigned labels have conflicts')
         return True
 
 
@@ -67,11 +69,14 @@ class ImageReader(Dataset):
             self.transform = transforms.Compose([transforms.Resize((256, 256)), transforms.RandomHorizontalFlip(),
                                                  transforms.ToTensor(), normalize])
             ids_name = 'results/{}_{}_{}_{}_ids.pth'.format(data_name, label_type, ensemble_size, meta_class_size)
-            if label_type == 'fixed':
-                meta_ids = create_fixed_id(meta_class_size, len(data_dict), ensemble_size)
+            if os.path.exists(ids_name):
+                meta_ids = torch.load(ids_name)
             else:
-                meta_ids = create_random_id(meta_class_size, len(data_dict), ensemble_size)
-            torch.save(meta_ids, ids_name)
+                if label_type == 'fixed':
+                    meta_ids = create_fixed_id(meta_class_size, len(data_dict), ensemble_size)
+                else:
+                    meta_ids = create_random_id(meta_class_size, len(data_dict), ensemble_size)
+                torch.save(meta_ids, ids_name)
 
             # balance data for each class
             max_size = 300
