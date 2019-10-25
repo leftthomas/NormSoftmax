@@ -66,8 +66,13 @@ class ImageReader(Dataset):
         class_to_idx = dict(zip(sorted(data_dict), range(len(data_dict))))
         normalize = transforms.Normalize(rgb_mean[data_name], rgb_std[data_name])
         if data_type == 'train':
-            self.transform = transforms.Compose([transforms.Resize((256, 256)), transforms.RandomHorizontalFlip(),
-                                                 transforms.ToTensor(), normalize])
+            if crop_type == 'uncropped':
+                self.transform = transforms.Compose(
+                    [transforms.Resize(int(256 * 1.1)), transforms.RandomCrop(256), transforms.RandomHorizontalFlip(),
+                     transforms.ToTensor(), normalize])
+            else:
+                self.transform = transforms.Compose([transforms.Resize((256, 256)), transforms.RandomHorizontalFlip(),
+                                                     transforms.ToTensor(), normalize])
             ids_name = 'results/{}_{}_{}_{}_ids.pth'.format(data_name, label_type, ensemble_size, meta_class_size)
             if os.path.exists(ids_name):
                 meta_ids = torch.load(ids_name)
@@ -91,7 +96,11 @@ class ImageReader(Dataset):
                 meta_label = torch.tensor(meta_label)
                 self.labels += [meta_label] * len(image_list)
         else:
-            self.transform = transforms.Compose([transforms.Resize((256, 256)), transforms.ToTensor(), normalize])
+            if crop_type == 'uncropped':
+                self.transform = transforms.Compose(
+                    [transforms.Resize(256), transforms.CenterCrop(256), transforms.ToTensor(), normalize])
+            else:
+                self.transform = transforms.Compose([transforms.Resize((256, 256)), transforms.ToTensor(), normalize])
             self.images, self.labels = [], []
             for label, image_list in data_dict.items():
                 self.images += image_list
