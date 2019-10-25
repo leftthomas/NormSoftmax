@@ -84,7 +84,7 @@ if __name__ == '__main__':
     parser.add_argument('--model_type', default='resnet18', type=str,
                         choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'], help='backbone type')
     parser.add_argument('--share_type', default='layer1', type=str,
-                        choices=['mp', 'layer1', 'layer2', 'layer3', 'layer4'], help='shared module type')
+                        choices=['maxpool', 'layer1', 'layer2', 'layer3', 'layer4'], help='shared module type')
     parser.add_argument('--with_random', action='store_true', help='with branch random weight or not')
     parser.add_argument('--batch_size', default=10, type=int, help='train batch size')
     parser.add_argument('--num_epochs', default=20, type=int, help='train epoch number')
