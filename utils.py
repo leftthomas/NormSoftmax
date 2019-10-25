@@ -30,6 +30,7 @@ def create_random_id(meta_class_size, num_class, ensemble_size):
         idx_all = idx_all[:num_class]
         random.shuffle(idx_all)
         idxes.append(idx_all)
+    check_assign_conflict(idxes)
     return idxes
 
 
@@ -38,15 +39,19 @@ def create_fixed_id(meta_class_size, num_class, ensemble_size):
     assert math.pow(meta_class_size, ensemble_size) >= num_class, 'make sure meta_class_size^ensemble_size >= num_class'
     assert meta_class_size <= num_class, 'make sure meta_class_size <= num_class'
     idxes = create_random_id(meta_class_size, num_class, ensemble_size)
-    flag = True
-    while flag:
-        check_list = list(zip(*idxes))
-        if len(check_list) == len(set(check_list)):
-            flag = False
-        else:
-            print('random assigned labels have conflicts, try to assign again')
-            idxes = create_random_id(meta_class_size, num_class, ensemble_size)
+    while check_assign_conflict(idxes):
+        idxes = create_random_id(meta_class_size, num_class, ensemble_size)
     return idxes
+
+
+def check_assign_conflict(idxes):
+    check_list = list(zip(*idxes))
+    if len(check_list) == len(set(check_list)):
+        print('random assigned labels have no conflicts')
+        return False
+    else:
+        print('random assigned labels have conflicts, try to assign again')
+        return True
 
 
 class ImageReader(Dataset):
