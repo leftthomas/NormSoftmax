@@ -5,7 +5,7 @@ from torchvision.models.resnet import resnet18, resnet34, resnet50, resnext50_32
 
 
 class Model(nn.Module):
-    def __init__(self, meta_class_size, ensemble_size, model_type, with_random, device_ids):
+    def __init__(self, meta_class_size, ensemble_size, share_type, model_type, with_random, device_ids):
         super(Model, self).__init__()
 
         # backbone

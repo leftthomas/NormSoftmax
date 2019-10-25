@@ -68,10 +68,8 @@ def eval(net, recalls):
         data_base['gallery_images'] = gallery_data_set.images if DATA_NAME == 'isc' else test_data_set.images
         data_base['gallery_labels'] = gallery_data_set.labels if DATA_NAME == 'isc' else test_data_set.labels
         data_base['gallery_features'] = gallery_features if DATA_NAME == 'isc' else test_features
-        torch.save(model.state_dict(), 'epochs/{}_{}_{}_{}_{}_{}_{}_model.pth'
-                   .format(DATA_NAME, CROP_TYPE, LABEL_TYPE, random_flag, MODEL_TYPE, ENSEMBLE_SIZE, META_CLASS_SIZE))
-        torch.save(data_base, 'results/{}_{}_{}_{}_{}_{}_{}_data_base.pth'
-                   .format(DATA_NAME, CROP_TYPE, LABEL_TYPE, random_flag, MODEL_TYPE, ENSEMBLE_SIZE, META_CLASS_SIZE))
+        torch.save(model.state_dict(), 'epochs/{}_model.pth'.format(save_name_pre))
+        torch.save(data_base, 'results/{}_data_base.pth'.format(save_name_pre))
 
 
 if __name__ == '__main__':
@@ -85,6 +83,8 @@ if __name__ == '__main__':
     parser.add_argument('--recalls', default='1,2,4,8', type=str, help='selected recall')
     parser.add_argument('--model_type', default='resnet18', type=str,
                         choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'], help='backbone type')
+    parser.add_argument('--share_type', default='layer1', type=str,
+                        choices=['mp', 'layer1', 'layer2', 'layer3', 'layer4'], help='shared module type')
     parser.add_argument('--with_random', action='store_true', help='with branch random weight or not')
     parser.add_argument('--batch_size', default=10, type=int, help='train batch size')
     parser.add_argument('--num_epochs', default=20, type=int, help='train epoch number')
@@ -97,7 +97,10 @@ if __name__ == '__main__':
     DATA_NAME, RECALLS, BATCH_SIZE, NUM_EPOCHS = opt.data_name, opt.recalls, opt.batch_size, opt.num_epochs
     ENSEMBLE_SIZE, META_CLASS_SIZE, CROP_TYPE = opt.ensemble_size, opt.meta_class_size, opt.crop_type
     GPU_IDS, MODEL_TYPE, LABEL_TYPE, WITH_RANDOM = opt.gpu_ids, opt.model_type, opt.label_type, opt.with_random
+    SHARE_TYPE = opt.share_type
     random_flag = 'random' if WITH_RANDOM else 'unrandom'
+    save_name_pre = '{}_{}_{}_{}_{}_{}_{}_{}'.format(DATA_NAME, CROP_TYPE, LABEL_TYPE, random_flag, SHARE_TYPE,
+                                                     MODEL_TYPE, ENSEMBLE_SIZE, META_CLASS_SIZE)
     recall_ids, device_ids = [int(k) for k in RECALLS.split(',')], [int(gpu) for gpu in GPU_IDS.split(',')]
     assert len(device_ids) == 2, 'make sure gpu_ids contains two devices'
 
@@ -113,7 +116,7 @@ if __name__ == '__main__':
         gallery_data_set = ImageReader(DATA_NAME, 'gallery', CROP_TYPE)
         gallery_data_loader = DataLoader(gallery_data_set, BATCH_SIZE, shuffle=False, num_workers=8)
 
-    model = Model(META_CLASS_SIZE, ENSEMBLE_SIZE, MODEL_TYPE, WITH_RANDOM, device_ids)
+    model = Model(META_CLASS_SIZE, ENSEMBLE_SIZE, SHARE_TYPE, MODEL_TYPE, WITH_RANDOM, device_ids)
     print("# trainable parameters:", sum(param.numel() if param.requires_grad else 0 for param in model.parameters()))
     optimizer = Adam(model.parameters(), lr=1e-4)
     lr_scheduler = MultiStepLR(optimizer, milestones=[int(NUM_EPOCHS * 0.5), int(NUM_EPOCHS * 0.7)], gamma=0.1)
@@ -126,6 +129,4 @@ if __name__ == '__main__':
         eval(model, recall_ids)
         # save statistics
         data_frame = pd.DataFrame(data=results, index=range(1, epoch + 1))
-        data_frame.to_csv('statistics/{}_{}_{}_{}_{}_{}_{}_results.csv'
-                          .format(DATA_NAME, CROP_TYPE, LABEL_TYPE, random_flag, MODEL_TYPE,
-                                  ENSEMBLE_SIZE, META_CLASS_SIZE), index_label='epoch')
+        data_frame.to_csv('statistics/{}_results.csv'.format(save_name_pre), index_label='epoch')

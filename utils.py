@@ -44,6 +44,7 @@ def create_fixed_id(meta_class_size, num_class, ensemble_size):
         if len(check_list) == len(set(check_list)):
             flag = False
         else:
+            print('random assigned labels have conflicts, try to assign again')
             idxes = create_random_id(meta_class_size, num_class, ensemble_size)
     return idxes
 
