@@ -27,9 +27,9 @@ class Model(nn.Module):
               sum(param.numel() if param.requires_grad else 0 for param in self.common_extractor.parameters()))
 
         # individual features
-        self.individual_extractor = nn.ModuleList(
-            [copy.deepcopy(nn.Sequential(*modules[module_names.index(share_type) + 1:])).cuda(device_ids[1]) for _
-             in range(ensemble_size)])
+        self.individual_extractor = nn.ModuleList([copy.deepcopy(
+            nn.Sequential(*modules[module_names.index(share_type) + 1:])).cuda(
+            device_ids[0 if i < ensemble_size / 6 else 1]) for i in range(ensemble_size)])
         print("# trainable individual feature parameters:",
               sum(param.numel() if param.requires_grad else 0 for param in self.individual_extractor.parameters())
               // ensemble_size)
@@ -52,9 +52,9 @@ class Model(nn.Module):
         out = []
         for i in range(self.ensemble_size):
             individual_feature = self.individual_extractor[i](
-                (branch_weight[i] * common_feature).cuda(self.device_ids[1]))
+                (branch_weight[i] * common_feature).cuda(self.device_ids[0 if i < self.ensemble_size / 6 else 1]))
             global_feature = F.adaptive_avg_pool2d(individual_feature, output_size=(1, 1)).view(batch_size, -1)
-            classes = self.classifiers[i](global_feature)
+            classes = self.classifiers[i](global_feature.cuda(self.device_ids[1]))
             out.append(classes)
         out = torch.stack(out, dim=1)
         return out
