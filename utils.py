@@ -37,36 +37,14 @@ def create_random_id(meta_class_size, num_class, ensemble_size):
 def create_fixed_id(meta_class_size, num_class, ensemble_size):
     assert math.pow(meta_class_size, ensemble_size) >= num_class, 'make sure meta_class_size^ensemble_size >= num_class'
     assert meta_class_size <= num_class, 'make sure meta_class_size <= num_class'
-    idxes = []
-    # step 1: add all exclude code
-    for i in range(meta_class_size):
-        idxes.append([i] * ensemble_size)
-    # step 2: add only one same code
-    for i in range(meta_class_size):
-        idxes.append([(i + k) % meta_class_size for k in range(ensemble_size)])
-    # step 3: add least one same code
-    idx = [i for i in range(meta_class_size)]
-    for i in range(1, meta_class_size - 2):
-        for j in range(meta_class_size):
-            reduced_idx = idx[j:] + idx[:j]
-            all_idx = [reduced_idx[0]]
-            index, count = 0, 1
-            while len(all_idx) < meta_class_size:
-                re_index = (index + (i + 1) * count) % meta_class_size
-                value = reduced_idx[re_index]
-                if value not in all_idx:
-                    all_idx.append(value)
-                    count += 1
-                else:
-                    index += 1
-                    count = 1
-            multiple = ensemble_size // meta_class_size
-            remain = ensemble_size % meta_class_size
-            if remain != 0:
-                multiple += 1
-            idxes.append((all_idx * multiple)[:ensemble_size])
-    idxes = list(zip(*idxes[:num_class]))
-    random.shuffle(idxes)
+    idxes = create_random_id(meta_class_size, num_class, ensemble_size)
+    flag = True
+    while flag:
+        check_list = list(zip(*idxes))
+        if len(check_list) == len(set(check_list)):
+            flag = False
+        else:
+            idxes = create_random_id(meta_class_size, num_class, ensemble_size)
     return idxes
 
 
