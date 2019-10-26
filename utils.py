@@ -68,7 +68,7 @@ class ImageReader(Dataset):
         if data_type == 'train':
             if crop_type == 'uncropped':
                 self.transform = transforms.Compose(
-                    [transforms.Resize(int(256 * 1.1)), transforms.RandomCrop(256), transforms.RandomHorizontalFlip(),
+                    [transforms.Resize(256), transforms.RandomCrop(256), transforms.RandomHorizontalFlip(),
                      transforms.ToTensor(), normalize])
             else:
                 self.transform = transforms.Compose([transforms.Resize((256, 256)), transforms.RandomHorizontalFlip(),
