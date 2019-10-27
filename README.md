@@ -28,7 +28,7 @@ optional arguments:
 --model_type                  backbone type [default value is 'resnet18'](choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'])
 --share_type                  shared module type [default value is 'layer1'](choices=['maxpool', 'layer1', 'layer2', 'layer3', 'layer4'])
 --with_random                 with branch random weight or not [default value is False]
---batch_size                  train batch size [default value is 10]
+--batch_size                  train batch size [default value is 8]
 --num_epochs                  train epochs number [default value is 20]
 --ensemble_size               ensemble model size [default value is 48]
 --meta_class_size             meta class size [default value is 12]
@@ -45,16 +45,14 @@ optional arguments:
 ```
 
 ## Benchmarks
-Adam optimizer is used with learning rate scheduling. The models are trained with batch size `10` on two 
+Adam optimizer is used with learning rate scheduling. The models are trained with batch size `8` on two 
 NVIDIA Tesla V100 (32G) GPUs.
 
 The images are preprocessed with resize (256, 256), random horizontal flip and normalize. 
 
 For `CARS196` and `CUB200` datasets, ensemble size `48`, meta class size `12` and `20` epochs are used. 
 
-For `SOP` dataset, ensemble size `48`, meta class size `500` and `40` epochs are used.
-
-For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs are used.
+For `SOP` and `In-shop` datasets, ensemble size `48`, meta class size `192` and `40` epochs are used.
 
 Here is the model parameter details:
 <table>
