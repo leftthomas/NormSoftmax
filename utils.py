@@ -127,7 +127,7 @@ def recall(feature_vectors, feature_labels, rank, gallery_vectors=None, gallery_
 
     # avoid OOM error
     sim_matrix = []
-    for feature_vector in torch.chunk(feature_vectors, chunks=16, dim=1):
+    for feature_vector in torch.chunk(feature_vectors, chunks=max(1, num_features // 15125), dim=1):
         sim_matrix.append(torch.mean(feature_vector.bmm(gallery_vectors), dim=0))
     sim_matrix = torch.cat(sim_matrix, dim=0)
 
