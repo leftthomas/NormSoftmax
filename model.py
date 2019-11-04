@@ -1,26 +1,7 @@
-import math
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torchvision.models.resnet import resnet18, resnet34, resnet50, resnext50_32x4d
-
-
-class EfficientChannelAttention(nn.Module):
-    def __init__(self, channel, gamma=2, b=1):
-        super(EfficientChannelAttention, self).__init__()
-        self.gamma = gamma
-        self.b = b
-        t = int(abs(math.log(channel, 2) + b) / gamma)
-        k = t if t % 2 else t + 1
-        self.avg_pool = nn.AdaptiveAvgPool2d(1)
-        self.conv = nn.Conv1d(1, 1, kernel_size=k, padding=int(k / 2), bias=False)
-
-    def forward(self, x):
-        y = self.avg_pool(x)
-        y = self.conv(y.squeeze(-1).transpose(-1, -2))
-        y = y.transpose(-1, -2).unsqueeze(-1)
-        return x * y.expand_as(x)
 
 
 class Model(nn.Module):
@@ -45,10 +26,6 @@ class Model(nn.Module):
         self.common_extractor = nn.Sequential(*self.common_extractor).cuda(device_ids[0])
         print("# trainable common feature parameters:",
               sum(param.numel() if param.requires_grad else 0 for param in self.common_extractor.parameters()))
-
-        if self.with_random:
-            self.branch_attention = nn.ModuleList([EfficientChannelAttention(64).cuda(device_ids[0])
-                                                   for _ in range(ensemble_size)])
 
         # individual features
         self.layer1, self.layer2, self.layer3, self.layer4 = [], [], [], []
@@ -84,12 +61,14 @@ class Model(nn.Module):
     def forward(self, x):
         batch_size = x.size(0)
         common_feature = self.common_extractor(x)
+        if self.with_random:
+            branch_weight = torch.rand(self.ensemble_size, device=x.device)
+            branch_weight = F.softmax(branch_weight, dim=-1)
+        else:
+            branch_weight = torch.ones(self.ensemble_size, device=x.device)
         out = []
         for i in range(self.ensemble_size):
-            if self.with_random:
-                individual_feature = self.branch_attention[i](common_feature)
-            else:
-                individual_feature = common_feature
+            individual_feature = branch_weight[i] * common_feature
             if len(self.layer1) != 0:
                 individual_feature = self.layer1[i](individual_feature.cuda(self.device_ids[0]))
             if len(self.layer2) != 0:
