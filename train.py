@@ -37,6 +37,7 @@ def eval(net, recalls):
     iter = 2 if WITH_RANDOM else 1
     with torch.no_grad():
         for key in eval_dict.keys():
+            eval_dict[key]['features'] = []
             for inputs, labels in eval_dict[key]['data_loader']:
                 out = []
                 for _ in range(iter):
@@ -117,12 +118,11 @@ if __name__ == '__main__':
     train_ext_data_loader = DataLoader(train_ext_data_set, BATCH_SIZE, shuffle=False, num_workers=8)
     test_data_set = ImageReader(DATA_NAME, 'query' if DATA_NAME == 'isc' else 'test', CROP_TYPE)
     test_data_loader = DataLoader(test_data_set, BATCH_SIZE, shuffle=False, num_workers=8)
-    eval_dict = {'train': {'data_loader': train_ext_data_loader, 'features': []},
-                 'test': {'data_loader': test_data_loader, 'features': []}}
+    eval_dict = {'train': {'data_loader': train_ext_data_loader}, 'test': {'data_loader': test_data_loader}}
     if DATA_NAME == 'isc':
         gallery_data_set = ImageReader(DATA_NAME, 'gallery', CROP_TYPE)
         gallery_data_loader = DataLoader(gallery_data_set, BATCH_SIZE, shuffle=False, num_workers=8)
-        eval_dict['gallery'] = {'data_loader': gallery_data_loader, 'features': []}
+        eval_dict['gallery'] = {'data_loader': gallery_data_loader}
 
     model = Model(META_CLASS_SIZE, ENSEMBLE_SIZE, SHARE_TYPE, MODEL_TYPE, WITH_RANDOM, device_ids)
     print("# trainable parameters:", sum(param.numel() if param.requires_grad else 0 for param in model.parameters()))
