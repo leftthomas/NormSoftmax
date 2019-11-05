@@ -34,32 +34,23 @@ def train(net, optim):
 
 def eval(net, recalls):
     net.eval()
-    iter = 3 if WITH_RANDOM else 1
+    iter = 2 if WITH_RANDOM else 1
     with torch.no_grad():
-        test_features = []
-        for inputs, labels in test_data_loader:
-            out = []
-            for _ in range(iter):
-                out.append(net(inputs.to(device_ids[0])))
-            out = torch.mean(torch.stack(out), dim=0)
-            out = F.normalize(out, dim=-1)
-            test_features.append(out.cpu())
-        test_features = torch.cat(test_features, dim=0)
-        if DATA_NAME == 'isc':
-            gallery_features = []
-            for inputs, labels in gallery_data_loader:
+        for key in eval_dict.keys():
+            for inputs, labels in eval_dict[key]['data_loader']:
                 out = []
                 for _ in range(iter):
                     out.append(net(inputs.to(device_ids[0])))
                 out = torch.mean(torch.stack(out), dim=0)
                 out = F.normalize(out, dim=-1)
-                gallery_features.append(out.cpu())
-            gallery_features = torch.cat(gallery_features, dim=0)
+                eval_dict[key]['features'].append(out.cpu())
+            eval_dict[key]['features'] = torch.cat(eval_dict[key]['features'], dim=0)
 
     if DATA_NAME == 'isc':
-        acc_list = recall(test_features, test_data_set.labels, recalls, gallery_features, gallery_data_set.labels)
+        acc_list = recall(eval_dict['test']['features'], test_data_set.labels, recalls,
+                          eval_dict['gallery']['features'], gallery_data_set.labels)
     else:
-        acc_list = recall(test_features, test_data_set.labels, recalls)
+        acc_list = recall(eval_dict['test']['features'], test_data_set.labels, recalls)
     desc = ''
     for index, recall_id in enumerate(recalls):
         desc += 'R@{}:{:.2f}% '.format(recall_id, acc_list[index] * 100)
@@ -69,12 +60,16 @@ def eval(net, recalls):
     data_base = {}
     if acc_list[0] > best_recall:
         best_recall = acc_list[0]
+        data_base['train_images'] = train_ext_data_set.images
+        data_base['train_labels'] = train_ext_data_set.labels
+        data_base['train_features'] = eval_dict['train']['features']
         data_base['test_images'] = test_data_set.images
         data_base['test_labels'] = test_data_set.labels
-        data_base['test_features'] = test_features
+        data_base['test_features'] = eval_dict['test']['features']
         data_base['gallery_images'] = gallery_data_set.images if DATA_NAME == 'isc' else test_data_set.images
         data_base['gallery_labels'] = gallery_data_set.labels if DATA_NAME == 'isc' else test_data_set.labels
-        data_base['gallery_features'] = gallery_features if DATA_NAME == 'isc' else test_features
+        data_base['gallery_features'] = eval_dict['gallery']['features'] if DATA_NAME == 'isc' else eval_dict['test'][
+            'features']
         torch.save(model.state_dict(), 'epochs/{}_model.pth'.format(save_name_pre))
         torch.save(data_base, 'results/{}_data_base.pth'.format(save_name_pre))
 
@@ -117,11 +112,17 @@ if __name__ == '__main__':
 
     train_data_set = ImageReader(DATA_NAME, 'train', CROP_TYPE, LABEL_TYPE, ENSEMBLE_SIZE, META_CLASS_SIZE)
     train_data_loader = DataLoader(train_data_set, BATCH_SIZE, shuffle=True, num_workers=8)
+
+    train_ext_data_set = ImageReader(DATA_NAME, 'train_ext', CROP_TYPE)
+    train_ext_data_loader = DataLoader(train_ext_data_set, BATCH_SIZE, shuffle=False, num_workers=8)
     test_data_set = ImageReader(DATA_NAME, 'query' if DATA_NAME == 'isc' else 'test', CROP_TYPE)
     test_data_loader = DataLoader(test_data_set, BATCH_SIZE, shuffle=False, num_workers=8)
+    eval_dict = {'train': {'data_loader': train_ext_data_loader, 'features': []},
+                 'test': {'data_loader': test_data_loader, 'features': []}}
     if DATA_NAME == 'isc':
         gallery_data_set = ImageReader(DATA_NAME, 'gallery', CROP_TYPE)
         gallery_data_loader = DataLoader(gallery_data_set, BATCH_SIZE, shuffle=False, num_workers=8)
+        eval_dict['gallery'] = {'data_loader': gallery_data_loader, 'features': []}
 
     model = Model(META_CLASS_SIZE, ENSEMBLE_SIZE, SHARE_TYPE, MODEL_TYPE, WITH_RANDOM, device_ids)
     print("# trainable parameters:", sum(param.numel() if param.requires_grad else 0 for param in model.parameters()))

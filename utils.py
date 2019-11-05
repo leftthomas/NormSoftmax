@@ -1,6 +1,7 @@
 import math
 import os
 import random
+from itertools import product
 
 import torch
 from PIL import Image
@@ -39,10 +40,16 @@ def create_random_id(meta_class_size, num_class, ensemble_size):
 def create_fixed_id(meta_class_size, num_class, ensemble_size):
     assert math.pow(meta_class_size, ensemble_size) >= num_class, 'make sure meta_class_size^ensemble_size >= num_class'
     assert meta_class_size <= num_class, 'make sure meta_class_size <= num_class'
-    idxes = create_random_id(meta_class_size, num_class, ensemble_size)
-    while check_assign_conflict(idxes):
-        print('try to random assign label again')
+
+    if math.pow(meta_class_size, ensemble_size) >= 1000:
         idxes = create_random_id(meta_class_size, num_class, ensemble_size)
+        while check_assign_conflict(idxes):
+            print('try to random assign label again')
+            idxes = create_random_id(meta_class_size, num_class, ensemble_size)
+    else:
+        idx_all = random.sample(list(product(range(meta_class_size), repeat=ensemble_size)), num_class)
+        idxes = list(zip(*idx_all))
+        check_assign_conflict(idxes)
     return idxes
 
 
@@ -62,7 +69,8 @@ class ImageReader(Dataset):
         if crop_type == 'cropped' and data_name not in ['car', 'cub']:
             raise NotImplementedError('cropped data only works for car or cub dataset')
 
-        data_dict = torch.load('data/{}/{}_data_dicts.pth'.format(data_name, crop_type))[data_type]
+        data_dict = torch.load('data/{}/{}_data_dicts.pth'.format(data_name, crop_type))[
+            'train' if data_type == 'train_ext' else data_type]
         class_to_idx = dict(zip(sorted(data_dict), range(len(data_dict))))
         normalize = transforms.Normalize(rgb_mean[data_name], rgb_std[data_name])
         if data_type == 'train':
