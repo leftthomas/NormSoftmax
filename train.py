@@ -34,7 +34,7 @@ def train(net, optim):
 
 def eval(net, recalls):
     net.eval()
-    iter = 5 if WITH_RANDOM else 1
+    iter = 3 if WITH_RANDOM else 1
     with torch.no_grad():
         test_features = []
         for inputs, labels in test_data_loader:
@@ -94,7 +94,7 @@ if __name__ == '__main__':
                         choices=['maxpool', 'layer1', 'layer2', 'layer3', 'layer4'], help='shared module type')
     parser.add_argument('--with_random', action='store_true', help='with branch random weight or not')
     parser.add_argument('--batch_size', default=8, type=int, help='train batch size')
-    parser.add_argument('--num_epochs', default=20, type=int, help='train epoch number')
+    parser.add_argument('--num_epochs', default=12, type=int, help='train epoch number')
     parser.add_argument('--ensemble_size', default=48, type=int, help='ensemble model size')
     parser.add_argument('--meta_class_size', default=12, type=int, help='meta class size')
     parser.add_argument('--gpu_ids', default='0,1', type=str, help='selected gpu')
