@@ -41,6 +41,7 @@ python inference.py --retrieval_num 10
 optional arguments:
 --query_img_name              query image name [default value is 'data/car/uncropped/008055.jpg']
 --data_base                   queried database [default value is 'car_uncropped_fixed_random_resnet18_48_12_data_base.pth']
+--data_type                   retrieval database type [default value is 'test'](choices=['train', 'test'])
 --retrieval_num               retrieval number [default value is 8]
 ```
 
