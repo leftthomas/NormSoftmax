@@ -34,17 +34,24 @@ def train(net, optim):
 
 def eval(net, recalls):
     net.eval()
+    iter = 5 if WITH_RANDOM else 1
     with torch.no_grad():
         test_features = []
         for inputs, labels in test_data_loader:
-            out = net(inputs.to(device_ids[0]))
+            out = []
+            for _ in range(iter):
+                out.append(net(inputs.to(device_ids[0])))
+            out = torch.mean(torch.stack(out), dim=0)
             out = F.normalize(out, dim=-1)
             test_features.append(out.cpu())
         test_features = torch.cat(test_features, dim=0)
         if DATA_NAME == 'isc':
             gallery_features = []
             for inputs, labels in gallery_data_loader:
-                out = net(inputs.to(device_ids[0]))
+                out = []
+                for _ in range(iter):
+                    out.append(net(inputs.to(device_ids[0])))
+                out = torch.mean(torch.stack(out), dim=0)
                 out = F.normalize(out, dim=-1)
                 gallery_features.append(out.cpu())
             gallery_features = torch.cat(gallery_features, dim=0)
