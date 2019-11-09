@@ -4,6 +4,7 @@ import shutil
 
 import torch
 from PIL import Image, ImageDraw
+from tqdm import tqdm
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Ablation study on Image Retrieval Model')
@@ -16,12 +17,13 @@ if __name__ == '__main__':
     parser.add_argument('--data_type', default='test', type=str, choices=['train', 'test'],
                         help='compared database type')
     parser.add_argument('--retrieval_num', default=8, type=int, help='retrieval number')
+    parser.add_argument('--save_results', action='store_true', help='with save results or not')
 
     opt = parser.parse_args()
 
     BETTER_DATA_BASE, WORSE_DATA_BASE, RETRIEVAL_NUM = opt.better_data_base, opt.worse_data_base, opt.retrieval_num
     BETTER_DATA_TYPE, WORSE_DATA_TYPE = BETTER_DATA_BASE.split('_')[:2], WORSE_DATA_BASE.split('_')[:2]
-    DATA_TYPE = opt.data_type
+    DATA_TYPE, SAVE_RESULTS = opt.data_type, opt.save_results
     if BETTER_DATA_TYPE != WORSE_DATA_TYPE:
         raise NotImplementedError('make sure the data type and crop type are same')
 
@@ -36,7 +38,7 @@ if __name__ == '__main__':
         assert better_data_base['gallery_images'] == worse_data_base['gallery_images']
         assert better_data_base['gallery_labels'] == worse_data_base['gallery_labels']
         assert len(better_data_base['gallery_features']) == len(worse_data_base['gallery_features'])
-    num_query_images, better_num = len(better_data_base['{}_images'.format(DATA_TYPE)]), 0
+    num_query_images, better_num, equal_num = len(better_data_base['{}_images'.format(DATA_TYPE)]), 0, 0
     query_images = better_data_base['{}_images'.format(DATA_TYPE)]
     query_labels = better_data_base['{}_labels'.format(DATA_TYPE)]
     gallery_images = better_data_base['{}_images'.format('train' if DATA_TYPE == 'train' else 'gallery')]
@@ -47,7 +49,7 @@ if __name__ == '__main__':
     # finally we average the number, divide the retrieval num
     better_correct_all, worse_correct_all, better_correct_instance, worse_correct_instance = 0, 0, 0, 0
 
-    for query_index in range(num_query_images):
+    for query_index in tqdm(range(num_query_images), 'processing data...'):
         query_label = torch.tensor(query_labels[query_index])
 
         better_query_feature = better_data_base['{}_features'.format(DATA_TYPE)][query_index]
@@ -87,9 +89,13 @@ if __name__ == '__main__':
             worse_correct_all += worse_correct_num
             worse_correct_instance += 1
 
-        # save the results
         if better_correct_num > worse_correct_num:
             better_num += 1
+        elif better_correct_num == worse_correct_num:
+            equal_num += 1
+
+        # save the results
+        if better_correct_num > worse_correct_num and SAVE_RESULTS:
             base_path = '{}----{}'.format(BETTER_DATA_BASE.split('_data_base.')[0],
                                           WORSE_DATA_BASE.split('_data_base.')[0])
             if not os.path.exists('results/{}'.format(base_path)):
@@ -134,7 +140,8 @@ if __name__ == '__main__':
                 retrieval_image.save(
                     '{}/worse/retrieval_img_{}_{}.jpg'.format(result_path, num + 1, '%.4f' % retrieval_prob))
 
-    print('better data base AR@{}:{:.2f}%----worse data base AR@{}:{:.2f}%, better rate:{:.2f}%'
+    print('better data base AR@{}:{:.2f}%----worse data base AR@{}:{:.2f}%, GE Rate@{}:{:.2f}%, Better Ratio@{}:{:.2f}'
           .format(RETRIEVAL_NUM, better_correct_all / (better_correct_instance * RETRIEVAL_NUM) * 100,
                   RETRIEVAL_NUM, worse_correct_all / (worse_correct_instance * RETRIEVAL_NUM) * 100,
-                  better_num / num_query_images * 100))
+                  RETRIEVAL_NUM, (better_num + equal_num) / num_query_images * 100,
+                  RETRIEVAL_NUM, better_num / (num_query_images - equal_num - better_num)))
