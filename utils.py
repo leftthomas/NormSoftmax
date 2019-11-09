@@ -61,10 +61,9 @@ def create_fixed_id(meta_class_size, num_class, ensemble_size):
             break
 
     if not assign_flag:
-        remained = set(check_list)
         idx_all = set(product(range(meta_class_size), repeat=ensemble_size))
-        added = random.sample(idx_all - set(check_list), num_class - len(remained))
-        idxes = list(zip(*(added + remained)))
+        added = random.sample(idx_all - set(check_list), num_class - len(set(check_list)))
+        idxes = list(zip(*(added + check_list)))
 
     return idxes
 
