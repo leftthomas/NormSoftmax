@@ -96,7 +96,7 @@ if __name__ == '__main__':
                 os.mkdir('results/{}'.format(base_path))
             query_img_name = query_images[query_index]
             print('[{}/{}] saving results for better case: {}'
-                  .format(query_index, num_query_images, query_img_name.split('/')[-1]))
+                  .format(query_index + 1, num_query_images, query_img_name.split('/')[-1]))
             result_path = 'results/{}/{}'.format(base_path, query_img_name.split('/')[-1].split('.')[0])
             if os.path.exists(result_path):
                 shutil.rmtree(result_path)
