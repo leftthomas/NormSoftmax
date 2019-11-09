@@ -36,7 +36,7 @@ if __name__ == '__main__':
         assert better_data_base['gallery_images'] == worse_data_base['gallery_images']
         assert better_data_base['gallery_labels'] == worse_data_base['gallery_labels']
         assert len(better_data_base['gallery_features']) == len(worse_data_base['gallery_features'])
-    num_query_images = len(better_data_base['{}_images'.format(DATA_TYPE)])
+    num_query_images, better_num = len(better_data_base['{}_images'.format(DATA_TYPE)]), 0
     query_images = better_data_base['{}_images'.format(DATA_TYPE)]
     query_labels = better_data_base['{}_labels'.format(DATA_TYPE)]
     gallery_images = better_data_base['{}_images'.format('train' if DATA_TYPE == 'train' else 'gallery')]
@@ -89,14 +89,18 @@ if __name__ == '__main__':
 
         # save the results
         if better_correct_num > worse_correct_num:
+            better_num += 1
             base_path = '{}----{}'.format(BETTER_DATA_BASE.split('.')[0], WORSE_DATA_BASE.split('.')[0])
             if not os.path.exists('results/{}'.format(base_path)):
                 os.mkdir('results/{}'.format(base_path))
             query_img_name = query_images[query_index]
+            print('[{}/{}] saving results for better case: {}'
+                  .format(query_index, num_query_images, query_img_name.split('/')[-1]))
             result_path = 'results/{}/{}'.format(base_path, query_img_name.split('/')[-1].split('.')[0])
             if os.path.exists(result_path):
                 shutil.rmtree(result_path)
             os.mkdir(result_path)
+
             query_image = Image.open(query_img_name).convert('RGB').resize((256, 256), resample=Image.BILINEAR)
             query_image.save('{}/query_img.jpg'.format(result_path))
             os.mkdir('{}/better'.format(result_path))
@@ -129,6 +133,7 @@ if __name__ == '__main__':
                 retrieval_image.save(
                     '{}/worse/retrieval_img_{}_{}.jpg'.format(result_path, num + 1, '%.4f' % retrieval_prob))
 
-    print('better data base AR@{}:{:.2f}%----worse data base AR@{}:{:.2f}%'
+    print('better data base AR@{}:{:.2f}%----worse data base AR@{}:{:.2f}%, better rate:{:.2f}%'
           .format(RETRIEVAL_NUM, better_correct_all / (better_correct_instance * RETRIEVAL_NUM) * 100,
-                  RETRIEVAL_NUM, worse_correct_all / (worse_correct_instance * RETRIEVAL_NUM) * 100))
+                  RETRIEVAL_NUM, worse_correct_all / (worse_correct_instance * RETRIEVAL_NUM) * 100,
+                  better_num / num_query_images * 100))
