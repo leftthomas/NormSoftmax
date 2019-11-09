@@ -90,7 +90,8 @@ if __name__ == '__main__':
         # save the results
         if better_correct_num > worse_correct_num:
             better_num += 1
-            base_path = '{}----{}'.format(BETTER_DATA_BASE.split('.')[0], WORSE_DATA_BASE.split('.')[0])
+            base_path = '{}----{}'.format(BETTER_DATA_BASE.split('_data_base.')[0],
+                                          WORSE_DATA_BASE.split('_data_base.')[0])
             if not os.path.exists('results/{}'.format(base_path)):
                 os.mkdir('results/{}'.format(base_path))
             query_img_name = query_images[query_index]
