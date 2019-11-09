@@ -16,10 +16,11 @@ class Model(nn.Module):
 
         # configs
         self.ensemble_size, self.with_random, self.device_ids = ensemble_size, with_random, device_ids
+        self.share_type = share_type
 
         # common features
-        self.common_extractor = []
-        basic_model, common_module_names = backbone(pretrained=True), module_names[:module_names.index(share_type) + 1]
+        self.common_extractor, basic_model = [], backbone(pretrained=True)
+        common_module_names = [] if share_type == 'none' else module_names[:module_names.index(share_type) + 1]
         for name, module in basic_model.named_children():
             if name in common_module_names:
                 self.common_extractor.append(module)
@@ -28,11 +29,14 @@ class Model(nn.Module):
               sum(param.numel() if param.requires_grad else 0 for param in self.common_extractor.parameters()))
 
         # individual features
-        self.layer1, self.layer2, self.layer3, self.layer4 = [], [], [], []
-        individual_module_names = module_names[module_names.index(share_type) + 1:]
+        self.head, self.layer1, self.layer2, self.layer3, self.layer4 = [], [], [], [], []
+        individual_module_names = module_names if share_type == 'none' else \
+            module_names[module_names.index(share_type) + 1:]
         for i in range(ensemble_size):
-            basic_model = backbone(pretrained=True)
+            basic_model, heads = backbone(pretrained=True), []
             for name, module in basic_model.named_children():
+                if name in individual_module_names and name in ['conv1', 'bn1', 'relu', 'maxpool']:
+                    heads.append(module)
                 if name in individual_module_names and name == 'layer1':
                     self.layer1.append(module.cuda(device_ids[0]))
                 if name in individual_module_names and name == 'layer2':
@@ -41,15 +45,19 @@ class Model(nn.Module):
                     self.layer3.append(module.cuda(device_ids[0 if i < ensemble_size / 6 else 1]))
                 if name in individual_module_names and name == 'layer4':
                     self.layer4.append(module.cuda(device_ids[0 if i < ensemble_size / 6 else 1]))
+            self.head.append(nn.Sequential(*heads).cuda(device_ids[0]))
+        self.head = nn.ModuleList(self.head)
         self.layer1 = nn.ModuleList(self.layer1)
         self.layer2 = nn.ModuleList(self.layer2)
         self.layer3 = nn.ModuleList(self.layer3)
         self.layer4 = nn.ModuleList(self.layer4)
         print("# trainable individual feature parameters:",
-              (sum(param.numel() if param.requires_grad else 0 for param in self.layer1.parameters()) + sum(
-                  param.numel() if param.requires_grad else 0 for param in self.layer2.parameters()) + sum(
-                  param.numel() if param.requires_grad else 0 for param in self.layer3.parameters()) + sum(
-                  param.numel() if param.requires_grad else 0 for param in self.layer4.parameters())) // ensemble_size)
+              (sum(param.numel() if param.requires_grad else 0 for param in self.head.parameters()) +
+               sum(param.numel() if param.requires_grad else 0 for param in self.layer1.parameters()) + sum(
+                          param.numel() if param.requires_grad else 0 for param in self.layer2.parameters()) + sum(
+                          param.numel() if param.requires_grad else 0 for param in self.layer3.parameters()) + sum(
+                          param.numel() if param.requires_grad else 0 for param in
+                          self.layer4.parameters())) // ensemble_size)
 
         # individual classifiers
         self.classifiers = nn.ModuleList([nn.Linear(512 * expansion, meta_class_size).cuda(device_ids[1])
@@ -69,6 +77,9 @@ class Model(nn.Module):
         out = []
         for i in range(self.ensemble_size):
             individual_feature = branch_weight[i] * common_feature
+            a = individual_feature
+            if len(self.head) != 0:
+                individual_feature = self.head[i](individual_feature.cuda(self.device_ids[0]))
             if len(self.layer1) != 0:
                 individual_feature = self.layer1[i](individual_feature.cuda(self.device_ids[0]))
             if len(self.layer2) != 0:

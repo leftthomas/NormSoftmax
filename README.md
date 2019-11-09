@@ -26,7 +26,7 @@ optional arguments:
 --label_type                  assign label with random method or fixed method [default value is 'fixed'](choices=['fixed', 'random'])
 --recalls                     selected recall [default value is '1,2,4,8']
 --model_type                  backbone type [default value is 'resnet18'](choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'])
---share_type                  shared module type [default value is 'layer1'](choices=['maxpool', 'layer1', 'layer2', 'layer3', 'layer4'])
+--share_type                  shared module type [default value is 'layer1'](choices=['none', 'maxpool', 'layer1', 'layer2', 'layer3', 'layer4'])
 --with_random                 with branch random weight or not [default value is False]
 --load_ids                    load already generated ids or not [default value is False]
 --batch_size                  train batch size [default value is 8]
