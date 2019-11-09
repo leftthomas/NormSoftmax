@@ -5,7 +5,7 @@ A PyTorch implementation of REIR based on the paper [Randomized Ensembles for Im
 - [Anaconda](https://www.anaconda.com/download/)
 - [PyTorch](https://pytorch.org)
 ```
-conda install pytorch torchvision cudatoolkit=10.1 -c pytorch
+conda install pytorch torchvision cudatoolkit=10.0 -c pytorch
 ```
 
 ## Datasets
@@ -38,12 +38,23 @@ optional arguments:
 
 ### Inference Demo
 ```
-python inference.py --retrieval_num 10
+python inference.py --retrieval_num 10 --data_type train
 optional arguments:
 --query_img_name              query image name [default value is 'data/car/uncropped/008055.jpg']
 --data_base                   queried database [default value is 'car_uncropped_fixed_random_resnet18_48_12_data_base.pth']
 --data_type                   retrieval database type [default value is 'test'](choices=['train', 'test'])
 --retrieval_num               retrieval number [default value is 8]
+```
+
+### Ablation Study
+```
+python ablation.py --save_results
+optional arguments:
+--better_data_base            better database [default value is 'car_uncropped_fixed_unrandom_layer1_resnet18_48_12_data_base.pth']
+--worse_data_base             worse database [default value is 'car_uncropped_random_unrandom_layer1_resnet18_48_12_data_base.pth']
+--data_type                   retrieval database type [default value is 'test'](choices=['train', 'test'])
+--retrieval_num               retrieval number [default value is 8]
+--save_results                with save results or not [default value is False]
 ```
 
 ## Benchmarks
@@ -54,7 +65,7 @@ The images are preprocessed with resize (256, 256), random horizontal flip and n
 
 For `CARS196` and `CUB200` datasets, ensemble size `48`, meta class size `12` and `20` epochs are used. 
 
-For `SOP` and `In-shop` datasets, ensemble size `48`, meta class size `192` and `40` epochs are used.
+For `SOP` and `In-shop` datasets, ensemble size `24`, meta class size `192` and `40` epochs are used.
 
 Here is the model parameter details:
 <table>
