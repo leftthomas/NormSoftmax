@@ -112,7 +112,7 @@ if __name__ == '__main__':
     for index, recall_id in enumerate(recall_ids):
         results['test_recall@{}'.format(recall_ids[index])] = []
 
-    train_data_set = ImageReader(DATA_NAME, 'train', CROP_TYPE, LABEL_TYPE, ENSEMBLE_SIZE, META_CLASS_SIZE)
+    train_data_set = ImageReader(DATA_NAME, 'train', CROP_TYPE, LABEL_TYPE, ENSEMBLE_SIZE, META_CLASS_SIZE, LOAD_IDS)
     train_data_loader = DataLoader(train_data_set, BATCH_SIZE, shuffle=True, num_workers=8)
 
     train_ext_data_set = ImageReader(DATA_NAME, 'train_ext', CROP_TYPE)

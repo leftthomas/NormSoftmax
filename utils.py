@@ -54,16 +54,17 @@ def create_fixed_id(meta_class_size, num_class, ensemble_size):
         check_list = list(zip(*idxes))
         i += 1
         if len(check_list) != len(set(check_list)):
-            print('random assigned labels have conflicts, try to random assign label again ({}/{})'.format(i, max_try))
+            print('try to random assign labels again ({}/{})'.format(i, max_try))
             assign_flag = False
         else:
             assign_flag = True
             break
 
     if not assign_flag:
+        remained = set(check_list)
         idx_all = set(product(range(meta_class_size), repeat=ensemble_size))
-        added = random.sample(idx_all - set(check_list), num_class - len(set(check_list)))
-        idxes = list(zip(*(added + check_list)))
+        added = set(random.sample(idx_all - remained, num_class - len(remained)))
+        idxes = list(zip(*(added | remained)))
 
     return idxes
 
@@ -93,7 +94,7 @@ class ImageReader(Dataset):
                 if os.path.exists(ids_name):
                     meta_ids = torch.load(ids_name)
                 else:
-                    print('{} is not exist'.format(ids_name))
+                    raise FileNotFoundError('{} is not exist'.format(ids_name))
             else:
                 if label_type == 'fixed':
                     meta_ids = create_fixed_id(meta_class_size, len(data_dict), ensemble_size)
