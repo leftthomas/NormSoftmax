@@ -49,7 +49,8 @@ if __name__ == '__main__':
     # finally we average the number, divide the retrieval num
     better_correct_all, worse_correct_all, better_correct_instance, worse_correct_instance = 0, 0, 0, 0
 
-    for query_index in tqdm(range(num_query_images), 'processing data...'):
+    progress_bar = tqdm(range(num_query_images), 'processing data...')
+    for query_index in progress_bar:
         query_label = torch.tensor(query_labels[query_index])
 
         better_query_feature = better_data_base['{}_features'.format(DATA_TYPE)][query_index]
@@ -101,8 +102,8 @@ if __name__ == '__main__':
             if not os.path.exists('results/{}'.format(base_path)):
                 os.mkdir('results/{}'.format(base_path))
             query_img_name = query_images[query_index]
-            print('[{}/{}] saving results for better case: {}'
-                  .format(query_index + 1, num_query_images, query_img_name.split('/')[-1]))
+            progress_bar.set_description('[{}/{}] saving results for better case: {}'
+                                         .format(query_index + 1, num_query_images, query_img_name.split('/')[-1]))
             result_path = 'results/{}/{}'.format(base_path, query_img_name.split('/')[-1].split('.')[0])
             if os.path.exists(result_path):
                 shutil.rmtree(result_path)
