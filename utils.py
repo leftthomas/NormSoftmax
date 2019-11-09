@@ -1,10 +1,10 @@
-import math
 import os
 import random
-from itertools import product
 
+import math
 import torch
 from PIL import Image
+from itertools import product
 from torch.utils.data import Dataset
 from torchvision import transforms
 
@@ -32,7 +32,14 @@ def create_random_id(meta_class_size, num_class, ensemble_size):
         idx_all = idx_all[:num_class]
         random.shuffle(idx_all)
         idxes.append(idx_all)
-    check_assign_conflict(idxes)
+
+    # check assign conflict
+    check_list = list(zip(*idxes))
+    if len(check_list) == len(set(check_list)):
+        print('random assigned labels have no conflicts')
+    else:
+        print('random assigned labels have conflicts')
+
     return idxes
 
 
@@ -41,31 +48,31 @@ def create_fixed_id(meta_class_size, num_class, ensemble_size):
     assert math.pow(meta_class_size, ensemble_size) >= num_class, 'make sure meta_class_size^ensemble_size >= num_class'
     assert meta_class_size <= num_class, 'make sure meta_class_size <= num_class'
 
-    if math.pow(meta_class_size, ensemble_size) >= 1000:
+    max_try, i, assign_flag = 10, 0, False
+    while i < max_try:
         idxes = create_random_id(meta_class_size, num_class, ensemble_size)
-        while check_assign_conflict(idxes):
-            print('try to random assign label again')
-            idxes = create_random_id(meta_class_size, num_class, ensemble_size)
-    else:
-        idx_all = random.sample(list(product(range(meta_class_size), repeat=ensemble_size)), num_class)
-        idxes = list(zip(*idx_all))
-        check_assign_conflict(idxes)
+        check_list = list(zip(*idxes))
+        i += 1
+        if len(check_list) != len(set(check_list)):
+            print('random assigned labels have conflicts, try to random assign label again ({}/{})'.format(i, max_try))
+            assign_flag = False
+        else:
+            assign_flag = True
+            break
+
+    if not assign_flag:
+        remained = set(check_list)
+        idx_all = set(product(range(meta_class_size), repeat=ensemble_size))
+        added = random.sample(idx_all - set(check_list), num_class - len(remained))
+        idxes = list(zip(*(added + remained)))
+
     return idxes
-
-
-def check_assign_conflict(idxes):
-    check_list = list(zip(*idxes))
-    if len(check_list) == len(set(check_list)):
-        print('random assigned labels have no conflicts')
-        return False
-    else:
-        print('random assigned labels have conflicts')
-        return True
 
 
 class ImageReader(Dataset):
 
-    def __init__(self, data_name, data_type, crop_type, label_type='fixed', ensemble_size=None, meta_class_size=None):
+    def __init__(self, data_name, data_type, crop_type, label_type='fixed', ensemble_size=None, meta_class_size=None,
+                 load_ids=False):
         if crop_type == 'cropped' and data_name not in ['car', 'cub']:
             raise NotImplementedError('cropped data only works for car or cub dataset')
 
@@ -82,8 +89,12 @@ class ImageReader(Dataset):
                 self.transform = transforms.Compose([transforms.Resize((256, 256)), transforms.RandomHorizontalFlip(),
                                                      transforms.ToTensor(), normalize])
             ids_name = 'results/{}_{}_{}_{}_ids.pth'.format(data_name, label_type, ensemble_size, meta_class_size)
-            if os.path.exists(ids_name):
-                meta_ids = torch.load(ids_name)
+
+            if load_ids:
+                if os.path.exists(ids_name):
+                    meta_ids = torch.load(ids_name)
+                else:
+                    print('{} is not exist'.format(ids_name))
             else:
                 if label_type == 'fixed':
                     meta_ids = create_fixed_id(meta_class_size, len(data_dict), ensemble_size)

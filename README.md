@@ -5,7 +5,7 @@ A PyTorch implementation of REIR based on the paper [Randomized Ensembles for Im
 - [Anaconda](https://www.anaconda.com/download/)
 - [PyTorch](https://pytorch.org)
 ```
-conda install pytorch torchvision cudatoolkit=10.0 -c pytorch
+conda install pytorch torchvision cudatoolkit=10.1 -c pytorch
 ```
 
 ## Datasets
@@ -28,6 +28,7 @@ optional arguments:
 --model_type                  backbone type [default value is 'resnet18'](choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'])
 --share_type                  shared module type [default value is 'layer1'](choices=['maxpool', 'layer1', 'layer2', 'layer3', 'layer4'])
 --with_random                 with branch random weight or not [default value is False]
+--load_ids                    load already generated ids or not [default value is False]
 --batch_size                  train batch size [default value is 8]
 --num_epochs                  train epochs number [default value is 20]
 --ensemble_size               ensemble model size [default value is 48]

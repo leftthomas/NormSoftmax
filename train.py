@@ -89,6 +89,7 @@ if __name__ == '__main__':
     parser.add_argument('--share_type', default='layer1', type=str,
                         choices=['maxpool', 'layer1', 'layer2', 'layer3', 'layer4'], help='shared module type')
     parser.add_argument('--with_random', action='store_true', help='with branch random weight or not')
+    parser.add_argument('--load_ids', action='store_true', help='load already generated ids or not')
     parser.add_argument('--batch_size', default=8, type=int, help='train batch size')
     parser.add_argument('--num_epochs', default=20, type=int, help='train epoch number')
     parser.add_argument('--ensemble_size', default=48, type=int, help='ensemble model size')
@@ -100,7 +101,7 @@ if __name__ == '__main__':
     DATA_NAME, RECALLS, BATCH_SIZE, NUM_EPOCHS = opt.data_name, opt.recalls, opt.batch_size, opt.num_epochs
     ENSEMBLE_SIZE, META_CLASS_SIZE, CROP_TYPE = opt.ensemble_size, opt.meta_class_size, opt.crop_type
     GPU_IDS, MODEL_TYPE, LABEL_TYPE, WITH_RANDOM = opt.gpu_ids, opt.model_type, opt.label_type, opt.with_random
-    SHARE_TYPE = opt.share_type
+    SHARE_TYPE, LOAD_IDS = opt.share_type, opt.load_ids
     random_flag = 'random' if WITH_RANDOM else 'unrandom'
     save_name_pre = '{}_{}_{}_{}_{}_{}_{}_{}'.format(DATA_NAME, CROP_TYPE, LABEL_TYPE, random_flag, SHARE_TYPE,
                                                      MODEL_TYPE, ENSEMBLE_SIZE, META_CLASS_SIZE)
