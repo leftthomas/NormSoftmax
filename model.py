@@ -16,7 +16,6 @@ class Model(nn.Module):
 
         # configs
         self.ensemble_size, self.with_random, self.device_ids = ensemble_size, with_random, device_ids
-        self.share_type = share_type
 
         # common features
         self.common_extractor, basic_model = [], backbone(pretrained=True)
@@ -77,7 +76,6 @@ class Model(nn.Module):
         out = []
         for i in range(self.ensemble_size):
             individual_feature = branch_weight[i] * common_feature
-            a = individual_feature
             if len(self.head) != 0:
                 individual_feature = self.head[i](individual_feature.cuda(self.device_ids[0]))
             if len(self.layer1) != 0:

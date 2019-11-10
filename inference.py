@@ -54,7 +54,7 @@ if __name__ == '__main__':
         retrieval_status = (retrieval_label == query_label).item()
         retrieval_prob = sim_matrix[index.item()].item()
         if retrieval_status:
-            draw.rectangle((0, 0, 255, 255), outline='green', width=5)
+            draw.rectangle((0, 0, 255, 255), outline='green', width=8)
         else:
-            draw.rectangle((0, 0, 255, 255), outline='red', width=5)
+            draw.rectangle((0, 0, 255, 255), outline='red', width=8)
         retrieval_image.save('{}/retrieval_img_{}_{}.jpg'.format(result_path, num + 1, '%.4f' % retrieval_prob))

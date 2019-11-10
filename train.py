@@ -34,15 +34,11 @@ def train(net, optim):
 
 def eval(net, recalls):
     net.eval()
-    iter = 2 if WITH_RANDOM else 1
     with torch.no_grad():
         for key in eval_dict.keys():
             eval_dict[key]['features'] = []
             for inputs, labels in eval_dict[key]['data_loader']:
-                out = []
-                for _ in range(iter):
-                    out.append(net(inputs.to(device_ids[0])))
-                out = torch.mean(torch.stack(out), dim=0)
+                out = net(inputs.to(device_ids[0]))
                 out = F.normalize(out, dim=-1)
                 eval_dict[key]['features'].append(out.cpu())
             eval_dict[key]['features'] = torch.cat(eval_dict[key]['features'], dim=0)
