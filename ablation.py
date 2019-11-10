@@ -133,7 +133,7 @@ if __name__ == '__main__':
                 draw = ImageDraw.Draw(retrieval_image)
                 retrieval_label = gallery_labels[index.item()]
                 retrieval_status = (retrieval_label == query_label).item()
-                retrieval_prob = better_sim_matrix[index.item()].item()
+                retrieval_prob = worse_sim_matrix[index.item()].item()
                 if retrieval_status:
                     draw.rectangle((0, 0, 255, 255), outline='green', width=8)
                 else:
