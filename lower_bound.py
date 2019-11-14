@@ -2,6 +2,7 @@ import math
 
 import numpy as np
 from matplotlib import pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 
 def s_lower_bound(n, m, epsilon=1e-8):
@@ -36,12 +37,12 @@ Y_s_list, Y_m_list = np.array(Y_s_list), np.array(Y_m_list)
 Z_s_list, Z_m_list = np.array(Z_s_list), np.array(Z_m_list)
 
 fig = plt.figure()
-ax = plt.axes(projection='3d')
+ax = Axes3D(fig)
 
 ax.scatter3D(X_s_list, Y_s_list, Z_s_list, cmap='Blues')
 # ax.scatter3D(X_m_list, Y_m_list, Z_m_list, cmap='Blues')
-# ax.set_xlabel('n value')
-# ax.set_ylabel('m value')
-# ax.set_zlabel('s value')
-# plt.savefig('s_value.pdf')
+ax.set_xlabel('n value')
+ax.set_ylabel('m value')
+ax.set_zlabel('k value')
+plt.savefig('k_value.pdf')
 plt.show()
