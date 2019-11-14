@@ -22,11 +22,11 @@ def m_lower_bound(n, s, epsilon=1e-8):
 
 
 X_s_list, X_m_list, Y_s_list, Y_m_list, Z_s_list, Z_m_list = [], [], [], [], [], []
-for i in range(100, 200, 5):
-    for j in range(2, 100, 5):
+for i in range(1000, 20000, 50):
+    for j in range(15, 100, 5):
         X_s_list.append(i)
         Y_s_list.append(j)
-        Z_s_list.append(s_lower_bound(i, j))
+        Z_s_list.append((s_lower_bound(i, j)))
         if i > j:
             X_m_list.append(i)
             Y_m_list.append(j)
@@ -39,10 +39,10 @@ Z_s_list, Z_m_list = np.array(Z_s_list), np.array(Z_m_list)
 fig = plt.figure()
 ax = Axes3D(fig)
 
-ax.scatter3D(X_s_list, Y_s_list, Z_s_list, cmap='Blues')
-# ax.scatter3D(X_m_list, Y_m_list, Z_m_list, cmap='Blues')
+# ax.scatter3D(X_s_list, Y_s_list, Z_s_list, cmap='Blues')
+ax.scatter3D(X_m_list, Y_m_list, Z_m_list, cmap='Blues')
 ax.set_xlabel('n value')
-ax.set_ylabel('m value')
-ax.set_zlabel('k value')
-plt.savefig('k_value.pdf')
+ax.set_ylabel('k value')
+ax.set_zlabel('m value')
+plt.savefig('m_value.pdf')
 plt.show()
