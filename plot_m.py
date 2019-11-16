@@ -2,9 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # for m
-# -2.352 (log(x))^2 + 20.16 log(x) + 22.62
-x = np.array([2, 6, 10, 12, 18, 24, 30, 36, 48, 64, 80])
-y = np.array([35.1, 52.2, 56.5, 58.1, 60.7, 63.5, 63.2, 64.6, 65.3, 65.9, 66.1])
+# -2.342 (log(x))^2 + 20.03 log(x) + 22.96
+x = np.array([2, 4, 6, 8, 10, 12, 18, 24, 30, 36, 48, 64, 80])
+y = np.array([35.1, 46.8, 52.2, 54.5, 56.5, 58.1, 60.7, 63.5, 63.2, 64.6, 65.3, 65.9, 66.1])
 
 z = np.polyfit(np.log(x), y, 2)  # using 2 polynomial with log to fit
 p = np.poly1d(z)
