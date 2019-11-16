@@ -65,7 +65,9 @@ The images are preprocessed with resize (256, 256), random horizontal flip and n
 
 For `CARS196` and `CUB200` datasets, ensemble size `48`, meta class size `12` and `20` epochs are used. 
 
-For `SOP` and `In-shop` datasets, ensemble size `24`, meta class size `192` and `30` epochs are used.
+For `SOP` dataset, ensemble size `48`, meta class size `512` and `40` epochs are used.
+
+For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs are used.
 
 Here is the model parameter details:
 <table>
