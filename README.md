@@ -69,51 +69,50 @@ For `SOP` dataset, ensemble size `48`, meta class size `512` and `40` epochs are
 
 For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs are used.
 
-Here is the model parameter details:
+### Model Parameter
 <table>
   <thead>
     <tr>
       <th>Backbone</th>
-      <th>resnet18</th>
-      <th>resnet34</th>
-      <th>resnet50</th>
-      <th>resnext50_32x4d</th>
+      <th>CARS196</th>
+      <th>CUB200</th>
+      <th>SOP</th>
+      <th>In-shop</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td align="center">CARS196</td>
+      <td align="center">ResNet18</td>
       <td align="center">529,365,376</td>
-      <td align="center">1,011,079,808</td>
-      <td align="center">1,118,974,592</td>
-      <td align="center">1,094,093,696</td>
-    </tr>
-    <tr>
-      <td align="center">CUB200</td>
       <td align="center">529,365,376</td>
-      <td align="center">1,011,079,808</td>
-      <td align="center">1,118,974,592</td>
-      <td align="center">1,094,093,696</td>
-    </tr>
-    <tr>
-      <td align="center">SOP</td>
       <td align="center">541,381,888</td>
-      <td align="center">1,023,096,320</td>
-      <td align="center">1,166,970,368</td>
-      <td align="center">1,142,089,472</td>
+      <td align="center">533,797,696</td>
     </tr>
     <tr>
-      <td align="center">In-shop</td>
-      <td align="center">533,797,696</td>
+      <td align="center">ResNet34</td>
+      <td align="center">1,011,079,808</td>
+      <td align="center">1,011,079,808</td>
+      <td align="center">1,023,096,320</td>
       <td align="center">1,015,512,128</td>
+    </tr>
+    <tr>
+      <td align="center">ResNet50</td>
+      <td align="center">1,118,974,592</td>
+      <td align="center">1,118,974,592</td>
+      <td align="center">1,166,970,368</td>
       <td align="center">1,136,677,952</td>
+    </tr>
+    <tr>
+      <td align="center">ResNeXt50</td>
+      <td align="center">1,094,093,696</td>
+      <td align="center">1,094,093,696</td>
+      <td align="center">1,142,089,472</td>
       <td align="center">1,111,797,056</td>
     </tr>
   </tbody>
 </table>
 
-Here is the results of uncropped `CARS196` dataset:
-
+# CARS196 (Uncropped)
 <table>
   <thead>
     <tr>
@@ -156,8 +155,7 @@ Here is the results of uncropped `CARS196` dataset:
   </tbody>
 </table>
 
-Here is the results of cropped `CARS196` dataset:
-
+# CARS196 (Cropped)
 <table>
   <thead>
     <tr>
@@ -200,8 +198,7 @@ Here is the results of cropped `CARS196` dataset:
   </tbody>
 </table>
 
-Here is the results of uncropped `CUB200` dataset:
-
+# CUB200 (Uncropped)
 <table>
   <thead>
     <tr>
@@ -244,8 +241,7 @@ Here is the results of uncropped `CUB200` dataset:
   </tbody>
 </table>
 
-Here is the results of cropped `CUB200` dataset:
-
+# CUB200 (Cropped)
 <table>
   <thead>
     <tr>
@@ -288,8 +284,7 @@ Here is the results of cropped `CUB200` dataset:
   </tbody>
 </table>
 
-Here is the results of `SOP` dataset:
-
+# SOP
 <table>
   <thead>
     <tr>
@@ -332,8 +327,7 @@ Here is the results of `SOP` dataset:
   </tbody>
 </table>
 
-Here is the results of `In-shop` dataset:
-
+# In-shop
 <table>
   <thead>
     <tr>
