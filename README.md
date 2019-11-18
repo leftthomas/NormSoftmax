@@ -414,16 +414,16 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
 
 - CAR/CUB (Uncropped)
 
-![CAR/CUB_Uncropped](results/sota_car_cub.pdf)
+![CAR/CUB_Uncropped](results/sota_car_cub.png)
 
 - CAR/CUB (Cropped)
 
-![CAR/CUB_Cropped](results/sota_car_cub_crop.pdf)
+![CAR/CUB_Cropped](results/sota_car_cub_crop.png)
 
 - SOP
 
-![SOP](results/sota_sop.pdf)
+![SOP](results/sota_sop.png)
 
 - ISC
 
-![ISC](results/sota_sop.pdf)
+![ISC](results/sota_sop.png)
