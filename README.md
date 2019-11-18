@@ -112,7 +112,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
   </tbody>
 </table>
 
-# CARS196 (Uncropped)
+### CARS196 (Uncropped)
 <table>
   <thead>
     <tr>
@@ -155,7 +155,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
   </tbody>
 </table>
 
-# CARS196 (Cropped)
+### CARS196 (Cropped)
 <table>
   <thead>
     <tr>
@@ -198,7 +198,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
   </tbody>
 </table>
 
-# CUB200 (Uncropped)
+### CUB200 (Uncropped)
 <table>
   <thead>
     <tr>
@@ -241,7 +241,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
   </tbody>
 </table>
 
-# CUB200 (Cropped)
+### CUB200 (Cropped)
 <table>
   <thead>
     <tr>
@@ -284,7 +284,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
   </tbody>
 </table>
 
-# SOP
+### SOP
 <table>
   <thead>
     <tr>
@@ -327,7 +327,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
   </tbody>
 </table>
 
-# In-shop
+### In-shop
 <table>
   <thead>
     <tr>
