@@ -29,7 +29,7 @@ optional arguments:
 --share_type                  shared module type [default value is 'layer1'](choices=['none', 'maxpool', 'layer1', 'layer2', 'layer3', 'layer4'])
 --with_random                 with branch random weight or not [default value is False]
 --load_ids                    load already generated ids or not [default value is False]
---batch_size                  train batch size [default value is 8]
+--batch_size                  train batch size [default value is 10]
 --num_epochs                  train epochs number [default value is 20]
 --ensemble_size               ensemble model size [default value is 48]
 --meta_class_size             meta class size [default value is 12]
@@ -41,7 +41,7 @@ optional arguments:
 python inference.py --retrieval_num 10 --data_type train
 optional arguments:
 --query_img_name              query image name [default value is 'data/car/uncropped/008055.jpg']
---data_base                   queried database [default value is 'car_uncropped_fixed_random_resnet18_48_12_data_base.pth']
+--data_base                   queried database [default value is 'car_uncropped_fixed_random_layer1_resnet18_48_12_data_base.pth']
 --data_type                   retrieval database type [default value is 'test'](choices=['train', 'test'])
 --retrieval_num               retrieval number [default value is 8]
 ```
@@ -58,7 +58,7 @@ optional arguments:
 ```
 
 ## Benchmarks
-Adam optimizer is used with learning rate scheduling. The models are trained with batch size `8` on two 
+Adam optimizer is used with learning rate scheduling. The models are trained with batch size `10` on two 
 NVIDIA Tesla V100 (32G) GPUs.
 
 The images are preprocessed with resize (256, 256), random horizontal flip and normalize. 
