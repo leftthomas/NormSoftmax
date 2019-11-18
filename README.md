@@ -410,3 +410,20 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
   </tbody>
 </table>
 
+## Results
+
+- CAR/CUB (Uncropped)
+
+![CAR/CUB_Uncropped](results/sota_car_cub.pdf)
+
+- CAR/CUB (Cropped)
+
+![CAR/CUB_Cropped](results/sota_car_cub_crop.pdf)
+
+- SOP
+
+![SOP](results/sota_sop.pdf)
+
+- ISC
+
+![ISC](results/sota_sop.pdf)
