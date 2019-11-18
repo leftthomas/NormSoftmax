@@ -1,6 +1,10 @@
 # REIR
 A PyTorch implementation of REIR based on the paper [Randomized Ensembles for Image Retrieval]().
 
+<div align="center">
+  <img src="results/architecture.png"/>
+</div>
+
 ## Requirements
 - [Anaconda](https://www.anaconda.com/download/)
 - [PyTorch](https://pytorch.org)
