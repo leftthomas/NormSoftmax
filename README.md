@@ -117,36 +117,44 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
   <thead>
     <tr>
       <th>Backbone</th>
-      <th>resnet18</th>
-      <th>resnet34</th>
-      <th>resnet50</th>
-      <th>resnext50_32x4d</th>
+      <th>R@1</th>
+      <th>R@2</th>
+      <th>>R@4</th>
+      <th>R@8</th>
+      <th>Download Link</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td align="center">R@1</td>
+      <td align="center">ResNet18</td>
       <td align="center">94.47%</td>
       <td align="center">94.23%</td>
       <td align="center">94.32%</td>
       <td align="center">95.01%</td>
     </tr>
     <tr>
-      <td align="center">R@2</td>
+      <td align="center">ResNet34</td>
       <td align="center">97.21%</td>
       <td align="center">96.75%</td>
       <td align="center">96.94%</td>
       <td align="center">97.26%</td>
     </tr>
     <tr>
-      <td align="center">R@4</td>
+      <td align="center">ResNet50</td>
       <td align="center">98.60%</td>
       <td align="center">98.20%</td>
       <td align="center">98.30%</td>
       <td align="center">98.20%</td>
     </tr>
     <tr>
-      <td align="center">R@8</td>
+      <td align="center">ResNeXt50</td>
+      <td align="center">99.37%</td>
+      <td align="center">98.94%</td>
+      <td align="center">98.97%</td>
+      <td align="center">98.94%</td>
+    </tr>
+    <tr>
+      <td align="center">ResNeXt50</td>
       <td align="center">99.37%</td>
       <td align="center">98.94%</td>
       <td align="center">98.97%</td>
@@ -160,41 +168,41 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
   <thead>
     <tr>
       <th>Backbone</th>
-      <th>resnet18</th>
-      <th>resnet34</th>
-      <th>resnet50</th>
-      <th>resnext50_32x4d</th>
+      <th>R@1</th>
+      <th>R@2</th>
+      <th>>R@4</th>
+      <th>R@8</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td align="center">R@1</td>
-      <td align="center">96.78%</td>
-      <td align="center">96.59%</td>
-      <td align="center">96.56%</td>
-      <td align="center">96.81%</td>
+      <td align="center">ResNet18</td>
+      <td align="center">94.47%</td>
+      <td align="center">94.23%</td>
+      <td align="center">94.32%</td>
+      <td align="center">95.01%</td>
     </tr>
     <tr>
-      <td align="center">R@2</td>
-      <td align="center">98.38%</td>
-      <td align="center">98.16%</td>
-      <td align="center">98.09%</td>
-      <td align="center">98.18%</td>
-    </tr>
-    </tr>
-    <tr>
-      <td align="center">R@4</td>
-      <td align="center">99.08%</td>
-      <td align="center">98.89%</td>
-      <td align="center">98.73%</td>
-      <td align="center">98.88%</td>
+      <td align="center">ResNet34</td>
+      <td align="center">97.21%</td>
+      <td align="center">96.75%</td>
+      <td align="center">96.94%</td>
+      <td align="center">97.26%</td>
     </tr>
     <tr>
-      <td align="center">R@8</td>
-      <td align="center">99.47%</td>
-      <td align="center">99.27%</td>
-      <td align="center">99.26%</td>
-      <td align="center">99.41%</td>
+      <td align="center">ResNet50</td>
+      <td align="center">98.60%</td>
+      <td align="center">98.20%</td>
+      <td align="center">98.30%</td>
+      <td align="center">98.20%</td>
+    </tr>
+    <tr>
+      <td align="center">ResNeXt50</td>
+      <td align="center">99.37%</td>
+      <td align="center">98.94%</td>
+      <td align="center">98.97%</td>
+      <td align="center">98.94%</td>
+    </tr>
   </tbody>
 </table>
 
@@ -203,40 +211,40 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
   <thead>
     <tr>
       <th>Backbone</th>
-      <th>resnet18</th>
-      <th>resnet34</th>
-      <th>resnet50</th>
-      <th>resnext50_32x4d</th>
+      <th>R@1</th>
+      <th>R@2</th>
+      <th>>R@4</th>
+      <th>R@8</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td align="center">R@1</td>
-      <td align="center">81.99%</td>
-      <td align="center">73.68%</td>
-      <td align="center">75.25%</td>
-      <td align="center">78.39%</td>
+      <td align="center">ResNet18</td>
+      <td align="center">94.47%</td>
+      <td align="center">94.23%</td>
+      <td align="center">94.32%</td>
+      <td align="center">95.01%</td>
     </tr>
     <tr>
-      <td align="center">R@2</td>
-      <td align="center">88.49%</td>
-      <td align="center">81.55%</td>
-      <td align="center">83.52%</td>
-      <td align="center">85.35%</td>
+      <td align="center">ResNet34</td>
+      <td align="center">97.21%</td>
+      <td align="center">96.75%</td>
+      <td align="center">96.94%</td>
+      <td align="center">97.26%</td>
     </tr>
     <tr>
-      <td align="center">R@4</td>
-      <td align="center">92.52%</td>
-      <td align="center">87.67%</td>
-      <td align="center">89.26%</td>
-      <td align="center">90.11%</td>
+      <td align="center">ResNet50</td>
+      <td align="center">98.60%</td>
+      <td align="center">98.20%</td>
+      <td align="center">98.30%</td>
+      <td align="center">98.20%</td>
     </tr>
     <tr>
-      <td align="center">R@8</td>
-      <td align="center">95.59%</td>
-      <td align="center">92.02%</td>
-      <td align="center">93.21%</td>
-      <td align="center">93.75%</td>
+      <td align="center">ResNeXt50</td>
+      <td align="center">99.37%</td>
+      <td align="center">98.94%</td>
+      <td align="center">98.97%</td>
+      <td align="center">98.94%</td>
     </tr>
   </tbody>
 </table>
@@ -246,40 +254,40 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
   <thead>
     <tr>
       <th>Backbone</th>
-      <th>resnet18</th>
-      <th>resnet34</th>
-      <th>resnet50</th>
-      <th>resnext50_32x4d</th>
+      <th>R@1</th>
+      <th>R@2</th>
+      <th>>R@4</th>
+      <th>R@8</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td align="center">R@1</td>
-      <td align="center">88.99%</td>
-      <td align="center">86.24%</td>
-      <td align="center">85.48%</td>
-      <td align="center">86.36%</td>
+      <td align="center">ResNet18</td>
+      <td align="center">94.47%</td>
+      <td align="center">94.23%</td>
+      <td align="center">94.32%</td>
+      <td align="center">95.01%</td>
     </tr>
     <tr>
-      <td align="center">R@2</td>
-      <td align="center">92.94%</td>
-      <td align="center">91.51%</td>
-      <td align="center">91.34%</td>
-      <td align="center">91.32%</td>
+      <td align="center">ResNet34</td>
+      <td align="center">97.21%</td>
+      <td align="center">96.75%</td>
+      <td align="center">96.94%</td>
+      <td align="center">97.26%</td>
     </tr>
     <tr>
-      <td align="center">R@4</td>
-      <td align="center">95.53%</td>
-      <td align="center">94.43%</td>
-      <td align="center">94.70%</td>
-      <td align="center">94.75%</td>
+      <td align="center">ResNet50</td>
+      <td align="center">98.60%</td>
+      <td align="center">98.20%</td>
+      <td align="center">98.30%</td>
+      <td align="center">98.20%</td>
     </tr>
     <tr>
-      <td align="center">R@8</td>
-      <td align="center">97.65%</td>
-      <td align="center">96.44%</td>
-      <td align="center">96.78%</td>
-      <td align="center">96.47%</td>
+      <td align="center">ResNeXt50</td>
+      <td align="center">99.37%</td>
+      <td align="center">98.94%</td>
+      <td align="center">98.97%</td>
+      <td align="center">98.94%</td>
     </tr>
   </tbody>
 </table>
