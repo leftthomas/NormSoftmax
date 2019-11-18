@@ -167,8 +167,9 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <th>Backbone</th>
       <th>R@1</th>
       <th>R@2</th>
-      <th>>R@4</th>
+      <th>R@4</th>
       <th>R@8</th>
+      <th>Download Link</th>
     </tr>
   </thead>
   <tbody>
@@ -178,6 +179,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">94.23%</td>
       <td align="center">94.32%</td>
       <td align="center">95.01%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
     <tr>
       <td align="center">ResNet34</td>
@@ -185,6 +187,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">96.75%</td>
       <td align="center">96.94%</td>
       <td align="center">97.26%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
     <tr>
       <td align="center">ResNet50</td>
@@ -192,6 +195,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">98.20%</td>
       <td align="center">98.30%</td>
       <td align="center">98.20%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
     <tr>
       <td align="center">ResNeXt50</td>
@@ -199,6 +203,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">98.94%</td>
       <td align="center">98.97%</td>
       <td align="center">98.94%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
   </tbody>
 </table>
@@ -210,8 +215,9 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <th>Backbone</th>
       <th>R@1</th>
       <th>R@2</th>
-      <th>>R@4</th>
+      <th>R@4</th>
       <th>R@8</th>
+      <th>Download Link</th>
     </tr>
   </thead>
   <tbody>
@@ -221,6 +227,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">94.23%</td>
       <td align="center">94.32%</td>
       <td align="center">95.01%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
     <tr>
       <td align="center">ResNet34</td>
@@ -228,6 +235,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">96.75%</td>
       <td align="center">96.94%</td>
       <td align="center">97.26%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
     <tr>
       <td align="center">ResNet50</td>
@@ -235,6 +243,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">98.20%</td>
       <td align="center">98.30%</td>
       <td align="center">98.20%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
     <tr>
       <td align="center">ResNeXt50</td>
@@ -242,6 +251,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">98.94%</td>
       <td align="center">98.97%</td>
       <td align="center">98.94%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
   </tbody>
 </table>
@@ -253,8 +263,9 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <th>Backbone</th>
       <th>R@1</th>
       <th>R@2</th>
-      <th>>R@4</th>
+      <th>R@4</th>
       <th>R@8</th>
+      <th>Download Link</th>
     </tr>
   </thead>
   <tbody>
@@ -264,6 +275,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">94.23%</td>
       <td align="center">94.32%</td>
       <td align="center">95.01%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
     <tr>
       <td align="center">ResNet34</td>
@@ -271,6 +283,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">96.75%</td>
       <td align="center">96.94%</td>
       <td align="center">97.26%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
     <tr>
       <td align="center">ResNet50</td>
@@ -278,6 +291,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">98.20%</td>
       <td align="center">98.30%</td>
       <td align="center">98.20%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
     <tr>
       <td align="center">ResNeXt50</td>
@@ -285,6 +299,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">98.94%</td>
       <td align="center">98.97%</td>
       <td align="center">98.94%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
   </tbody>
 </table>
@@ -294,40 +309,45 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
   <thead>
     <tr>
       <th>Backbone</th>
-      <th>resnet18</th>
-      <th>resnet34</th>
-      <th>resnet50</th>
-      <th>resnext50_32x4d</th>
+      <th>R@1</th>
+      <th>R@10</th>
+      <th>R@100</th>
+      <th>R@1000</th>
+      <th>Download Link</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td align="center">R@1</td>
-      <td align="center">90.69%</td>
-      <td align="center">90.86%</td>
-      <td align="center">83.27%</td>
-      <td align="center">85.82%</td>
+      <td align="center">ResNet18</td>
+      <td align="center">94.47%</td>
+      <td align="center">94.23%</td>
+      <td align="center">94.32%</td>
+      <td align="center">95.01%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
     <tr>
-      <td align="center">R@10</td>
-      <td align="center">96.07%</td>
-      <td align="center">95.91%</td>
-      <td align="center">89.00%</td>
-      <td align="center">91.31%</td>
-    </tr>
-    <tr>
-      <td align="center">R@100</td>
-      <td align="center">98.11%</td>
-      <td align="center">98.01%</td>
-      <td align="center">92.70%</td>
-      <td align="center">94.59%</td>
-    </tr>
-    <tr>
-      <td align="center">R@1000</td>
-      <td align="center">99.29%</td>
-      <td align="center">99.22%</td>
-      <td align="center">96.27%</td>
+      <td align="center">ResNet34</td>
       <td align="center">97.21%</td>
+      <td align="center">96.75%</td>
+      <td align="center">96.94%</td>
+      <td align="center">97.26%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
+    </tr>
+    <tr>
+      <td align="center">ResNet50</td>
+      <td align="center">98.60%</td>
+      <td align="center">98.20%</td>
+      <td align="center">98.30%</td>
+      <td align="center">98.20%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
+    </tr>
+    <tr>
+      <td align="center">ResNeXt50</td>
+      <td align="center">99.37%</td>
+      <td align="center">98.94%</td>
+      <td align="center">98.97%</td>
+      <td align="center">98.94%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
   </tbody>
 </table>
@@ -337,54 +357,55 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
   <thead>
     <tr>
       <th>Backbone</th>
-      <th>resnet18</th>
-      <th>resnet34</th>
-      <th>resnet50</th>
-      <th>resnext50_32x4d</th>
+      <th>R@1</th>
+      <th>R@10</th>
+      <th>R@20</th>
+      <th>R@30</th>
+      <th>R@40</th>
+      <th>R@50</th>
+      <th>Download Link</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td align="center">R@1</td>
-      <td align="center">77.11%</td>
-      <td align="center">83.38%</td>
-      <td align="center">77.20%</td>
-      <td align="center">88.02%</td>
+      <td align="center">ResNet18</td>
+      <td align="center">94.47%</td>
+      <td align="center">94.23%</td>
+      <td align="center">94.32%</td>
+      <td align="center">95.01%</td>
+      <td align="center">94.32%</td>
+      <td align="center">95.01%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
     <tr>
-      <td align="center">R@10</td>
-      <td align="center">92.91%</td>
-      <td align="center">95.33%</td>
-      <td align="center">92.81%</td>
-      <td align="center">96.83%</td>
+      <td align="center">ResNet34</td>
+      <td align="center">97.21%</td>
+      <td align="center">96.75%</td>
+      <td align="center">96.94%</td>
+      <td align="center">97.26%</td>
+      <td align="center">94.32%</td>
+      <td align="center">95.01%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
     <tr>
-      <td align="center">R@20</td>
-      <td align="center">94.86%</td>
-      <td align="center">96.82%</td>
-      <td align="center">94.90%</td>
-      <td align="center">97.74%</td>
+      <td align="center">ResNet50</td>
+      <td align="center">98.60%</td>
+      <td align="center">98.20%</td>
+      <td align="center">98.30%</td>
+      <td align="center">98.20%</td>
+      <td align="center">94.32%</td>
+      <td align="center">95.01%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
     <tr>
-      <td align="center">R@30</td>
-      <td align="center">95.80%</td>
-      <td align="center">97.38%</td>
-      <td align="center">95.87%</td>
-      <td align="center">98.22%</td>
-    </tr>
-    <tr>
-      <td align="center">R@40</td>
-      <td align="center">96.40%</td>
-      <td align="center">97.77%</td>
-      <td align="center">96.48%</td>
-      <td align="center">98.57%</td>
-    </tr>
-    <tr>
-      <td align="center">R@50</td>
-      <td align="center">96.80%</td>
-      <td align="center">98.08%</td>
-      <td align="center">97.00%</td>
-      <td align="center">98.76%</td>
+      <td align="center">ResNeXt50</td>
+      <td align="center">99.37%</td>
+      <td align="center">98.94%</td>
+      <td align="center">98.97%</td>
+      <td align="center">98.94%</td>
+      <td align="center">94.32%</td>
+      <td align="center">95.01%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
   </tbody>
 </table>
