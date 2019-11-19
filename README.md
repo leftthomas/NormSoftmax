@@ -89,28 +89,28 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">ResNet18</td>
       <td align="center">529,365,376</td>
       <td align="center">529,365,376</td>
-      <td align="center">541,381,888</td>
+      <td align="center">541,677,376</td>
       <td align="center">533,797,696</td>
     </tr>
     <tr>
       <td align="center">ResNet34</td>
       <td align="center">1,011,079,808</td>
       <td align="center">1,011,079,808</td>
-      <td align="center">1,023,096,320</td>
+      <td align="center">1,023,391,808</td>
       <td align="center">1,015,512,128</td>
     </tr>
     <tr>
       <td align="center">ResNet50</td>
       <td align="center">1,118,974,592</td>
       <td align="center">1,118,974,592</td>
-      <td align="center">1,166,970,368</td>
+      <td align="center">1,168,150,592</td>
       <td align="center">1,136,677,952</td>
     </tr>
     <tr>
       <td align="center">ResNeXt50</td>
       <td align="center">1,094,093,696</td>
       <td align="center">1,094,093,696</td>
-      <td align="center">1,142,089,472</td>
+      <td align="center">1,143,269,696</td>
       <td align="center">1,111,797,056</td>
     </tr>
   </tbody>
