@@ -299,10 +299,10 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
     </tr>
     <tr>
       <td align="center">ResNeXt50</td>
-      <td align="center">99.37%</td>
-      <td align="center">98.94%</td>
-      <td align="center">98.97%</td>
-      <td align="center">98.94%</td>
+      <td align="center">86.3%</td>
+      <td align="center">91.3%</td>
+      <td align="center">94.5%</td>
+      <td align="center">96.6%</td>
       <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
   </tbody>
