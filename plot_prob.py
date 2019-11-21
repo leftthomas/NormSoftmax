@@ -1,5 +1,3 @@
-import math
-
 import numpy as np
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
@@ -7,9 +5,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 def get_prob(n, k):
     assert 1 < k < n
-    a, b = math.floor(n / k), math.ceil(n / k)
-    i = k - (n % k)
-    return (i * a * (a - 1) + (k - i) * b * (b - 1)) / (n * (n - 1))
+    return 2 * (2 * n - k) / (k * (n - 1))
 
 
 N, K, Prob = [], [], []
