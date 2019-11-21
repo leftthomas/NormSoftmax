@@ -15,7 +15,7 @@ def s_lower_bound(n, m, epsilon=1e-8):
 def m_lower_bound(n, s, epsilon=1e-8):
     assert n > 1 and s > 1 and epsilon > 0 and epsilon < 1
     first_constraint = math.log(n, s)
-    second_constraint = math.log(epsilon, s / 4) + 1
+    second_constraint = math.log(epsilon, 4 / s) + 1
     return math.ceil(max(first_constraint, second_constraint))
 
 
@@ -32,7 +32,7 @@ def get_index_s_lower_bound(n, m, epsilon=1e-8):
 def get_index_m_lower_bound(n, s, epsilon=1e-8):
     assert n > 1 and s > 1 and epsilon > 0 and epsilon < 1
     first_constraint = math.log(n, s)
-    second_constraint = math.log(epsilon, s / 4) + 1
+    second_constraint = math.log(epsilon, 4 / s) + 1
     if first_constraint >= second_constraint:
         return 1
     else:
@@ -59,19 +59,19 @@ Z_s_list, Z_m_list = np.array(Z_s_list), np.array(Z_m_list)
 fig = plt.figure()
 ax = Axes3D(fig)
 
-# ax.scatter3D(X_m_list, Y_m_list, Z_m_list)
-# ax.set_xlabel('n value')
-# ax.set_ylabel('k value')
-# ax.set_zlabel('m value')
-# plt.savefig('m_value.pdf')
-# plt.show()
-
-ax.scatter3D(X_s_list, Y_s_list, Z_s_list)
+ax.scatter3D(X_m_list, Y_m_list, Z_m_list)
 ax.set_xlabel('n value')
-ax.set_ylabel('m value')
-ax.set_zlabel('k value')
-plt.savefig('k_value.pdf')
+ax.set_ylabel('k value')
+ax.set_zlabel('m value')
+plt.savefig('m_value.pdf')
 plt.show()
+
+# ax.scatter3D(X_s_list, Y_s_list, Z_s_list)
+# ax.set_xlabel('n value')
+# ax.set_ylabel('m value')
+# ax.set_zlabel('k value')
+# plt.savefig('k_value.pdf')
+# plt.show()
 
 # ax.scatter3D(X_s_list, Y_s_list, Z_m_index_list)
 # ax.set_xlabel('n value')
