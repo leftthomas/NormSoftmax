@@ -379,7 +379,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">95.2%</td>
       <td align="center">95.8%</td>
       <td align="center">96.3%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
+      <td align="center"><a href="https://pan.baidu.com/s/14-TdMqY5zxhPjjzEyWKnbw">model</a>&nbsp;|&nbsp;czd3</td>
     </tr>
     <tr>
       <td align="center">ResNet34</td>
@@ -389,7 +389,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">97.1%</td>
       <td align="center">97.4%</td>
       <td align="center">97.7%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1XV3LcHc8nYrJDV-Z-hAkfw">model</a>&nbsp;|&nbsp;1n2h</td>
     </tr>
     <tr>
       <td align="center">ResNet50</td>
@@ -399,7 +399,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">96.1%</td>
       <td align="center">96.7%</td>
       <td align="center">97.0%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1yqwTTiGKWnZfkoSZs1LuvQ">model</a>&nbsp;|&nbsp;6dh2</td>
     </tr>
     <tr>
       <td align="center">ResNeXt50</td>
@@ -409,7 +409,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">98.1%</td>
       <td align="center">98.4%</td>
       <td align="center">98.6%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1Kf0Tq_q2ODTAp3RXV2_idQ">model</a>&nbsp;|&nbsp;xam8</td>
     </tr>
   </tbody>
 </table>
