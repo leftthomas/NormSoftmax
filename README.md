@@ -403,12 +403,12 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
     </tr>
     <tr>
       <td align="center">ResNeXt50</td>
-      <td align="center">99.37%</td>
-      <td align="center">98.94%</td>
-      <td align="center">98.97%</td>
-      <td align="center">98.94%</td>
-      <td align="center">94.32%</td>
-      <td align="center">95.01%</td>
+      <td align="center">87.7%</td>
+      <td align="center">96.7%</td>
+      <td align="center">97.7%</td>
+      <td align="center">98.1%</td>
+      <td align="center">98.4%</td>
+      <td align="center">98.6%</td>
       <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
     </tr>
   </tbody>
@@ -430,4 +430,4 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
 
 - ISC
 
-![ISC](results/sota_sop.png)
+![ISC](results/sota_isc.png)
