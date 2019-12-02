@@ -327,7 +327,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">95.1%</td>
       <td align="center">97.6%</td>
       <td align="center">99.1%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1UTgAZga6o7yx13oDx8VK8g">model</a>&nbsp;|&nbsp;6kun</td>
     </tr>
     <tr>
       <td align="center">ResNet34</td>
@@ -335,7 +335,7 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">95.3%</td>
       <td align="center">97.4%</td>
       <td align="center">98.9%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1KSx-AaOYfIdZkk9Z-zyl8Q">model</a>&nbsp;|&nbsp;kdzt</td>
     </tr>
     <tr>
       <td align="center">ResNet50</td>
@@ -343,15 +343,15 @@ For `In-shop` dataset, ensemble size `48`, meta class size `192` and `40` epochs
       <td align="center">90.7%</td>
       <td align="center">93.9%</td>
       <td align="center">96.8%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1_xaiZKwHp3BAp0U1K1ImrQ">model</a>&nbsp;|&nbsp;vsps</td>
     </tr>
     <tr>
       <td align="center">ResNeXt50</td>
-      <td align="center">99.37%</td>
-      <td align="center">98.94%</td>
-      <td align="center">98.97%</td>
-      <td align="center">98.94%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/1k6wIhyJfRLtr9WY_SoZNIw">model</a>&nbsp;|&nbsp;vqeq</td>
+      <td align="center">87.8%</td>
+      <td align="center">93.2%</td>
+      <td align="center">96.0%</td>
+      <td align="center">98.1%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1HCzf6ROjePEyKWs-h3kDsA">model</a>&nbsp;|&nbsp;8588</td>
     </tr>
   </tbody>
 </table>
