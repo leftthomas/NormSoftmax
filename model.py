@@ -29,10 +29,11 @@ class Model(nn.Module):
         # Refactor Layer
         self.refactor = nn.Linear(512 * expansion, feature_dim, bias=False)
         # Classification Layer
-        self.fc = nn.Sequential(nn.BatchNorm1d(512 * expansion), nn.Linear(512 * expansion, num_classes))
+        self.fc = nn.Sequential(nn.BatchNorm1d(feature_dim), nn.Linear(feature_dim, num_classes))
 
     def forward(self, x):
-        global_feature = F.adaptive_avg_pool2d(self.features(x), output_size=(1, 1))
+        global_feature = F.adaptive_max_pool2d(self.features(x), output_size=(1, 1))
         global_feature = torch.flatten(global_feature, start_dim=1)
-        classes = self.fc(global_feature)
-        return F.normalize(global_feature, dim=-1), classes
+        feature = self.refactor(global_feature)
+        classes = self.fc(feature)
+        return F.normalize(feature, dim=-1), classes
