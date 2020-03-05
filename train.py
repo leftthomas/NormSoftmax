@@ -66,7 +66,6 @@ if __name__ == '__main__':
                         help='crop data or not, it only works for car or cub dataset')
     parser.add_argument('--backbone_type', default='resnet18', type=str,
                         choices=['resnet18', 'resnet34', 'resnet50', 'resnext50'], help='backbone network type')
-    parser.add_argument('--capsule_num', default=16, type=int, help='hidden capsule number')
     parser.add_argument('--feature_dim', default=512, type=int, help='feature dim')
     parser.add_argument('--margin', default=0.1, type=float, help='margin of m for triplet loss')
     parser.add_argument('--recalls', default='1,2,4,8', type=str, help='selected recall')
@@ -76,10 +75,9 @@ if __name__ == '__main__':
     opt = parser.parse_args()
     # args parse
     data_path, data_name, crop_type, backbone_type = opt.data_path, opt.data_name, opt.crop_type, opt.backbone_type
-    capsule_num, feature_dim, margin, batch_size = opt.capsule_num, opt.feature_dim, opt.margin, opt.batch_size
-    recalls, num_epochs = [int(k) for k in opt.recalls.split(',')], opt.num_epochs
-    save_name_pre = '{}_{}_{}_{}_{}_{}_{}'.format(data_name, crop_type, backbone_type, capsule_num, feature_dim,
-                                                  margin, batch_size)
+    feature_dim, margin, batch_size, num_epochs = opt.feature_dim, opt.margin, opt.batch_size, opt.num_epochs
+    recalls = [int(k) for k in opt.recalls.split(',')]
+    save_name_pre = '{}_{}_{}_{}_{}_{}'.format(data_name, crop_type, backbone_type, feature_dim, margin, batch_size)
 
     results = {'train_loss': []}
     for recall_id in recalls:
@@ -98,7 +96,7 @@ if __name__ == '__main__':
         eval_dict['gallery'] = {'data_loader': gallery_data_loader}
 
     # model setup, model profile, optimizer config and loss definition
-    model = Model(backbone_type, capsule_num, feature_dim).cuda()
+    model = Model(backbone_type, feature_dim).cuda()
     flops, params = profile(model, inputs=(torch.randn(1, 3, 224, 224).cuda(),))
     flops, params = clever_format([flops, params])
     print('# Model Params: {} FLOPs: {}'.format(params, flops))

@@ -9,10 +9,6 @@ A PyTorch implementation of CLF based on the paper [Combination of Multiple Loca
 ```
 conda install pytorch torchvision cudatoolkit=10.0 -c pytorch
 ```
-- Capsule Layer
-```
-pip install git+https://github.com/leftthomas/CapsuleLayer.git@master
-```
 - thop
 ```
 pip install thop
@@ -35,7 +31,6 @@ optional arguments:
 --data_name                   dataset name [default value is 'car'](choices=['car', 'cub', 'sop', 'isc'])
 --crop_type                   crop data or not, it only works for car or cub dataset [default value is 'uncropped'](choices=['uncropped', 'cropped'])
 --backbone_type               backbone network type [default value is 'resnet18'](choices=['resnet18', 'resnet34', 'resnet50', 'resnext50'])
---capsule_num                 hidden capsule number [default value is 16]
 --feature_dim                 feature dim [default value is 512]
 --margin                      margin of m for triplet loss [default value is 0.1]
 --recalls                     selected recall [default value is '1,2,4,8']
@@ -48,7 +43,7 @@ optional arguments:
 python test.py --retrieval_num 10
 optional arguments:
 --query_img_name              query image name [default value is '/home/data/car/uncropped/008055.jpg']
---data_base                   queried database [default value is 'car_uncropped_resnet18_16_512_0.1_128_data_base.pth']
+--data_base                   queried database [default value is 'car_uncropped_resnet18_512_0.1_128_data_base.pth']
 --retrieval_num               retrieval number [default value is 8]
 ```
 
