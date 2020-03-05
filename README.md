@@ -32,7 +32,6 @@ optional arguments:
 --crop_type                   crop data or not, it only works for car or cub dataset [default value is 'uncropped'](choices=['uncropped', 'cropped'])
 --backbone_type               backbone network type [default value is 'resnet18'](choices=['resnet18', 'resnet34', 'resnet50', 'resnext50'])
 --feature_dim                 feature dim [default value is 512]
---margin                      margin of m for triplet loss [default value is 0.1]
 --recalls                     selected recall [default value is '1,2,4,8']
 --batch_size                  train batch size [default value is 128]
 --num_epochs                  train epoch number [default value is 20]
@@ -43,7 +42,7 @@ optional arguments:
 python test.py --retrieval_num 10
 optional arguments:
 --query_img_name              query image name [default value is '/home/data/car/uncropped/008055.jpg']
---data_base                   queried database [default value is 'car_uncropped_resnet18_512_0.1_128_data_base.pth']
+--data_base                   queried database [default value is 'car_uncropped_resnet18_512_data_base.pth']
 --retrieval_num               retrieval number [default value is 8]
 ```
 
