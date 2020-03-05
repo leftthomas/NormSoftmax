@@ -12,7 +12,7 @@ def set_bn_eval(m):
 
 
 class Model(nn.Module):
-    def __init__(self, backbone_type, feature_dim):
+    def __init__(self, backbone_type, feature_dim, num_classes):
         super().__init__()
 
         # Backbone Network
@@ -28,10 +28,11 @@ class Model(nn.Module):
 
         # Refactor Layer
         self.refactor = nn.Linear(512 * expansion, feature_dim, bias=False)
+        # Classification Layer
+        self.fc = nn.Sequential(nn.BatchNorm1d(512 * expansion), nn.Linear(512 * expansion, num_classes))
 
     def forward(self, x):
         global_feature = F.adaptive_avg_pool2d(self.features(x), output_size=(1, 1))
         global_feature = torch.flatten(global_feature, start_dim=1)
-        global_feature = self.refactor(global_feature)
-        global_feature = F.normalize(global_feature, dim=-1)
-        return global_feature
+        classes = self.fc(global_feature)
+        return F.normalize(global_feature, dim=-1), classes
