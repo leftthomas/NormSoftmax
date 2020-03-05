@@ -9,31 +9,26 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from model import Model, set_bn_eval
-from utils import recall, LabelSmoothingCrossEntropyLoss, BatchHardTripletLoss, ImageReader, MPerClassSampler
+from utils import recall, BatchHardTripletLoss, ImageReader, MPerClassSampler
 
 
 def train(net, optim):
     net.train()
     # fix bn on backbone network
     net.apply(set_bn_eval)
-    total_loss, total_correct, total_num, data_bar = 0, 0, 0, tqdm(train_data_loader)
+    total_loss, total_num, data_bar = 0.0, 0, tqdm(train_data_loader)
     for inputs, labels in data_bar:
         inputs, labels = inputs.cuda(), labels.cuda()
-        features, classes = net(inputs)
-        class_loss = class_criterion(classes, labels)
-        feature_loss = feature_criterion(features, labels)
-        loss = class_loss + feature_loss
+        features = net(inputs)
+        loss = loss_criterion(features, labels)
         optim.zero_grad()
         loss.backward()
         optim.step()
-        pred = torch.argmax(classes, dim=-1)
         total_loss += loss.item() * inputs.size(0)
-        total_correct += torch.sum(pred == labels).item()
         total_num += inputs.size(0)
-        data_bar.set_description('Train Epoch {}/{} - Loss:{:.4f} - Acc:{:.2f}%'
-                                 .format(epoch, num_epochs, total_loss / total_num, total_correct / total_num * 100))
+        data_bar.set_description('Train Epoch {}/{} - Loss:{:.4f}'.format(epoch, num_epochs, total_loss / total_num))
 
-    return total_loss / total_num, total_correct / total_num * 100
+    return total_loss / total_num
 
 
 def test(net, recall_ids):
@@ -44,7 +39,7 @@ def test(net, recall_ids):
             eval_dict[key]['features'] = []
             for inputs, labels in tqdm(eval_dict[key]['data_loader'], desc='processing {} data'.format(key)):
                 inputs, labels = inputs.cuda(), labels.cuda()
-                features, classes = net(inputs)
+                features = net(inputs)
                 eval_dict[key]['features'].append(features)
             eval_dict[key]['features'] = torch.cat(eval_dict[key]['features'], dim=0)
 
@@ -63,21 +58,16 @@ def test(net, recall_ids):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Train CGD')
+    parser = argparse.ArgumentParser(description='Train Model')
     parser.add_argument('--data_path', default='/home/data', type=str, help='datasets path')
     parser.add_argument('--data_name', default='car', type=str, choices=['car', 'cub', 'sop', 'isc'],
                         help='dataset name')
     parser.add_argument('--crop_type', default='uncropped', type=str, choices=['uncropped', 'cropped'],
                         help='crop data or not, it only works for car or cub dataset')
-    parser.add_argument('--backbone_type', default='resnet50', type=str, choices=['resnet50', 'resnext50'],
-                        help='backbone network type')
-    parser.add_argument('--gd_config', default='SG', type=str,
-                        choices=['S', 'M', 'G', 'SM', 'MS', 'SG', 'GS', 'MG', 'GM', 'SMG', 'MSG', 'GSM'],
-                        help='global descriptors config')
-    parser.add_argument('--feature_dim', default=1536, type=int, help='feature dim')
-    parser.add_argument('--smoothing', default=0.1, type=float, help='smoothing value for label smoothing')
-    parser.add_argument('--temperature', default=0.5, type=float,
-                        help='temperature scaling used in softmax cross-entropy loss')
+    parser.add_argument('--backbone_type', default='resnet18', type=str,
+                        choices=['resnet18', 'resnet34', 'resnet50', 'resnext50'], help='backbone network type')
+    parser.add_argument('--capsule_num', default=16, type=int, help='hidden capsule number')
+    parser.add_argument('--feature_dim', default=512, type=int, help='feature dim')
     parser.add_argument('--margin', default=0.1, type=float, help='margin of m for triplet loss')
     parser.add_argument('--recalls', default='1,2,4,8', type=str, help='selected recall')
     parser.add_argument('--batch_size', default=128, type=int, help='train batch size')
@@ -86,13 +76,12 @@ if __name__ == '__main__':
     opt = parser.parse_args()
     # args parse
     data_path, data_name, crop_type, backbone_type = opt.data_path, opt.data_name, opt.crop_type, opt.backbone_type
-    gd_config, feature_dim, smoothing, temperature = opt.gd_config, opt.feature_dim, opt.smoothing, opt.temperature
-    margin, recalls, batch_size = opt.margin, [int(k) for k in opt.recalls.split(',')], opt.batch_size
-    num_epochs = opt.num_epochs
-    save_name_pre = '{}_{}_{}_{}_{}_{}_{}_{}_{}'.format(data_name, crop_type, backbone_type, gd_config, feature_dim,
-                                                        smoothing, temperature, margin, batch_size)
+    capsule_num, feature_dim, margin, batch_size = opt.capsule_num, opt.feature_dim, opt.margin, opt.batch_size
+    recalls, num_epochs = [int(k) for k in opt.recalls.split(',')], opt.num_epochs
+    save_name_pre = '{}_{}_{}_{}_{}_{}_{}'.format(data_name, crop_type, backbone_type, capsule_num, feature_dim,
+                                                  margin, batch_size)
 
-    results = {'train_loss': [], 'train_accuracy': []}
+    results = {'train_loss': []}
     for recall_id in recalls:
         results['test_recall@{}'.format(recall_id)] = []
 
@@ -109,20 +98,18 @@ if __name__ == '__main__':
         eval_dict['gallery'] = {'data_loader': gallery_data_loader}
 
     # model setup, model profile, optimizer config and loss definition
-    model = Model(backbone_type, gd_config, feature_dim, num_classes=len(train_data_set.class_to_idx)).cuda()
+    model = Model(backbone_type, capsule_num, feature_dim).cuda()
     flops, params = profile(model, inputs=(torch.randn(1, 3, 224, 224).cuda(),))
     flops, params = clever_format([flops, params])
     print('# Model Params: {} FLOPs: {}'.format(params, flops))
     optimizer = Adam(model.parameters(), lr=1e-4)
     lr_scheduler = MultiStepLR(optimizer, milestones=[int(0.6 * num_epochs), int(0.8 * num_epochs)], gamma=0.1)
-    class_criterion = LabelSmoothingCrossEntropyLoss(smoothing=smoothing, temperature=temperature)
-    feature_criterion = BatchHardTripletLoss(margin=margin)
+    loss_criterion = BatchHardTripletLoss(margin=margin)
 
     best_recall = 0.0
     for epoch in range(1, num_epochs + 1):
-        train_loss, train_accuracy = train(model, optimizer)
+        train_loss = train(model, optimizer)
         results['train_loss'].append(train_loss)
-        results['train_accuracy'].append(train_accuracy)
         rank = test(model, recalls)
         lr_scheduler.step()
 

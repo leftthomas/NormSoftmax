@@ -9,6 +9,10 @@ A PyTorch implementation of CLF based on the paper [Combination of Multiple Loca
 ```
 conda install pytorch torchvision cudatoolkit=10.0 -c pytorch
 ```
+- Capsule Layer
+```
+pip install git+https://github.com/leftthomas/CapsuleLayer.git@master
+```
 - thop
 ```
 pip install thop
@@ -25,16 +29,14 @@ You should download these datasets by yourself, and extract them into `${data_pa
 ## Usage
 ### Train Model
 ```
-python train.py --feature_dim 512 --gd_config SM
+python train.py --backbone_type resnet50 --feature_dim 1024
 optional arguments:
 --data_path                   datasets path [default value is '/home/data']
 --data_name                   dataset name [default value is 'car'](choices=['car', 'cub', 'sop', 'isc'])
 --crop_type                   crop data or not, it only works for car or cub dataset [default value is 'uncropped'](choices=['uncropped', 'cropped'])
---backbone_type               backbone network type [default value is 'resnet50'](choices=['resnet50', 'resnext50'])
---gd_config                   global descriptors config [default value is 'SG'](choices=['S', 'M', 'G', 'SM', 'MS', 'SG', 'GS', 'MG', 'GM', 'SMG', 'MSG', 'GSM'])
---feature_dim                 feature dim [default value is 1536]
---smoothing                   smoothing value for label smoothing [default value is 0.1]
---temperature                 temperature scaling used in softmax cross-entropy loss [default value is 0.5]
+--backbone_type               backbone network type [default value is 'resnet18'](choices=['resnet18', 'resnet34', 'resnet50', 'resnext50'])
+--capsule_num                 hidden capsule number [default value is 16]
+--feature_dim                 feature dim [default value is 512]
 --margin                      margin of m for triplet loss [default value is 0.1]
 --recalls                     selected recall [default value is '1,2,4,8']
 --batch_size                  train batch size [default value is 128]
@@ -46,7 +48,7 @@ optional arguments:
 python test.py --retrieval_num 10
 optional arguments:
 --query_img_name              query image name [default value is '/home/data/car/uncropped/008055.jpg']
---data_base                   queried database [default value is 'car_uncropped_resnet50_SG_1536_0.1_0.5_0.1_128_data_base.pth']
+--data_base                   queried database [default value is 'car_uncropped_resnet18_16_512_0.1_128_data_base.pth']
 --retrieval_num               retrieval number [default value is 8]
 ```
 
@@ -66,6 +68,20 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td align="center">ResNet18</td>
+      <td align="center">26.86M | 10.64G</td>
+      <td align="center">26.86M | 10.64G</td>
+      <td align="center">49.85M | 10.69G</td>
+      <td align="center">34.85M | 10.66G</td>
+    </tr>
+    <tr>
+      <td align="center">ResNet34</td>
+      <td align="center">26.33M | 10.84G</td>
+      <td align="center">26.33M | 10.84G</td>
+      <td align="center">49.32M | 10.89G</td>
+      <td align="center">34.32M | 10.86G</td>
+    </tr>
     <tr>
       <td align="center">ResNet50</td>
       <td align="center">26.86M | 10.64G</td>
@@ -97,7 +113,7 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
   </thead>
   <tbody>
     <tr>
-      <td align="center">ResNet50(SG)</td>
+      <td align="center">ResNet18</td>
       <td align="center">86.4% | 92.4%</td>
       <td align="center">92.1% | 96.1%</td>
       <td align="center">95.6% | 97.8%</td>
@@ -105,7 +121,23 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
       <td align="center"><a href="https://pan.baidu.com/s/1W3-QKVe5HpCAHJTgxI1M5Q">r3sn</a> | <a href="https://pan.baidu.com/s/171Wqa-1TNquzedjlFhaYGg">sf5s</a></td>
     </tr>
     <tr>
-      <td align="center">ResNeXt50(SG)</td>
+      <td align="center">ResNet34</td>
+      <td align="center">86.4% | 92.4%</td>
+      <td align="center">92.1% | 96.1%</td>
+      <td align="center">95.6% | 97.8%</td>
+      <td align="center">97.5% | 98.7%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1W3-QKVe5HpCAHJTgxI1M5Q">r3sn</a> | <a href="https://pan.baidu.com/s/171Wqa-1TNquzedjlFhaYGg">sf5s</a></td>
+    </tr>
+    <tr>
+      <td align="center">ResNet50</td>
+      <td align="center">86.4% | 92.4%</td>
+      <td align="center">92.1% | 96.1%</td>
+      <td align="center">95.6% | 97.8%</td>
+      <td align="center">97.5% | 98.7%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1W3-QKVe5HpCAHJTgxI1M5Q">r3sn</a> | <a href="https://pan.baidu.com/s/171Wqa-1TNquzedjlFhaYGg">sf5s</a></td>
+    </tr>
+    <tr>
+      <td align="center">ResNeXt50</td>
       <td align="center">86.4% | 91.7%</td>
       <td align="center">92.0% | 95.4%</td>
       <td align="center">95.4% | 97.3%</td>
@@ -129,7 +161,7 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
   </thead>
   <tbody>
     <tr>
-      <td align="center">ResNet50(MG)</td>
+      <td align="center">ResNet18</td>
       <td align="center">66.0% | 73.9%</td>
       <td align="center">76.4% | 83.1%</td>
       <td align="center">84.8% | 89.6%</td>
@@ -137,7 +169,23 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
       <td align="center"><a href="https://pan.baidu.com/s/1_Ij-bYHZC31cxEWUnYwqwQ">2cfi</a> | <a href="https://pan.baidu.com/s/1deaYb2RWHikztHHsbJyuNw">pi4q</a></td>
     </tr>
     <tr>
-      <td align="center">ResNeXt50(MG)</td>
+      <td align="center">ResNet34</td>
+      <td align="center">66.0% | 73.9%</td>
+      <td align="center">76.4% | 83.1%</td>
+      <td align="center">84.8% | 89.6%</td>
+      <td align="center">90.7% | 94.0%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1_Ij-bYHZC31cxEWUnYwqwQ">2cfi</a> | <a href="https://pan.baidu.com/s/1deaYb2RWHikztHHsbJyuNw">pi4q</a></td>
+    </tr>
+    <tr>
+      <td align="center">ResNet50</td>
+      <td align="center">66.0% | 73.9%</td>
+      <td align="center">76.4% | 83.1%</td>
+      <td align="center">84.8% | 89.6%</td>
+      <td align="center">90.7% | 94.0%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1_Ij-bYHZC31cxEWUnYwqwQ">2cfi</a> | <a href="https://pan.baidu.com/s/1deaYb2RWHikztHHsbJyuNw">pi4q</a></td>
+    </tr>
+    <tr>
+      <td align="center">ResNeXt50</td>
       <td align="center">66.1% | 73.7%</td>
       <td align="center">76.3% | 82.6%</td>
       <td align="center">84.0% | 89.0%</td>
@@ -161,7 +209,7 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
   </thead>
   <tbody>
     <tr>
-      <td align="center">ResNet50(SG)</td>
+      <td align="center">ResNet18</td>
       <td align="center">79.3%</td>
       <td align="center">90.6%</td>
       <td align="center">95.8%</td>
@@ -169,7 +217,23 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
       <td align="center"><a href="https://pan.baidu.com/s/17I2nQMK5XBXL1XhiZ2elAg">qgsn</a></td>
     </tr>
     <tr>
-      <td align="center">ResNeXt50(SG)</td>
+      <td align="center">ResNet34</td>
+      <td align="center">79.3%</td>
+      <td align="center">90.6%</td>
+      <td align="center">95.8%</td>
+      <td align="center">98.6%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/17I2nQMK5XBXL1XhiZ2elAg">qgsn</a></td>
+    </tr>
+    <tr>
+      <td align="center">ResNet50</td>
+      <td align="center">79.3%</td>
+      <td align="center">90.6%</td>
+      <td align="center">95.8%</td>
+      <td align="center">98.6%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/17I2nQMK5XBXL1XhiZ2elAg">qgsn</a></td>
+    </tr>
+    <tr>
+      <td align="center">ResNeXt50</td>
       <td align="center">71.0%</td>
       <td align="center">85.3%</td>
       <td align="center">93.5%</td>
@@ -195,7 +259,7 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
   </thead>
   <tbody>
     <tr>
-      <td align="center">ResNet50(GS)</td>
+      <td align="center">ResNet18</td>
       <td align="center">83.6%</td>
       <td align="center">95.7%</td>
       <td align="center">97.1%</td>
@@ -205,7 +269,27 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
       <td align="center"><a href="https://pan.baidu.com/s/10Ow0JhXzRcPVsv5-j14ZjQ">8jmp</a></td>
     </tr>
     <tr>
-      <td align="center">ResNeXt50(GS)</td>
+      <td align="center">ResNet34</td>
+      <td align="center">83.6%</td>
+      <td align="center">95.7%</td>
+      <td align="center">97.1%</td>
+      <td align="center">97.7%</td>
+      <td align="center">98.1%</td>
+      <td align="center">98.4%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/10Ow0JhXzRcPVsv5-j14ZjQ">8jmp</a></td>
+    </tr>
+    <tr>
+      <td align="center">ResNet50</td>
+      <td align="center">83.6%</td>
+      <td align="center">95.7%</td>
+      <td align="center">97.1%</td>
+      <td align="center">97.7%</td>
+      <td align="center">98.1%</td>
+      <td align="center">98.4%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/10Ow0JhXzRcPVsv5-j14ZjQ">8jmp</a></td>
+    </tr>
+    <tr>
+      <td align="center">ResNeXt50</td>
       <td align="center">85.0%</td>
       <td align="center">96.1%</td>
       <td align="center">97.3%</td>
