@@ -68,7 +68,7 @@ if __name__ == '__main__':
     parser.add_argument('--crop_type', default='uncropped', type=str, choices=['uncropped', 'cropped'],
                         help='crop data or not, it only works for car or cub dataset')
     parser.add_argument('--backbone_type', default='resnet18', type=str,
-                        choices=['resnet18', 'resnet34', 'resnet50', 'resnext50'], help='backbone network type')
+                        choices=['resnet18', 'resnet50'], help='backbone network type')
     parser.add_argument('--feature_dim', default=512, type=int, help='feature dim')
     parser.add_argument('--recalls', default='1,2,4,8', type=str, help='selected recall')
     parser.add_argument('--batch_size', default=128, type=int, help='train batch size')
