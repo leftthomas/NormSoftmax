@@ -2,136 +2,143 @@ import argparse
 
 import pandas as pd
 import torch
-import torch.nn.functional as F
-from torch.nn import CrossEntropyLoss
+from thop import profile, clever_format
 from torch.optim import Adam
 from torch.optim.lr_scheduler import MultiStepLR
-from torch.utils.data.dataloader import DataLoader
+from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from model import Model
-from utils import ImageReader, recall
+from model import Model, set_bn_eval
+from utils import recall, LabelSmoothingCrossEntropyLoss, BatchHardTripletLoss, ImageReader, MPerClassSampler
 
 
 def train(net, optim):
     net.train()
-    l_data, t_data, n_data, train_progress = 0, 0, 0, tqdm(train_data_loader)
-    for inputs, labels in train_progress:
+    # fix bn on backbone network
+    net.apply(set_bn_eval)
+    total_loss, total_correct, total_num, data_bar = 0, 0, 0, tqdm(train_data_loader)
+    for inputs, labels in data_bar:
+        inputs, labels = inputs.cuda(), labels.cuda()
+        features, classes = net(inputs)
+        class_loss = class_criterion(classes, labels)
+        feature_loss = feature_criterion(features, labels)
+        loss = class_loss + feature_loss
         optim.zero_grad()
-        out = net(inputs.to(device_ids[0]))
-        loss = cel_criterion(out.permute(0, 2, 1).contiguous(), labels.to(device_ids[1]))
         loss.backward()
         optim.step()
-        pred = torch.argmax(out, dim=-1)
-        l_data += loss.item()
-        t_data += torch.sum((pred.cpu() == labels).float()).item() / ENSEMBLE_SIZE
-        n_data += len(labels)
-        train_progress.set_description(
-            'Epoch {}/{} - Loss:{:.4f} - Acc:{:.2f}%'.format(epoch, NUM_EPOCHS, l_data / n_data, t_data / n_data * 100))
-    results['train_loss'].append(l_data / n_data)
-    results['train_accuracy'].append(t_data / n_data * 100)
+        pred = torch.argmax(classes, dim=-1)
+        total_loss += loss.item() * inputs.size(0)
+        total_correct += torch.sum(pred == labels).item()
+        total_num += inputs.size(0)
+        data_bar.set_description('Train Epoch {}/{} - Loss:{:.4f} - Acc:{:.2f}%'
+                                 .format(epoch, num_epochs, total_loss / total_num, total_correct / total_num * 100))
+
+    return total_loss / total_num, total_correct / total_num * 100
 
 
-def eval(net, recalls):
+def test(net, recall_ids):
     net.eval()
     with torch.no_grad():
+        # obtain feature vectors for all data
         for key in eval_dict.keys():
             eval_dict[key]['features'] = []
-            for inputs, labels in eval_dict[key]['data_loader']:
-                out = net(inputs.to(device_ids[0]))
-                out = F.normalize(out, dim=-1)
-                eval_dict[key]['features'].append(out.cpu())
+            for inputs, labels in tqdm(eval_dict[key]['data_loader'], desc='processing {} data'.format(key)):
+                inputs, labels = inputs.cuda(), labels.cuda()
+                features, classes = net(inputs)
+                eval_dict[key]['features'].append(features)
             eval_dict[key]['features'] = torch.cat(eval_dict[key]['features'], dim=0)
 
-    if DATA_NAME == 'isc':
-        acc_list = recall(eval_dict['test']['features'], test_data_set.labels, recalls,
-                          eval_dict['gallery']['features'], gallery_data_set.labels)
-    else:
-        acc_list = recall(eval_dict['test']['features'], test_data_set.labels, recalls)
-    desc = ''
-    for index, recall_id in enumerate(recalls):
-        desc += 'R@{}:{:.2f}% '.format(recall_id, acc_list[index] * 100)
-        results['test_recall@{}'.format(recall_ids[index])].append(acc_list[index] * 100)
+        # compute recall metric
+        if data_name == 'isc':
+            acc_list = recall(eval_dict['test']['features'], test_data_set.labels, recall_ids,
+                              eval_dict['gallery']['features'], gallery_data_set.labels)
+        else:
+            acc_list = recall(eval_dict['test']['features'], test_data_set.labels, recall_ids)
+    desc = 'Test Epoch {}/{} '.format(epoch, num_epochs)
+    for index, rank_id in enumerate(recall_ids):
+        desc += 'R@{}:{:.2f}% '.format(rank_id, acc_list[index] * 100)
+        results['test_recall@{}'.format(rank_id)].append(acc_list[index] * 100)
     print(desc)
-    global best_recall
-    data_base = {}
-    if acc_list[0] > best_recall:
-        best_recall = acc_list[0]
-        data_base['train_images'] = train_ext_data_set.images
-        data_base['train_labels'] = train_ext_data_set.labels
-        data_base['train_features'] = eval_dict['train']['features']
-        data_base['test_images'] = test_data_set.images
-        data_base['test_labels'] = test_data_set.labels
-        data_base['test_features'] = eval_dict['test']['features']
-        data_base['gallery_images'] = gallery_data_set.images if DATA_NAME == 'isc' else test_data_set.images
-        data_base['gallery_labels'] = gallery_data_set.labels if DATA_NAME == 'isc' else test_data_set.labels
-        data_base['gallery_features'] = eval_dict['gallery']['features'] if DATA_NAME == 'isc' else eval_dict['test'][
-            'features']
-        torch.save(model.state_dict(), 'epochs/{}_model.pth'.format(save_name_pre))
-        torch.save(data_base, 'results/{}_data_base.pth'.format(save_name_pre))
+    return acc_list[0]
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Train Image Retrieval Model')
+    parser = argparse.ArgumentParser(description='Train CGD')
+    parser.add_argument('--data_path', default='/home/data', type=str, help='datasets path')
     parser.add_argument('--data_name', default='car', type=str, choices=['car', 'cub', 'sop', 'isc'],
                         help='dataset name')
     parser.add_argument('--crop_type', default='uncropped', type=str, choices=['uncropped', 'cropped'],
                         help='crop data or not, it only works for car or cub dataset')
-    parser.add_argument('--label_type', default='fixed', type=str, choices=['fixed', 'random'],
-                        help='assign label with random method or fixed method')
+    parser.add_argument('--backbone_type', default='resnet50', type=str, choices=['resnet50', 'resnext50'],
+                        help='backbone network type')
+    parser.add_argument('--gd_config', default='SG', type=str,
+                        choices=['S', 'M', 'G', 'SM', 'MS', 'SG', 'GS', 'MG', 'GM', 'SMG', 'MSG', 'GSM'],
+                        help='global descriptors config')
+    parser.add_argument('--feature_dim', default=1536, type=int, help='feature dim')
+    parser.add_argument('--smoothing', default=0.1, type=float, help='smoothing value for label smoothing')
+    parser.add_argument('--temperature', default=0.5, type=float,
+                        help='temperature scaling used in softmax cross-entropy loss')
+    parser.add_argument('--margin', default=0.1, type=float, help='margin of m for triplet loss')
     parser.add_argument('--recalls', default='1,2,4,8', type=str, help='selected recall')
-    parser.add_argument('--model_type', default='resnet18', type=str,
-                        choices=['resnet18', 'resnet34', 'resnet50', 'resnext50_32x4d'], help='backbone type')
-    parser.add_argument('--share_type', default='layer1', type=str,
-                        choices=['none', 'maxpool', 'layer1', 'layer2', 'layer3', 'layer4'], help='shared module type')
-    parser.add_argument('--with_random', action='store_true', help='with branch random weight or not')
-    parser.add_argument('--load_ids', action='store_true', help='load already generated ids or not')
-    parser.add_argument('--batch_size', default=10, type=int, help='train batch size')
+    parser.add_argument('--batch_size', default=128, type=int, help='train batch size')
     parser.add_argument('--num_epochs', default=20, type=int, help='train epoch number')
-    parser.add_argument('--ensemble_size', default=48, type=int, help='ensemble model size')
-    parser.add_argument('--meta_class_size', default=12, type=int, help='meta class size')
-    parser.add_argument('--gpu_ids', default='0,1', type=str, help='selected gpu')
 
     opt = parser.parse_args()
-
-    DATA_NAME, RECALLS, BATCH_SIZE, NUM_EPOCHS = opt.data_name, opt.recalls, opt.batch_size, opt.num_epochs
-    ENSEMBLE_SIZE, META_CLASS_SIZE, CROP_TYPE = opt.ensemble_size, opt.meta_class_size, opt.crop_type
-    GPU_IDS, MODEL_TYPE, LABEL_TYPE, WITH_RANDOM = opt.gpu_ids, opt.model_type, opt.label_type, opt.with_random
-    SHARE_TYPE, LOAD_IDS = opt.share_type, opt.load_ids
-    random_flag = 'random' if WITH_RANDOM else 'unrandom'
-    save_name_pre = '{}_{}_{}_{}_{}_{}_{}_{}'.format(DATA_NAME, CROP_TYPE, LABEL_TYPE, random_flag, SHARE_TYPE,
-                                                     MODEL_TYPE, ENSEMBLE_SIZE, META_CLASS_SIZE)
-    recall_ids, device_ids = [int(k) for k in RECALLS.split(',')], [int(gpu) for gpu in GPU_IDS.split(',')]
-    assert len(device_ids) == 2, 'make sure gpu_ids contains two devices'
+    # args parse
+    data_path, data_name, crop_type, backbone_type = opt.data_path, opt.data_name, opt.crop_type, opt.backbone_type
+    gd_config, feature_dim, smoothing, temperature = opt.gd_config, opt.feature_dim, opt.smoothing, opt.temperature
+    margin, recalls, batch_size = opt.margin, [int(k) for k in opt.recalls.split(',')], opt.batch_size
+    num_epochs = opt.num_epochs
+    save_name_pre = '{}_{}_{}_{}_{}_{}_{}_{}_{}'.format(data_name, crop_type, backbone_type, gd_config, feature_dim,
+                                                        smoothing, temperature, margin, batch_size)
 
     results = {'train_loss': [], 'train_accuracy': []}
-    for index, recall_id in enumerate(recall_ids):
-        results['test_recall@{}'.format(recall_ids[index])] = []
+    for recall_id in recalls:
+        results['test_recall@{}'.format(recall_id)] = []
 
-    train_data_set = ImageReader(DATA_NAME, 'train', CROP_TYPE, LABEL_TYPE, ENSEMBLE_SIZE, META_CLASS_SIZE, LOAD_IDS)
-    train_data_loader = DataLoader(train_data_set, BATCH_SIZE, shuffle=True, num_workers=8)
-
-    train_ext_data_set = ImageReader(DATA_NAME, 'train_ext', CROP_TYPE)
-    train_ext_data_loader = DataLoader(train_ext_data_set, BATCH_SIZE, shuffle=False, num_workers=8)
-    test_data_set = ImageReader(DATA_NAME, 'query' if DATA_NAME == 'isc' else 'test', CROP_TYPE)
-    test_data_loader = DataLoader(test_data_set, BATCH_SIZE, shuffle=False, num_workers=8)
-    eval_dict = {'train': {'data_loader': train_ext_data_loader}, 'test': {'data_loader': test_data_loader}}
-    if DATA_NAME == 'isc':
-        gallery_data_set = ImageReader(DATA_NAME, 'gallery', CROP_TYPE)
-        gallery_data_loader = DataLoader(gallery_data_set, BATCH_SIZE, shuffle=False, num_workers=8)
+    # dataset loader
+    train_data_set = ImageReader(data_path, data_name, 'train', crop_type)
+    train_sample = MPerClassSampler(train_data_set.labels, batch_size)
+    train_data_loader = DataLoader(train_data_set, batch_sampler=train_sample, num_workers=8)
+    test_data_set = ImageReader(data_path, data_name, 'query' if data_name == 'isc' else 'test', crop_type)
+    test_data_loader = DataLoader(test_data_set, batch_size, shuffle=False, num_workers=8)
+    eval_dict = {'test': {'data_loader': test_data_loader}}
+    if data_name == 'isc':
+        gallery_data_set = ImageReader(data_path, data_name, 'gallery', crop_type)
+        gallery_data_loader = DataLoader(gallery_data_set, batch_size, shuffle=False, num_workers=8)
         eval_dict['gallery'] = {'data_loader': gallery_data_loader}
 
-    model = Model(META_CLASS_SIZE, ENSEMBLE_SIZE, SHARE_TYPE, MODEL_TYPE, WITH_RANDOM, device_ids)
-    print("# trainable parameters:", sum(param.numel() if param.requires_grad else 0 for param in model.parameters()))
+    # model setup, model profile, optimizer config and loss definition
+    model = Model(backbone_type, gd_config, feature_dim, num_classes=len(train_data_set.class_to_idx)).cuda()
+    flops, params = profile(model, inputs=(torch.randn(1, 3, 224, 224).cuda(),))
+    flops, params = clever_format([flops, params])
+    print('# Model Params: {} FLOPs: {}'.format(params, flops))
     optimizer = Adam(model.parameters(), lr=1e-4)
-    lr_scheduler = MultiStepLR(optimizer, milestones=[int(NUM_EPOCHS * 0.5), int(NUM_EPOCHS * 0.7)], gamma=0.1)
-    cel_criterion = CrossEntropyLoss()
+    lr_scheduler = MultiStepLR(optimizer, milestones=[int(0.6 * num_epochs), int(0.8 * num_epochs)], gamma=0.1)
+    class_criterion = LabelSmoothingCrossEntropyLoss(smoothing=smoothing, temperature=temperature)
+    feature_criterion = BatchHardTripletLoss(margin=margin)
 
-    best_recall = 0
-    for epoch in range(1, NUM_EPOCHS + 1):
-        train(model, optimizer)
-        lr_scheduler.step(epoch)
-        eval(model, recall_ids)
+    best_recall = 0.0
+    for epoch in range(1, num_epochs + 1):
+        train_loss, train_accuracy = train(model, optimizer)
+        results['train_loss'].append(train_loss)
+        results['train_accuracy'].append(train_accuracy)
+        rank = test(model, recalls)
+        lr_scheduler.step()
+
         # save statistics
         data_frame = pd.DataFrame(data=results, index=range(1, epoch + 1))
-        data_frame.to_csv('statistics/{}_results.csv'.format(save_name_pre), index_label='epoch')
+        data_frame.to_csv('results/{}_statistics.csv'.format(save_name_pre), index_label='epoch')
+        # save database and model
+        data_base = {}
+        if rank > best_recall:
+            best_recall = rank
+            data_base['test_images'] = test_data_set.images
+            data_base['test_labels'] = test_data_set.labels
+            data_base['test_features'] = eval_dict['test']['features']
+            if data_name == 'isc':
+                data_base['gallery_images'] = gallery_data_set.images
+                data_base['gallery_labels'] = gallery_data_set.labels
+                data_base['gallery_features'] = eval_dict['gallery']['features']
+            torch.save(model.state_dict(), 'results/{}_model.pth'.format(save_name_pre))
+            torch.save(data_base, 'results/{}_data_base.pth'.format(save_name_pre))

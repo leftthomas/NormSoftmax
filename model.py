@@ -1,95 +1,86 @@
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from torchvision.models.resnet import resnet18, resnet34, resnet50, resnext50_32x4d
+from torch import nn
+from torch.nn import functional as F
+
+from resnet import resnet50, resnext50_32x4d
+
+
+def set_bn_eval(m):
+    classname = m.__class__.__name__
+    if classname.find('BatchNorm2d') != -1:
+        m.eval()
+
+
+class GlobalDescriptor(nn.Module):
+    def __init__(self, p=1):
+        super().__init__()
+        self.p = p
+
+    def forward(self, x):
+        assert x.dim() == 4, 'the input tensor of GlobalDescriptor must be the shape of [B, C, H, W]'
+        if self.p == 1:
+            return x.mean(dim=[-1, -2])
+        elif self.p == float('inf'):
+            return torch.flatten(F.adaptive_max_pool2d(x, output_size=(1, 1)), start_dim=1)
+        else:
+            sum_value = x.pow(self.p).mean(dim=[-1, -2])
+            return torch.sign(sum_value) * (torch.abs(sum_value).pow(1.0 / self.p))
+
+    def extra_repr(self):
+        return 'p={}'.format(self.p)
+
+
+class L2Norm(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, x):
+        assert x.dim() == 2, 'the input tensor of L2Norm must be the shape of [B, C]'
+        return F.normalize(x, p=2, dim=-1)
 
 
 class Model(nn.Module):
-    def __init__(self, meta_class_size, ensemble_size, share_type, model_type, with_random, device_ids):
-        super(Model, self).__init__()
+    def __init__(self, backbone_type, gd_config, feature_dim, num_classes):
+        super().__init__()
 
-        # backbone
-        backbones = {'resnet18': (resnet18, 1), 'resnet34': (resnet34, 1), 'resnet50': (resnet50, 4),
-                     'resnext50_32x4d': (resnext50_32x4d, 4)}
-        backbone, expansion = backbones[model_type]
-        module_names = ['conv1', 'bn1', 'relu', 'maxpool', 'layer1', 'layer2', 'layer3', 'layer4']
+        # Backbone Network
+        backbone = resnet50(pretrained=True) if backbone_type == 'resnet50' else resnext50_32x4d(pretrained=True)
+        self.features = []
+        for name, module in backbone.named_children():
+            if isinstance(module, nn.AdaptiveAvgPool2d) or isinstance(module, nn.Linear):
+                continue
+            self.features.append(module)
+        self.features = nn.Sequential(*self.features)
 
-        # configs
-        self.ensemble_size, self.with_random, self.device_ids = ensemble_size, with_random, device_ids
+        # Main Module
+        n = len(gd_config)
+        k = feature_dim // n
+        assert feature_dim % n == 0, 'the feature dim should be divided by number of global descriptors'
 
-        # common features
-        self.common_extractor, basic_model = [], backbone(pretrained=True)
-        common_module_names = [] if share_type == 'none' else module_names[:module_names.index(share_type) + 1]
-        for name, module in basic_model.named_children():
-            if name in common_module_names:
-                self.common_extractor.append(module)
-        self.common_extractor = nn.Sequential(*self.common_extractor).cuda(device_ids[0])
-        print("# trainable common feature parameters:",
-              sum(param.numel() if param.requires_grad else 0 for param in self.common_extractor.parameters()))
+        self.global_descriptors, self.main_modules = [], []
+        for i in range(n):
+            if gd_config[i] == 'S':
+                p = 1
+            elif gd_config[i] == 'M':
+                p = float('inf')
+            else:
+                p = 3
+            self.global_descriptors.append(GlobalDescriptor(p=p))
+            self.main_modules.append(nn.Sequential(nn.Linear(2048, k, bias=False), L2Norm()))
+        self.global_descriptors = nn.ModuleList(self.global_descriptors)
+        self.main_modules = nn.ModuleList(self.main_modules)
 
-        # individual features
-        self.head, self.layer1, self.layer2, self.layer3, self.layer4 = [], [], [], [], []
-        individual_module_names = module_names if share_type == 'none' else \
-            module_names[module_names.index(share_type) + 1:]
-        for i in range(ensemble_size):
-            basic_model, heads = backbone(pretrained=True), []
-            for name, module in basic_model.named_children():
-                if name in individual_module_names and name in ['conv1', 'bn1', 'relu', 'maxpool']:
-                    heads.append(module)
-                if name in individual_module_names and name == 'layer1':
-                    self.layer1.append(module.cuda(device_ids[0]))
-                if name in individual_module_names and name == 'layer2':
-                    self.layer2.append(module.cuda(device_ids[0]))
-                if name in individual_module_names and name == 'layer3':
-                    self.layer3.append(module.cuda(device_ids[0 if i < ensemble_size / 6 else 1]))
-                if name in individual_module_names and name == 'layer4':
-                    self.layer4.append(module.cuda(device_ids[0 if i < ensemble_size / 6 else 1]))
-            self.head.append(nn.Sequential(*heads).cuda(device_ids[0]))
-        self.head = nn.ModuleList(self.head)
-        self.layer1 = nn.ModuleList(self.layer1)
-        self.layer2 = nn.ModuleList(self.layer2)
-        self.layer3 = nn.ModuleList(self.layer3)
-        self.layer4 = nn.ModuleList(self.layer4)
-        print("# trainable individual feature parameters:",
-              (sum(param.numel() if param.requires_grad else 0 for param in self.head.parameters()) +
-               sum(param.numel() if param.requires_grad else 0 for param in self.layer1.parameters()) + sum(
-                          param.numel() if param.requires_grad else 0 for param in self.layer2.parameters()) + sum(
-                          param.numel() if param.requires_grad else 0 for param in self.layer3.parameters()) + sum(
-                          param.numel() if param.requires_grad else 0 for param in
-                          self.layer4.parameters())) // ensemble_size)
-
-        # individual classifiers
-        self.classifiers = nn.ModuleList([nn.Linear(512 * expansion, meta_class_size).cuda(device_ids[1])
-                                          for _ in range(ensemble_size)])
-        print("# trainable individual classifier parameters:",
-              sum(param.numel() if param.requires_grad else 0 for param in
-                  self.classifiers.parameters()) // ensemble_size)
+        # Auxiliary Module
+        self.auxiliary_module = nn.Sequential(nn.BatchNorm1d(2048), nn.Linear(2048, num_classes, bias=True))
 
     def forward(self, x):
-        batch_size = x.size(0)
-        common_feature = self.common_extractor(x)
-        if self.with_random:
-            branch_weight = torch.rand(self.ensemble_size, device=x.device)
-            branch_weight = F.softmax(branch_weight, dim=-1)
-        else:
-            branch_weight = torch.ones(self.ensemble_size, device=x.device)
-        out = []
-        for i in range(self.ensemble_size):
-            individual_feature = branch_weight[i] * common_feature
-            if len(self.head) != 0:
-                individual_feature = self.head[i](individual_feature.cuda(self.device_ids[0]))
-            if len(self.layer1) != 0:
-                individual_feature = self.layer1[i](individual_feature.cuda(self.device_ids[0]))
-            if len(self.layer2) != 0:
-                individual_feature = self.layer2[i](individual_feature.cuda(self.device_ids[0]))
-            if len(self.layer3) != 0:
-                individual_feature = self.layer3[i](
-                    individual_feature.cuda(self.device_ids[0 if i < self.ensemble_size / 6 else 1]))
-            if len(self.layer4) != 0:
-                individual_feature = self.layer4[i](
-                    individual_feature.cuda(self.device_ids[0 if i < self.ensemble_size / 6 else 1]))
-            global_feature = F.adaptive_avg_pool2d(individual_feature, output_size=(1, 1)).view(batch_size, -1)
-            classes = self.classifiers[i](global_feature.cuda(self.device_ids[1]))
-            out.append(classes)
-        out = torch.stack(out, dim=1)
-        return out
+        shared = self.features(x)
+        global_descriptors = []
+        for i in range(len(self.global_descriptors)):
+            global_descriptor = self.global_descriptors[i](shared)
+            if i == 0:
+                classes = self.auxiliary_module(global_descriptor)
+            global_descriptor = self.main_modules[i](global_descriptor)
+            global_descriptors.append(global_descriptor)
+        global_descriptors = F.normalize(torch.cat(global_descriptors, dim=-1), dim=-1)
+        return global_descriptors, classes

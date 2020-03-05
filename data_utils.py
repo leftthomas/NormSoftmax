@@ -1,3 +1,4 @@
+import argparse
 import os
 
 import torch
@@ -124,11 +125,16 @@ def process_isc_data(data_path):
 
 
 if __name__ == '__main__':
-    process_car_data('data/car', 'uncropped')
-    process_car_data('data/car', 'cropped')
-    process_cub_data('data/cub', 'uncropped')
-    process_cub_data('data/cub', 'cropped')
+    parser = argparse.ArgumentParser(description='Process datasets')
+    parser.add_argument('--data_path', default='/home/data', type=str, help='datasets path')
+
+    opt = parser.parse_args()
+
+    process_car_data('{}/car'.format(opt.data_path), 'uncropped')
+    process_car_data('{}/car'.format(opt.data_path), 'cropped')
+    process_cub_data('{}/cub'.format(opt.data_path), 'uncropped')
+    process_cub_data('{}/cub'.format(opt.data_path), 'cropped')
     print('processing sop dataset')
-    process_sop_data('data/sop')
+    process_sop_data('{}/sop'.format(opt.data_path))
     print('processing isc dataset')
-    process_isc_data('data/isc')
+    process_isc_data('{}/isc'.format(opt.data_path))
