@@ -3,32 +3,36 @@ import argparse
 import pandas as pd
 import torch
 from thop import profile, clever_format
+from torch import nn
 from torch.optim import Adam
 from torch.optim.lr_scheduler import MultiStepLR
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from model import Model, set_bn_eval
-from utils import recall, BatchHardTripletLoss, ImageReader, MPerClassSampler
+from utils import recall, ImageReader
 
 
 def train(net, optim):
     net.train()
     # fix bn on backbone network
     net.apply(set_bn_eval)
-    total_loss, total_num, data_bar = 0.0, 0, tqdm(train_data_loader)
+    total_loss, total_correct, total_num, data_bar = 0.0, 0.0, 0, tqdm(train_data_loader)
     for inputs, labels in data_bar:
         inputs, labels = inputs.cuda(), labels.cuda()
-        features = net(inputs)
-        loss = loss_criterion(features, labels)
+        features, classes = net(inputs)
+        loss = loss_criterion(classes, labels)
         optim.zero_grad()
         loss.backward()
         optim.step()
+        pred = torch.argmax(classes, dim=-1)
         total_loss += loss.item() * inputs.size(0)
+        total_correct += torch.sum(pred == labels).item()
         total_num += inputs.size(0)
-        data_bar.set_description('Train Epoch {}/{} - Loss:{:.4f}'.format(epoch, num_epochs, total_loss / total_num))
+        data_bar.set_description('Train Epoch {}/{} - Loss:{:.4f} - Acc:{:.2f}%'
+                                 .format(epoch, num_epochs, total_loss / total_num, total_correct / total_num * 100))
 
-    return total_loss / total_num
+    return total_loss / total_num, total_correct / total_num * 100
 
 
 def test(net, recall_ids):
@@ -38,8 +42,7 @@ def test(net, recall_ids):
         for key in eval_dict.keys():
             eval_dict[key]['features'] = []
             for inputs, labels in tqdm(eval_dict[key]['data_loader'], desc='processing {} data'.format(key)):
-                inputs, labels = inputs.cuda(), labels.cuda()
-                features = net(inputs)
+                features, classes = net(inputs.cuda())
                 eval_dict[key]['features'].append(features)
             eval_dict[key]['features'] = torch.cat(eval_dict[key]['features'], dim=0)
 
@@ -67,7 +70,6 @@ if __name__ == '__main__':
     parser.add_argument('--backbone_type', default='resnet18', type=str,
                         choices=['resnet18', 'resnet34', 'resnet50', 'resnext50'], help='backbone network type')
     parser.add_argument('--feature_dim', default=512, type=int, help='feature dim')
-    parser.add_argument('--margin', default=0.1, type=float, help='margin of m for triplet loss')
     parser.add_argument('--recalls', default='1,2,4,8', type=str, help='selected recall')
     parser.add_argument('--batch_size', default=128, type=int, help='train batch size')
     parser.add_argument('--num_epochs', default=20, type=int, help='train epoch number')
@@ -75,18 +77,17 @@ if __name__ == '__main__':
     opt = parser.parse_args()
     # args parse
     data_path, data_name, crop_type, backbone_type = opt.data_path, opt.data_name, opt.crop_type, opt.backbone_type
-    feature_dim, margin, batch_size, num_epochs = opt.feature_dim, opt.margin, opt.batch_size, opt.num_epochs
+    feature_dim, batch_size, num_epochs = opt.feature_dim, opt.batch_size, opt.num_epochs
     recalls = [int(k) for k in opt.recalls.split(',')]
-    save_name_pre = '{}_{}_{}_{}_{}_{}'.format(data_name, crop_type, backbone_type, feature_dim, margin, batch_size)
+    save_name_pre = '{}_{}_{}_{}'.format(data_name, crop_type, backbone_type, feature_dim)
 
-    results = {'train_loss': []}
+    results = {'train_loss': [], 'train_accuracy': []}
     for recall_id in recalls:
         results['test_recall@{}'.format(recall_id)] = []
 
     # dataset loader
     train_data_set = ImageReader(data_path, data_name, 'train', crop_type)
-    train_sample = MPerClassSampler(train_data_set.labels, batch_size)
-    train_data_loader = DataLoader(train_data_set, batch_sampler=train_sample, num_workers=8)
+    train_data_loader = DataLoader(train_data_set, batch_size, shuffle=True, num_workers=8)
     test_data_set = ImageReader(data_path, data_name, 'query' if data_name == 'isc' else 'test', crop_type)
     test_data_loader = DataLoader(test_data_set, batch_size, shuffle=False, num_workers=8)
     eval_dict = {'test': {'data_loader': test_data_loader}}
@@ -96,18 +97,19 @@ if __name__ == '__main__':
         eval_dict['gallery'] = {'data_loader': gallery_data_loader}
 
     # model setup, model profile, optimizer config and loss definition
-    model = Model(backbone_type, feature_dim).cuda()
+    model = Model(backbone_type, feature_dim, len(train_data_set.class_to_idx)).cuda()
     flops, params = profile(model, inputs=(torch.randn(1, 3, 224, 224).cuda(),))
     flops, params = clever_format([flops, params])
     print('# Model Params: {} FLOPs: {}'.format(params, flops))
     optimizer = Adam(model.parameters(), lr=1e-4)
     lr_scheduler = MultiStepLR(optimizer, milestones=[int(0.6 * num_epochs), int(0.8 * num_epochs)], gamma=0.1)
-    loss_criterion = BatchHardTripletLoss(margin=margin)
+    loss_criterion = nn.CrossEntropyLoss()
 
     best_recall = 0.0
     for epoch in range(1, num_epochs + 1):
-        train_loss = train(model, optimizer)
+        train_loss, train_accuracy = train(model, optimizer)
         results['train_loss'].append(train_loss)
+        results['train_accuracy'].append(train_accuracy)
         rank = test(model, recalls)
         lr_scheduler.step()
 
