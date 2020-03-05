@@ -29,8 +29,9 @@ class Model(nn.Module):
         self.features = nn.Sequential(*self.features)
 
         # Capsule Layer
-        self.attention = nn.Parameter(torch.randn(size=(1, capsule_num, 1, 1)), requires_grad=True)
-        self.refactor = CapsuleLinear(1, 512 * expansion, feature_dim, capsule_num, False, num_iterations=1)
+        # self.attention = nn.Parameter(torch.randn(size=(1, capsule_num, 1, 1)), requires_grad=True)
+        self.register_buffer('attention', torch.randn(size=(1, capsule_num, 1, 1)))
+        self.refactor = CapsuleLinear(1, 512 * expansion, feature_dim, num_iterations=1)
 
     def forward(self, x):
         local_features = self.features(x)
