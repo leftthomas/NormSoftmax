@@ -3,14 +3,13 @@ import argparse
 import pandas as pd
 import torch
 from thop import profile, clever_format
-from torch import nn
 from torch.optim import Adam
 from torch.optim.lr_scheduler import MultiStepLR
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from model import Model, set_bn_eval
-from utils import recall, ImageReader
+from utils import recall, ImageReader, LabelSmoothingCrossEntropyLoss
 
 
 def train(net, optim):
@@ -103,7 +102,7 @@ if __name__ == '__main__':
     print('# Model Params: {} FLOPs: {}'.format(params, flops))
     optimizer = Adam(model.parameters(), lr=1e-4)
     lr_scheduler = MultiStepLR(optimizer, milestones=[int(0.6 * num_epochs), int(0.8 * num_epochs)], gamma=0.1)
-    loss_criterion = nn.CrossEntropyLoss()
+    loss_criterion = LabelSmoothingCrossEntropyLoss()
 
     best_recall = 0.0
     for epoch in range(1, num_epochs + 1):

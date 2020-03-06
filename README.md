@@ -158,18 +158,18 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
   <tbody>
     <tr>
       <td align="center">ResNet18</td>
-      <td align="center">79.3%</td>
-      <td align="center">90.6%</td>
-      <td align="center">95.8%</td>
-      <td align="center">98.6%</td>
+      <td align="center">75.3%</td>
+      <td align="center">87.1%</td>
+      <td align="center">93.6%</td>
+      <td align="center">97.4%</td>
       <td align="center"><a href="https://pan.baidu.com/s/17I2nQMK5XBXL1XhiZ2elAg">qgsn</a></td>
     </tr>
     <tr>
       <td align="center">ResNet50</td>
-      <td align="center">79.3%</td>
-      <td align="center">90.6%</td>
-      <td align="center">95.8%</td>
-      <td align="center">98.6%</td>
+      <td align="center">79.7%</td>
+      <td align="center">89.9%</td>
+      <td align="center">95.1%</td>
+      <td align="center">98.1%</td>
       <td align="center"><a href="https://pan.baidu.com/s/17I2nQMK5XBXL1XhiZ2elAg">qgsn</a></td>
     </tr>
   </tbody>
