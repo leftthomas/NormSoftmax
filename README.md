@@ -66,14 +66,14 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
       <td align="center">ResNet18</td>
       <td align="center">11.80M | 4.29G</td>
       <td align="center">11.81M | 4.29G</td>
-      <td align="center">49.85M | 10.69G</td>
+      <td align="center">23.30M | 4.31G</td>
       <td align="center">15.80M | 4.30G</td>
     </tr>
     <tr>
       <td align="center">ResNet50</td>
       <td align="center">25.71M | 10.64G</td>
       <td align="center">25.71M | 10.64G</td>
-      <td align="center">49.85M | 10.69G</td>
+      <td align="center">37.21M | 10.66G</td>
       <td align="center">29.70M | 10.65G</td>
     </tr>
   </tbody>
@@ -192,22 +192,22 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
   <tbody>
     <tr>
       <td align="center">ResNet18</td>
-      <td align="center">83.6%</td>
-      <td align="center">95.7%</td>
-      <td align="center">97.1%</td>
-      <td align="center">97.7%</td>
-      <td align="center">98.1%</td>
-      <td align="center">98.4%</td>
+      <td align="center">79.4%</td>
+      <td align="center">94.5%</td>
+      <td align="center">96.3%</td>
+      <td align="center">97.0%</td>
+      <td align="center">97.5%</td>
+      <td align="center">97.9%</td>
       <td align="center"><a href="https://pan.baidu.com/s/10Ow0JhXzRcPVsv5-j14ZjQ">8jmp</a></td>
     </tr>
     <tr>
       <td align="center">ResNet50</td>
-      <td align="center">83.6%</td>
-      <td align="center">95.7%</td>
-      <td align="center">97.1%</td>
-      <td align="center">97.7%</td>
-      <td align="center">98.1%</td>
+      <td align="center">87.2%</td>
+      <td align="center">96.9%</td>
+      <td align="center">97.9%</td>
+      <td align="center">98.3%</td>
       <td align="center">98.4%</td>
+      <td align="center">98.6%</td>
       <td align="center"><a href="https://pan.baidu.com/s/10Ow0JhXzRcPVsv5-j14ZjQ">8jmp</a></td>
     </tr>
   </tbody>
