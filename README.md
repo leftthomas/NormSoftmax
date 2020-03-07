@@ -78,8 +78,8 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
     </tr>
     <tr>
       <td align="center">SEResNet50</td>
-      <td align="center">25.71M | 10.64G</td>
-      <td align="center">25.71M | 10.64G</td>
+      <td align="center">28.24M | 10.27G</td>
+      <td align="center">28.24M | 10.27G</td>
       <td align="center">37.21M | 10.66G</td>
       <td align="center">29.70M | 10.65G</td>
     </tr>
