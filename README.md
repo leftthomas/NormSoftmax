@@ -30,7 +30,7 @@ optional arguments:
 --data_path                   datasets path [default value is '/home/data']
 --data_name                   dataset name [default value is 'car'](choices=['car', 'cub', 'sop', 'isc'])
 --crop_type                   crop data or not, it only works for car or cub dataset [default value is 'uncropped'](choices=['uncropped', 'cropped'])
---backbone_type               backbone network type [default value is 'resnet18'](choices=['resnet18', 'resnet50'])
+--backbone_type               backbone network type [default value is 'resnet18'](choices=['resnet18', 'resnet50', 'seresnet50'])
 --feature_dim                 feature dim [default value is 512]
 --recalls                     selected recall [default value is '1,2,4,8']
 --batch_size                  train batch size [default value is 128]
@@ -76,6 +76,13 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
       <td align="center">37.21M | 10.66G</td>
       <td align="center">29.70M | 10.65G</td>
     </tr>
+    <tr>
+      <td align="center">SEResNet50</td>
+      <td align="center">25.71M | 10.64G</td>
+      <td align="center">25.71M | 10.64G</td>
+      <td align="center">37.21M | 10.66G</td>
+      <td align="center">29.70M | 10.65G</td>
+    </tr>
   </tbody>
 </table>
 
@@ -102,6 +109,14 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
     </tr>
     <tr>
       <td align="center">ResNet50</td>
+      <td align="center">88.8% | 93.5%</td>
+      <td align="center">93.7% | 96.4%</td>
+      <td align="center">96.2% | 97.8%</td>
+      <td align="center">97.8% | 98.7%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1W3-QKVe5HpCAHJTgxI1M5Q">r3sn</a> | <a href="https://pan.baidu.com/s/171Wqa-1TNquzedjlFhaYGg">sf5s</a></td>
+    </tr>
+    <tr>
+      <td align="center">SEResNet50</td>
       <td align="center">88.8% | 93.5%</td>
       <td align="center">93.7% | 96.4%</td>
       <td align="center">96.2% | 97.8%</td>
@@ -140,6 +155,14 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
       <td align="center">91.2% | 93.5%</td>
       <td align="center"><a href="https://pan.baidu.com/s/1_Ij-bYHZC31cxEWUnYwqwQ">2cfi</a> | <a href="https://pan.baidu.com/s/1deaYb2RWHikztHHsbJyuNw">pi4q</a></td>
     </tr>
+    <tr>
+      <td align="center">SEResNet50</td>
+      <td align="center">66.2% | 74.3%</td>
+      <td align="center">77.3% | 82.5%</td>
+      <td align="center">85.5% | 89.1%</td>
+      <td align="center">91.2% | 93.5%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1W3-QKVe5HpCAHJTgxI1M5Q">r3sn</a> | <a href="https://pan.baidu.com/s/171Wqa-1TNquzedjlFhaYGg">sf5s</a></td>
+    </tr>
   </tbody>
 </table>
 
@@ -166,6 +189,14 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
     </tr>
     <tr>
       <td align="center">ResNet50</td>
+      <td align="center">79.7%</td>
+      <td align="center">89.9%</td>
+      <td align="center">95.1%</td>
+      <td align="center">98.1%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/17I2nQMK5XBXL1XhiZ2elAg">qgsn</a></td>
+    </tr>
+    <tr>
+      <td align="center">SEResNet50</td>
       <td align="center">79.7%</td>
       <td align="center">89.9%</td>
       <td align="center">95.1%</td>
@@ -202,6 +233,16 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
     </tr>
     <tr>
       <td align="center">ResNet50</td>
+      <td align="center">87.2%</td>
+      <td align="center">96.9%</td>
+      <td align="center">97.9%</td>
+      <td align="center">98.3%</td>
+      <td align="center">98.4%</td>
+      <td align="center">98.6%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/10Ow0JhXzRcPVsv5-j14ZjQ">8jmp</a></td>
+    </tr>
+    <tr>
+      <td align="center">SEResNet50</td>
       <td align="center">87.2%</td>
       <td align="center">96.9%</td>
       <td align="center">97.9%</td>

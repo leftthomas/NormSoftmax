@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from resnet import resnet18, resnet50
+from resnet import resnet18, resnet50, seresnet50
 
 
 def set_bn_eval(m):
@@ -16,7 +16,7 @@ class Model(nn.Module):
         super().__init__()
 
         # Backbone Network
-        backbones = {'resnet18': (resnet18, 1), 'resnet50': (resnet50, 4)}
+        backbones = {'resnet18': (resnet18, 1), 'resnet50': (resnet50, 4), 'seresnet50': (seresnet50, 4)}
         backbone, expansion = backbones[backbone_type]
         self.features = []
         for name, module in backbone(pretrained=True).named_children():
