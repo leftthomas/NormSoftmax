@@ -28,7 +28,7 @@ class Model(nn.Module):
         # Refactor Layer
         self.refactor = nn.Linear(512 * expansion, feature_dim, bias=False)
         # Classification Layer
-        self.fc = nn.Sequential(nn.BatchNorm1d(feature_dim), nn.Linear(feature_dim, num_classes))
+        self.fc = nn.Sequential(nn.BatchNorm1d(feature_dim), nn.Linear(feature_dim, num_classes, bias=False))
 
     def forward(self, x):
         global_feature = F.adaptive_max_pool2d(self.features(x), output_size=(1, 1))

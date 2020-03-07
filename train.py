@@ -1,5 +1,6 @@
 import argparse
 
+import numpy as np
 import pandas as pd
 import torch
 from thop import profile, clever_format
@@ -10,6 +11,12 @@ from tqdm import tqdm
 
 from model import Model, set_bn_eval
 from utils import recall, ImageReader, LabelSmoothingCrossEntropyLoss
+
+# for reproducibility
+torch.manual_seed(0)
+np.random.seed(0)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
 
 
 def train(net, optim):
