@@ -13,11 +13,10 @@ def set_bn_eval(m):
 
 
 class Pooling(nn.Module):
-    def __init__(self, pooling_mode='k_means', splits=8):
+    def __init__(self, pooling_mode='map'):
         super().__init__()
         assert pooling_mode in ['k_means', 'map', 'avp'], 'pooling_mode {} is not supported'.format(pooling_mode)
         self.pooling_mode = pooling_mode
-        self.splits = splits
 
     def forward(self, x):
         assert x.dim() == 4, 'the input tensor must be the shape of [B, C, H, W]'
@@ -30,7 +29,7 @@ class Pooling(nn.Module):
             assert c % self.splits == 0, 'the channel of input tensor must be divided by {}'.format(self.splits)
             x = x.view(b, self.splits, c // self.splits, h * w)
             x = x.permute(0, 1, 3, 2).contiguous()
-            y, _ = k_means_routing(x, num_iterations=3, similarity='cosine')
+            y, _ = k_means_routing(x, num_iterations=1, similarity='cosine')
             y = y.view(b, c)
             return y
 
@@ -39,7 +38,7 @@ class Pooling(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, backbone_type, feature_dim, num_classes, pooling_mode='k_means', splits=8):
+    def __init__(self, backbone_type, feature_dim, num_classes, pooling_mode='map'):
         super().__init__()
 
         # Backbone Network
@@ -53,7 +52,7 @@ class Model(nn.Module):
         self.features = nn.Sequential(*self.features)
 
         # Refactor Layer
-        self.pooling = Pooling(pooling_mode, splits)
+        self.pooling = Pooling(pooling_mode)
         self.refactor = nn.Linear(512 * expansion, feature_dim, bias=False)
         # Classification Layer
         self.fc = nn.Sequential(nn.BatchNorm1d(feature_dim), nn.Linear(feature_dim, num_classes, bias=False))
