@@ -64,22 +64,22 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
   <tbody>
     <tr>
       <td align="center">ResNet18</td>
-      <td align="center">11.80M | 4.29G</td>
-      <td align="center">11.81M | 4.29G</td>
-      <td align="center">23.30M | 4.31G</td>
-      <td align="center">15.80M | 4.30G</td>
+      <td align="center">12.12M | 4.29G</td>
+      <td align="center">12.12M | 4.29G</td>
+      <td align="center">29.35M | 4.32G</td>
+      <td align="center">18.11M | 4.30G</td>
     </tr>
     <tr>
       <td align="center">ResNet50</td>
-      <td align="center">25.71M | 10.64G</td>
-      <td align="center">25.71M | 10.64G</td>
+      <td align="center">26.81M | 10.64G</td>
+      <td align="center">26.81M | 10.64G</td>
       <td align="center">37.21M | 10.66G</td>
-      <td align="center">29.70M | 10.65G</td>
+      <td align="center">32.80M | 10.66G</td>
     </tr>
     <tr>
       <td align="center">SEResNet50</td>
-      <td align="center">28.24M | 10.27G</td>
-      <td align="center">28.24M | 10.27G</td>
+      <td align="center">29.34M | 11.20G</td>
+      <td align="center">29.34M | 11.20G</td>
       <td align="center">37.21M | 10.66G</td>
       <td align="center">29.70M | 10.65G</td>
     </tr>
@@ -101,26 +101,26 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
   <tbody>
     <tr>
       <td align="center">ResNet18</td>
-      <td align="center">84.9% | 91.0%</td>
-      <td align="center">90.9% | 95.2%</td>
-      <td align="center">94.9% | 97.1%</td>
-      <td align="center">97.1% | 98.5%</td>
+      <td align="center">84.3% | 91.2%</td>
+      <td align="center">90.4% | 94.9%</td>
+      <td align="center">94.3% | 97.1%</td>
+      <td align="center">96.7% | 98.4%</td>
       <td align="center"><a href="https://pan.baidu.com/s/1W3-QKVe5HpCAHJTgxI1M5Q">r3sn</a> | <a href="https://pan.baidu.com/s/171Wqa-1TNquzedjlFhaYGg">sf5s</a></td>
     </tr>
     <tr>
       <td align="center">ResNet50</td>
-      <td align="center">88.8% | 93.5%</td>
-      <td align="center">93.7% | 96.4%</td>
-      <td align="center">96.2% | 97.8%</td>
-      <td align="center">97.8% | 98.7%</td>
+      <td align="center">90.2% | 94.2%</td>
+      <td align="center">94.5% | 96.8%</td>
+      <td align="center">96.9% | 98.1%</td>
+      <td align="center">98.3% | 99.0%</td>
       <td align="center"><a href="https://pan.baidu.com/s/1W3-QKVe5HpCAHJTgxI1M5Q">r3sn</a> | <a href="https://pan.baidu.com/s/171Wqa-1TNquzedjlFhaYGg">sf5s</a></td>
     </tr>
     <tr>
       <td align="center">SEResNet50</td>
-      <td align="center">88.8% | 93.5%</td>
-      <td align="center">93.7% | 96.4%</td>
-      <td align="center">96.2% | 97.8%</td>
-      <td align="center">97.8% | 98.7%</td>
+      <td align="center">90.2% | 94.2%</td>
+      <td align="center">94.3% | 96.8%</td>
+      <td align="center">96.8% | 98.1%</td>
+      <td align="center">98.4% | 98.9%</td>
       <td align="center"><a href="https://pan.baidu.com/s/1W3-QKVe5HpCAHJTgxI1M5Q">r3sn</a> | <a href="https://pan.baidu.com/s/171Wqa-1TNquzedjlFhaYGg">sf5s</a></td>
     </tr>
   </tbody>
@@ -141,26 +141,26 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
   <tbody>
     <tr>
       <td align="center">ResNet18</td>
-      <td align="center">61.2% | 69.5%</td>
-      <td align="center">72.6% | 79.1%</td>
-      <td align="center">81.7% | 86.8%</td>
-      <td align="center">88.3% | 92.0%</td>
+      <td align="center">61.9% | 68.3%</td>
+      <td align="center">72.9% | 78.5%</td>
+      <td align="center">82.1% | 86.3%</td>
+      <td align="center">89.2% | 92.2%</td>
       <td align="center"><a href="https://pan.baidu.com/s/1_Ij-bYHZC31cxEWUnYwqwQ">2cfi</a> | <a href="https://pan.baidu.com/s/1deaYb2RWHikztHHsbJyuNw">pi4q</a></td>
     </tr>
     <tr>
       <td align="center">ResNet50</td>
-      <td align="center">66.2% | 74.3%</td>
-      <td align="center">77.3% | 82.5%</td>
-      <td align="center">85.5% | 89.1%</td>
-      <td align="center">91.2% | 93.5%</td>
+      <td align="center">69.1% | 76.0%</td>
+      <td align="center">79.6% | 84.0%</td>
+      <td align="center">87.1% | 90.3%</td>
+      <td align="center">92.1% | 94.3%</td>
       <td align="center"><a href="https://pan.baidu.com/s/1_Ij-bYHZC31cxEWUnYwqwQ">2cfi</a> | <a href="https://pan.baidu.com/s/1deaYb2RWHikztHHsbJyuNw">pi4q</a></td>
     </tr>
     <tr>
       <td align="center">SEResNet50</td>
-      <td align="center">66.2% | 74.3%</td>
-      <td align="center">77.3% | 82.5%</td>
-      <td align="center">85.5% | 89.1%</td>
-      <td align="center">91.2% | 93.5%</td>
+      <td align="center">70.9% | 79.8%</td>
+      <td align="center">79.9% | 87.1%</td>
+      <td align="center">87.0% | 91.6%</td>
+      <td align="center">92.4% | 95.0%</td>
       <td align="center"><a href="https://pan.baidu.com/s/1W3-QKVe5HpCAHJTgxI1M5Q">r3sn</a> | <a href="https://pan.baidu.com/s/171Wqa-1TNquzedjlFhaYGg">sf5s</a></td>
     </tr>
   </tbody>
