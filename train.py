@@ -23,7 +23,7 @@ def train(net, optim):
     net.train()
     # fix bn on backbone network
     net.apply(set_bn_eval)
-    total_loss, total_correct, total_num, data_bar = 0.0, 0.0, 0, tqdm(train_data_loader)
+    total_loss, total_correct, total_num, data_bar = 0.0, 0.0, 0, tqdm(train_data_loader, dynamic_ncols=True)
     for inputs, labels in data_bar:
         inputs, labels = inputs.cuda(), labels.cuda()
         features, classes = net(inputs)
@@ -47,7 +47,8 @@ def test(net, recall_ids):
         # obtain feature vectors for all data
         for key in eval_dict.keys():
             eval_dict[key]['features'] = []
-            for inputs, labels in tqdm(eval_dict[key]['data_loader'], desc='processing {} data'.format(key)):
+            for inputs, labels in tqdm(eval_dict[key]['data_loader'], desc='processing {} data'.format(key),
+                                       dynamic_ncols=True):
                 features, classes = net(inputs.cuda())
                 eval_dict[key]['features'].append(features)
             eval_dict[key]['features'] = torch.cat(eval_dict[key]['features'], dim=0)
@@ -107,7 +108,7 @@ if __name__ == '__main__':
     flops, params = profile(model, inputs=(torch.randn(1, 3, 224, 224).cuda(),))
     flops, params = clever_format([flops, params])
     print('# Model Params: {} FLOPs: {}'.format(params, flops))
-    optimizer = Adam(model.parameters(), lr=1e-4)
+    optimizer = Adam(model.parameters(), lr=1e-4, weight_decay=1e-5)
     lr_scheduler = MultiStepLR(optimizer, milestones=[int(0.6 * num_epochs), int(0.8 * num_epochs)], gamma=0.1)
     loss_criterion = LabelSmoothingCrossEntropyLoss()
 

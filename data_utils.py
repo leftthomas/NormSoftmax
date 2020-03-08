@@ -24,7 +24,7 @@ def process_car_data(data_path, data_type):
         os.mkdir('{}/{}'.format(data_path, data_type))
     train_images, test_images = {}, {}
     annotations = loadmat('{}/cars_annos.mat'.format(data_path))['annotations'][0]
-    for img in tqdm(annotations, desc='process {} data for car dataset'.format(data_type)):
+    for img in tqdm(annotations, desc='process {} data for car dataset'.format(data_type), dynamic_ncols=True):
         img_name, img_label = str(img[0][0]), str(img[5][0][0])
         if data_type == 'uncropped':
             img = Image.open('{}/{}'.format(data_path, img_name)).convert('RGB')
@@ -53,7 +53,8 @@ def process_cub_data(data_path, data_type):
     labels = read_txt('{}/image_class_labels.txt'.format(data_path), 2)
     bounding_boxes = read_txt('{}/bounding_boxes.txt'.format(data_path), 5)
     train_images, test_images = {}, {}
-    for img_id, img_name in tqdm(images.items(), desc='process {} data for cub dataset'.format(data_type)):
+    for img_id, img_name in tqdm(images.items(), desc='process {} data for cub dataset'.format(data_type),
+                                 dynamic_ncols=True):
         if data_type == 'uncropped':
             img = Image.open('{}/images/{}'.format(data_path, img_name)).convert('RGB')
         else:
