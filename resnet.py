@@ -31,10 +31,13 @@ class SEModule(nn.Module):
 
 class SEBottleneck(Bottleneck):
 
-    def __init__(self, inplanes, planes, stride=1, downsample=None):
-        super(SEBottleneck, self).__init__(inplanes, planes, stride, downsample)
-        self.conv1 = conv1x1(inplanes, planes, stride)
-        self.conv2 = conv3x3(planes, planes)
+    def __init__(self, inplanes, planes, stride=1, downsample=None, groups=1, base_width=64, dilation=1,
+                 norm_layer=None):
+        super(SEBottleneck, self).__init__(inplanes, planes, stride, downsample, groups, base_width, dilation,
+                                           norm_layer)
+        width = int(planes * (base_width / 64.)) * groups
+        self.conv1 = conv1x1(inplanes, width, stride)
+        self.conv2 = conv3x3(width, width)
         self.se_module = SEModule(planes * self.expansion)
 
     def forward(self, x):
@@ -65,7 +68,7 @@ class EResNet(ResNet):
         super(EResNet, self).__init__(block, layers, num_classes)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1, ceil_mode=ceil_mode)
         # remove down sample for stage3
-        self.inplanes = 512
+        self.inplanes = 128 * block.expansion
         self.layer3 = self._make_layer(block, 256, layers[2], stride=1)
 
 
