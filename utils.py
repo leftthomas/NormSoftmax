@@ -30,6 +30,7 @@ class ImageReader(Dataset):
             self.images += image_list
             self.labels += [self.class_to_idx[label]] * len(image_list)
             self.weights[self.class_to_idx[label]] = len(image_list)
+        # class-wise weight for overcome dataset imbalance
         sum_weight = 0.0
         for key, value in self.weights.items():
             self.weights[key] = len(self.labels) / value
