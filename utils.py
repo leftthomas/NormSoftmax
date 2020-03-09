@@ -8,35 +8,28 @@ from torch import nn
 from torch.utils.data import Dataset
 from torchvision import transforms
 
-rgb_mean = {'car_train_uncropped': [0.470, 0.461, 0.456], 'car_train_cropped': [0.421, 0.402, 0.405],
-            'car_test_uncropped': [0.470, 0.458, 0.453], 'car_test_cropped': [0.423, 0.400, 0.402],
-            'cub_train_uncropped': [0.484, 0.503, 0.452], 'cub_train_cropped': [0.462, 0.468, 0.420],
-            'cub_test_uncropped': [0.488, 0.496, 0.412], 'cub_test_cropped': [0.482, 0.475, 0.392],
-            'sop_train_uncropped': [0.579, 0.539, 0.505], 'sop_test_uncropped': [0.582, 0.540, 0.505],
-            'isc_train_uncropped': [0.832, 0.811, 0.804], 'isc_query_uncropped': [0.830, 0.808, 0.802],
-            'isc_gallery_uncropped': [0.834, 0.813, 0.806]}
-rgb_std = {'car_train_uncropped': [0.265, 0.264, 0.269], 'car_train_cropped': [0.270, 0.267, 0.269],
-           'car_test_uncropped': [0.268, 0.267, 0.271], 'car_test_cropped': [0.273, 0.269, 0.271],
-           'cub_train_uncropped': [0.183, 0.183, 0.194], 'cub_train_cropped': [0.211, 0.211, 0.219],
-           'cub_test_uncropped': [0.181, 0.179, 0.191], 'cub_test_cropped': [0.200, 0.198, 0.206],
-           'sop_train_uncropped': [0.238, 0.242, 0.242], 'sop_test_uncropped': [0.237, 0.241, 0.242],
-           'isc_train_uncropped': [0.209, 0.229, 0.237], 'isc_query_uncropped': [0.211, 0.231, 0.238],
-           'isc_gallery_uncropped': [0.211, 0.231, 0.239]}
+rgb_mean = {'car_uncropped': [0.470, 0.461, 0.456], 'car_cropped': [0.421, 0.402, 0.405],
+            'cub_uncropped': [0.484, 0.503, 0.452], 'cub_cropped': [0.462, 0.468, 0.420],
+            'sop_uncropped': [0.579, 0.539, 0.505], 'isc_uncropped': [0.832, 0.811, 0.804]}
+rgb_std = {'car_uncropped': [0.257, 0.256, 0.262], 'car_cropped': [0.264, 0.260, 0.262],
+           'cub_uncropped': [0.176, 0.176, 0.187], 'cub_cropped': [0.206, 0.206, 0.214],
+           'sop_uncropped': [0.230, 0.234, 0.234], 'isc_uncropped': [0.204, 0.224, 0.233]}
 
 
-def get_mean_std(data_path, data_name, data_type, crop_type):
-    data_dict = torch.load('{}/{}/{}_data_dicts.pth'.format(data_path, data_name, crop_type))[data_type]
+def get_mean_std(data_path, data_name, crop_type):
+    data_dict = torch.load('{}/{}/{}_data_dicts.pth'.format(data_path, data_name, crop_type))['train']
 
     mean, std, num = np.zeros(3, dtype=np.float32), np.zeros(3, dtype=np.float32), 0.0
     for key, value in data_dict.items():
         for path in value:
             num += 1
-            img = np.array(Image.open(path).convert('RGB'), dtype=np.float32)
+            img = np.array(Image.open(path).convert('RGB').resize((224, 224), Image.BILINEAR), dtype=np.float32)
             for i in range(3):
                 mean[i] += img[:, :, i].mean()
                 std[i] += img[:, :, i].std()
     mean, std = mean / (num * 255), std / (num * 255)
-    print('[{}-{}-{}] Mean: {} Std: {}'.format(data_name, data_type, crop_type, mean, std))
+    print('[{}-{}] Mean: {} Std: {}'.format(data_name, crop_type, np.around(mean, decimals=3),
+                                            np.around(std, decimals=3)))
 
 
 class ImageReader(Dataset):
@@ -47,8 +40,8 @@ class ImageReader(Dataset):
 
         data_dict = torch.load('{}/{}/{}_data_dicts.pth'.format(data_path, data_name, crop_type))[data_type]
         self.class_to_idx = dict(zip(sorted(data_dict), range(len(data_dict))))
-        normalize = transforms.Normalize(rgb_mean['{}_{}_{}'.format(data_name, data_type, crop_type)],
-                                         rgb_std['{}_{}_{}'.format(data_name, data_type, crop_type)])
+        normalize = transforms.Normalize(rgb_mean['{}_{}'.format(data_name, crop_type)],
+                                         rgb_std['{}_{}'.format(data_name, crop_type)])
         if data_type == 'train':
             self.transform = transforms.Compose([transforms.Resize((256, 256)), transforms.RandomCrop(224),
                                                  transforms.RandomHorizontalFlip(), transforms.ToTensor(), normalize])
@@ -118,16 +111,9 @@ if __name__ == '__main__':
     parser.add_argument('--data_path', default='/home/data', type=str, help='datasets path')
 
     opt = parser.parse_args()
-    get_mean_std(opt.data_path, 'car', 'train', 'uncropped')
-    get_mean_std(opt.data_path, 'car', 'train', 'cropped')
-    get_mean_std(opt.data_path, 'car', 'test', 'uncropped')
-    get_mean_std(opt.data_path, 'car', 'test', 'cropped')
-    get_mean_std(opt.data_path, 'cub', 'train', 'uncropped')
-    get_mean_std(opt.data_path, 'cub', 'train', 'cropped')
-    get_mean_std(opt.data_path, 'cub', 'test', 'uncropped')
-    get_mean_std(opt.data_path, 'cub', 'test', 'cropped')
-    get_mean_std(opt.data_path, 'sop', 'train', 'uncropped')
-    get_mean_std(opt.data_path, 'sop', 'test', 'uncropped')
-    get_mean_std(opt.data_path, 'isc', 'train', 'uncropped')
-    get_mean_std(opt.data_path, 'isc', 'query', 'uncropped')
-    get_mean_std(opt.data_path, 'isc', 'gallery', 'uncropped')
+    get_mean_std(opt.data_path, 'car', 'uncropped')
+    get_mean_std(opt.data_path, 'car', 'cropped')
+    get_mean_std(opt.data_path, 'cub', 'uncropped')
+    get_mean_std(opt.data_path, 'cub', 'cropped')
+    get_mean_std(opt.data_path, 'sop', 'uncropped')
+    get_mean_std(opt.data_path, 'isc', 'uncropped')
