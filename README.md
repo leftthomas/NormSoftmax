@@ -197,10 +197,10 @@ the learning rate is decayed by 10 on 12th and 16th epoch.
     </tr>
     <tr>
       <td align="center">SEResNet50</td>
-      <td align="center">79.7%</td>
-      <td align="center">89.9%</td>
-      <td align="center">95.1%</td>
-      <td align="center">98.1%</td>
+      <td align="center">30.1%</td>
+      <td align="center">45.6%</td>
+      <td align="center">64.5%</td>
+      <td align="center">83.6%</td>
       <td align="center"><a href="https://pan.baidu.com/s/17I2nQMK5XBXL1XhiZ2elAg">qgsn</a></td>
     </tr>
   </tbody>

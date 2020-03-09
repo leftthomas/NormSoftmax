@@ -1,5 +1,6 @@
+import math
+
 import torch
-from capsule_layer.functional import k_means_routing
 from torch import nn
 from torch.nn import functional as F
 
@@ -13,32 +14,57 @@ def set_bn_eval(m):
 
 
 class Pooling(nn.Module):
-    def __init__(self, pooling_mode='map'):
+    def __init__(self, pooling_mode='sap'):
         super().__init__()
-        assert pooling_mode in ['k_means', 'map', 'avp'], 'pooling_mode {} is not supported'.format(pooling_mode)
+        assert pooling_mode in ['sap', 'max', 'avg', 'gem'], 'pooling_mode {} is not supported'.format(pooling_mode)
         self.pooling_mode = pooling_mode
 
     def forward(self, x):
         assert x.dim() == 4, 'the input tensor must be the shape of [B, C, H, W]'
-        if self.pooling_mode == 'map':
+        if self.pooling_mode == 'max':
             return torch.flatten(F.adaptive_max_pool2d(x, output_size=(1, 1)), start_dim=1)
-        elif self.pooling_mode == 'avp':
+        elif self.pooling_mode == 'avg':
             return torch.flatten(F.adaptive_avg_pool2d(x, output_size=(1, 1)), start_dim=1)
+        elif self.pooling_mode == 'gem':
+            sum_value = x.pow(self.p).mean(dim=[-1, -2])
+            return torch.sign(sum_value) * (torch.abs(sum_value).pow(1.0 / self.p))
         else:
-            b, c, h, w = x.size()
-            assert c % self.splits == 0, 'the channel of input tensor must be divided by {}'.format(self.splits)
-            x = x.view(b, self.splits, c // self.splits, h * w)
-            x = x.permute(0, 1, 3, 2).contiguous()
-            y, _ = k_means_routing(x, num_iterations=1, similarity='cosine')
-            y = y.view(b, c)
+            # [B, C, H*W]
+            y = torch.flatten(x, start_dim=2)
+            # [B, C]
+            channel_attention = torch.bmm(y, y.permute(0, 2, 1).contiguous()).mean(dim=-1)
+            channel_attention = channel_attention / channel_attention.max(dim=-1, keepdim=True)[0]
+            # [B, H*W]
+            spatial_attention = torch.bmm(y.permute(0, 2, 1).contiguous(), y).mean(dim=-1)
+            spatial_attention = spatial_attention / spatial_attention.max(dim=-1, keepdim=True)[0]
+            # [B, C, H*W]
+            y = channel_attention.unsqueeze(dim=-1) * spatial_attention.unsqueeze(dim=1) * y
+            # [B, C]
+            y = torch.flatten(F.adaptive_max_pool1d(y, output_size=1), start_dim=1)
             return y
 
     def extra_repr(self):
         return 'pooling_mode={}'.format(self.pooling_mode)
 
 
+class ProxyLinear(nn.Module):
+    def __init__(self, in_features, out_features):
+        super(ProxyLinear, self).__init__()
+        self.in_features = in_features
+        self.out_features = out_features
+        self.weight = nn.Parameter(torch.Tensor(out_features, in_features))
+        nn.init.kaiming_uniform_(self.weight, a=math.sqrt(5))
+
+    def forward(self, x):
+        output = x.matmul(self.weight.t())
+        return output
+
+    def extra_repr(self):
+        return 'in_features={}, out_features={}'.format(self.in_features, self.out_features)
+
+
 class Model(nn.Module):
-    def __init__(self, backbone_type, feature_dim, num_classes, pooling_mode='map'):
+    def __init__(self, backbone_type, feature_dim, num_classes, pooling_mode='sap'):
         super().__init__()
 
         # Backbone Network
@@ -55,7 +81,7 @@ class Model(nn.Module):
         self.pooling = Pooling(pooling_mode)
         self.refactor = nn.Linear(512 * expansion, feature_dim, bias=False)
         # Classification Layer
-        self.fc = nn.Sequential(nn.BatchNorm1d(feature_dim), nn.Linear(feature_dim, num_classes, bias=False))
+        self.fc = nn.Sequential(nn.BatchNorm1d(feature_dim), ProxyLinear(feature_dim, num_classes))
 
     def forward(self, x):
         global_feature = self.features(x)
