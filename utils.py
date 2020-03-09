@@ -54,15 +54,15 @@ def recall(feature_vectors, feature_labels, rank, gallery_vectors=None, gallery_
     feature_labels = torch.tensor(feature_labels, device=feature_vectors.device)
     gallery_vectors = feature_vectors if gallery_vectors is None else gallery_vectors
 
-    dist_matrix = torch.cdist(feature_vectors.unsqueeze(0), gallery_vectors.unsqueeze(0)).squeeze(0)
+    sim_matrix = torch.mm(feature_vectors, gallery_vectors.t().contiguous())
 
     if gallery_labels is None:
-        dist_matrix.fill_diagonal_(float('inf'))
+        sim_matrix.fill_diagonal_(0)
         gallery_labels = feature_labels
     else:
         gallery_labels = torch.tensor(gallery_labels, device=feature_vectors.device)
 
-    idx = dist_matrix.topk(k=rank[-1], dim=-1, largest=False)[1]
+    idx = sim_matrix.topk(k=rank[-1], dim=-1, largest=True)[1]
     acc_list = []
     for r in rank:
         correct = (gallery_labels[idx[:, 0:r]] == feature_labels.unsqueeze(dim=-1)).any(dim=-1).float()
