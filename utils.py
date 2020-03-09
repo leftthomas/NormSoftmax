@@ -1,35 +1,9 @@
-import argparse
-
-import numpy as np
 import torch
 import torch.nn.functional as F
 from PIL import Image
 from torch import nn
 from torch.utils.data import Dataset
 from torchvision import transforms
-
-rgb_mean = {'car_uncropped': [0.470, 0.461, 0.456], 'car_cropped': [0.421, 0.402, 0.405],
-            'cub_uncropped': [0.484, 0.503, 0.452], 'cub_cropped': [0.462, 0.468, 0.420],
-            'sop_uncropped': [0.579, 0.539, 0.505], 'isc_uncropped': [0.832, 0.811, 0.804]}
-rgb_std = {'car_uncropped': [0.257, 0.256, 0.262], 'car_cropped': [0.264, 0.260, 0.262],
-           'cub_uncropped': [0.176, 0.176, 0.187], 'cub_cropped': [0.206, 0.206, 0.214],
-           'sop_uncropped': [0.230, 0.234, 0.234], 'isc_uncropped': [0.204, 0.224, 0.233]}
-
-
-def get_mean_std(data_path, data_name, crop_type):
-    data_dict = torch.load('{}/{}/{}_data_dicts.pth'.format(data_path, data_name, crop_type))['train']
-
-    mean, std, num = np.zeros(3, dtype=np.float32), np.zeros(3, dtype=np.float32), 0.0
-    for key, value in data_dict.items():
-        for path in value:
-            num += 1
-            img = np.array(Image.open(path).convert('RGB').resize((224, 224), Image.BILINEAR), dtype=np.float32)
-            for i in range(3):
-                mean[i] += img[:, :, i].mean()
-                std[i] += img[:, :, i].std()
-    mean, std = mean / (num * 255), std / (num * 255)
-    print('[{}-{}] Mean: {} Std: {}'.format(data_name, crop_type, np.around(mean, decimals=3),
-                                            np.around(std, decimals=3)))
 
 
 class ImageReader(Dataset):
@@ -40,8 +14,7 @@ class ImageReader(Dataset):
 
         data_dict = torch.load('{}/{}/{}_data_dicts.pth'.format(data_path, data_name, crop_type))[data_type]
         self.class_to_idx = dict(zip(sorted(data_dict), range(len(data_dict))))
-        normalize = transforms.Normalize(rgb_mean['{}_{}'.format(data_name, crop_type)],
-                                         rgb_std['{}_{}'.format(data_name, crop_type)])
+        normalize = transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         if data_type == 'train':
             self.transform = transforms.Compose([transforms.Resize((256, 256)), transforms.RandomCrop(224),
                                                  transforms.RandomHorizontalFlip(), transforms.ToTensor(), normalize])
@@ -104,16 +77,3 @@ class LabelSmoothingCrossEntropyLoss(nn.Module):
         smooth_loss = -log_probs.mean(dim=-1)
         loss = (1.0 - self.smoothing) * nll_loss + self.smoothing * smooth_loss
         return (weight * loss).mean()
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Process datasets')
-    parser.add_argument('--data_path', default='/home/data', type=str, help='datasets path')
-
-    opt = parser.parse_args()
-    get_mean_std(opt.data_path, 'car', 'uncropped')
-    get_mean_std(opt.data_path, 'car', 'cropped')
-    get_mean_std(opt.data_path, 'cub', 'uncropped')
-    get_mean_std(opt.data_path, 'cub', 'cropped')
-    get_mean_std(opt.data_path, 'sop', 'uncropped')
-    get_mean_std(opt.data_path, 'isc', 'uncropped')
