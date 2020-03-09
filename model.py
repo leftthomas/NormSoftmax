@@ -26,8 +26,8 @@ class Pooling(nn.Module):
         elif self.pooling_mode == 'avg':
             return torch.flatten(F.adaptive_avg_pool2d(x, output_size=(1, 1)), start_dim=1)
         elif self.pooling_mode == 'gem':
-            sum_value = x.pow(self.p).mean(dim=[-1, -2])
-            return torch.sign(sum_value) * (torch.abs(sum_value).pow(1.0 / self.p))
+            sum_value = x.pow(3).mean(dim=[-1, -2])
+            return torch.sign(sum_value) * (torch.abs(sum_value).pow(1.0 / 3))
         else:
             # [B, C, H*W]
             y = torch.flatten(x, start_dim=2)
@@ -64,7 +64,7 @@ class ProxyLinear(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, backbone_type, feature_dim, num_classes, pooling_mode='max'):
+    def __init__(self, backbone_type, feature_dim, num_classes, pooling_mode='sap'):
         super().__init__()
 
         # Backbone Network
