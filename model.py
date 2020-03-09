@@ -40,7 +40,7 @@ class Pooling(nn.Module):
             # [B, C, H*W]
             y = channel_attention.unsqueeze(dim=-1) * spatial_attention.unsqueeze(dim=1) * y
             # [B, C]
-            y = torch.flatten(F.adaptive_max_pool1d(y, output_size=1), start_dim=1)
+            y = torch.flatten(y, start_dim=1).topk(k=y.size(1), dim=-1, largest=True, sorted=False)[0]
             return y
 
     def extra_repr(self):
@@ -64,7 +64,7 @@ class ProxyLinear(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, backbone_type, feature_dim, num_classes, pooling_mode='sap'):
+    def __init__(self, backbone_type, feature_dim, num_classes, pooling_mode='max'):
         super().__init__()
 
         # Backbone Network
