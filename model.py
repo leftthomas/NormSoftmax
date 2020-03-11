@@ -1,8 +1,8 @@
 import math
 
 import torch
+import torch.nn.functional as F
 from torch import nn
-from torch.nn import functional as F
 
 from resnet import resnet18, resnet50, seresnet50
 
@@ -13,38 +13,29 @@ def set_bn_eval(m):
         m.eval()
 
 
-class Pooling(nn.Module):
-    def __init__(self, pooling_mode='sap'):
-        super().__init__()
-        assert pooling_mode in ['sap', 'max', 'avg', 'gem'], 'pooling_mode {} is not supported'.format(pooling_mode)
-        self.pooling_mode = pooling_mode
+class Refactor(nn.Module):
+    def __init__(self, in_features, out_features, refactor_mode='tra'):
+        super(Refactor, self).__init__()
+        self.in_features = in_features
+        self.out_features = out_features
+        self.refactor_mode = refactor_mode
+        self.fc = nn.Linear(in_features, out_features, bias=False)
 
     def forward(self, x):
-        assert x.dim() == 4, 'the input tensor must be the shape of [B, C, H, W]'
-        if self.pooling_mode == 'max':
-            return torch.flatten(F.adaptive_max_pool2d(x, output_size=(1, 1)), start_dim=1)
-        elif self.pooling_mode == 'avg':
-            return torch.flatten(F.adaptive_avg_pool2d(x, output_size=(1, 1)), start_dim=1)
-        elif self.pooling_mode == 'gem':
-            sum_value = x.pow(3).mean(dim=[-1, -2])
-            return torch.sign(sum_value) * (torch.abs(sum_value).pow(1.0 / 3))
+        if self.refactor_mode == 'tra':
+            u, s, v = torch.svd(x)
+        elif self.refactor_mode == 'max':
+            x = torch.flatten(F.adaptive_max_pool2d(x, output_size=(1, 1)), start_dim=1)
+        elif self.refactor_mode == 'avg':
+            x = torch.flatten(F.adaptive_avg_pool2d(x, output_size=(1, 1)), start_dim=1)
         else:
-            # [B, C, H*W]
-            y = torch.flatten(x, start_dim=2)
-            # [B, C]
-            channel_attention = torch.bmm(y, y.permute(0, 2, 1).contiguous()).mean(dim=-1)
-            channel_attention = channel_attention / channel_attention.max(dim=-1, keepdim=True)[0]
-            # [B, H*W]
-            spatial_attention = torch.bmm(y.permute(0, 2, 1).contiguous(), y).mean(dim=-1)
-            spatial_attention = spatial_attention / spatial_attention.max(dim=-1, keepdim=True)[0]
-            # [B, C, H*W]
-            y = channel_attention.unsqueeze(dim=-1) * spatial_attention.unsqueeze(dim=1) * y
-            # [B, C]
-            y = torch.flatten(y, start_dim=1).topk(k=y.size(1), dim=-1, largest=True, sorted=False)[0]
-            return y
+            sum_value = x.pow(3).mean(dim=[-1, -2])
+            x = torch.sign(sum_value) * (torch.abs(sum_value).pow(1.0 / 3))
+        output = self.fc(x)
+        return output
 
     def extra_repr(self):
-        return 'pooling_mode={}'.format(self.pooling_mode)
+        return 'in_features={}, out_features={}'.format(self.in_features, self.out_features)
 
 
 class ProxyLinear(nn.Module):
@@ -64,7 +55,7 @@ class ProxyLinear(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, backbone_type, feature_dim, num_classes, pooling_mode='sap'):
+    def __init__(self, backbone_type, feature_dim, num_classes, refactor_mode='tra'):
         super().__init__()
 
         # Backbone Network
@@ -78,14 +69,12 @@ class Model(nn.Module):
         self.features = nn.Sequential(*self.features)
 
         # Refactor Layer
-        self.pooling = Pooling(pooling_mode)
-        self.refactor = nn.Linear(512 * expansion, feature_dim, bias=False)
+        self.refactor = Refactor(512 * expansion, feature_dim, refactor_mode)
         # Classification Layer
         self.fc = nn.Sequential(nn.BatchNorm1d(feature_dim), ProxyLinear(feature_dim, num_classes))
 
     def forward(self, x):
         global_feature = self.features(x)
-        global_feature = self.pooling(global_feature)
         feature = self.refactor(global_feature)
         classes = self.fc(feature)
         return F.normalize(feature, dim=-1), classes
