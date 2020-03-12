@@ -23,7 +23,7 @@ class Refactor(nn.Module):
 
     def forward(self, x):
         if self.refactor_mode == 'tra':
-            u, s, v = torch.svd(x)
+            x = torch.flatten(F.adaptive_avg_pool2d(x, output_size=(1, 1)), start_dim=1)
         elif self.refactor_mode == 'max':
             x = torch.flatten(F.adaptive_max_pool2d(x, output_size=(1, 1)), start_dim=1)
         elif self.refactor_mode == 'avg':
