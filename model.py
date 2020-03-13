@@ -29,6 +29,33 @@ class ProxyLinear(nn.Module):
         return 'in_features={}, out_features={}'.format(self.in_features, self.out_features)
 
 
+class WeightPooling(nn.Module):
+    def __init__(self, channel, height, width, num_point):
+        super(WeightPooling, self).__init__()
+        self.height = height
+        self.width = width
+        self.num_point = num_point
+        self.spatial_attention = nn.Parameter(torch.Tensor(1, channel, height, width))
+        self.reduce = nn.Conv1d(channel, channel, num_point, groups=channel, bias=True)
+        for m in self.modules():
+            if isinstance(m, nn.Conv1d):
+                nn.init.constant_(m.weight, 1)
+                nn.init.constant_(m.bias, 0)
+        nn.init.constant_(self.spatial_attention, 1)
+
+    def forward(self, x):
+        # [B, C, H*W]
+        output = torch.flatten(self.spatial_attention * x, start_dim=2)
+        # [B, C, N]
+        output, locations = output.topk(k=self.num_point, dim=-1)
+        # [B, C]
+        output = torch.flatten(self.reduce(output), start_dim=1)
+        return output, locations.float()
+
+    def extra_repr(self):
+        return 'height={}, width={}, num_point={}'.format(self.height, self.width, self.num_point)
+
+
 class Model(nn.Module):
     def __init__(self, backbone_type, feature_dim, num_classes):
         super().__init__()
@@ -46,6 +73,8 @@ class Model(nn.Module):
                 self.add_module(name, module)
         self.layer0 = nn.Sequential(*self.layer0)
 
+        self.pooling = WeightPooling(512 * expansion, 15, 15, 4)
+
         # Refactor Layer
         self.refactor = nn.Linear(512 * expansion, feature_dim, bias=False)
         # Classification Layer
@@ -57,9 +86,7 @@ class Model(nn.Module):
         res2 = self.layer2(res1)
         res3 = self.layer3(res2)
         res4 = self.layer4(res3)
-        max_feature = torch.flatten(F.adaptive_max_pool2d(res4, output_size=(1, 1)), start_dim=1)
-        avg_feature = torch.flatten(F.adaptive_avg_pool2d(res4, output_size=(1, 1)), start_dim=1)
-        global_feature = 0.5 * max_feature + 0.5 * avg_feature
+        global_feature, locations = self.pooling(res4)
         feature = self.refactor(global_feature)
         classes = self.fc(feature)
-        return F.normalize(feature, dim=-1), classes
+        return F.normalize(feature, dim=-1), classes, locations
