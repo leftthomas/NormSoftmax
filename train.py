@@ -27,7 +27,8 @@ def train(net, optim):
     for inputs, labels, weights in data_bar:
         inputs, labels, weights = inputs.cuda(), labels.cuda(), weights.cuda()
         features, classes, locations = net(inputs)
-        loss = loss_criterion(classes, labels, weights) + (torch.exp(-torch.cdist(locations, locations))).mean()
+        loss = loss_criterion(classes, labels, weights) + (
+            torch.exp(-torch.log(torch.cdist(locations, locations) + 1))).mean()
         optim.zero_grad()
         loss.backward()
         optim.step()
