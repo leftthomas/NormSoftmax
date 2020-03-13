@@ -29,34 +29,64 @@ class ProxyLinear(nn.Module):
         return 'in_features={}, out_features={}'.format(self.in_features, self.out_features)
 
 
-class FeatureFuse(nn.Module):
-    def __init__(self, lower_channels, upper_channels):
-        super(FeatureFuse, self).__init__()
-        self.lower_channels = lower_channels
-        self.upper_channels = upper_channels
-        self.lower_conv = nn.Conv2d(lower_channels, lower_channels // 2, kernel_size=1, bias=False)
-        self.upper_conv = nn.Conv2d(upper_channels, lower_channels // 2, kernel_size=1, bias=True)
-        self.atten = nn.Conv2d(lower_channels // 2, out_channels=1, kernel_size=1, bias=True)
-        self.W = nn.Sequential(nn.Conv2d(in_channels=lower_channels, out_channels=lower_channels, kernel_size=1),
-                               nn.BatchNorm2d(lower_channels))
+class ConvBlock(nn.Module):
+    def __init__(self, in_channels, out_channels, kernel_size=3, stride=2, padding=1, dilation=1, groups=1):
+        super().__init__()
 
-        for m in self.modules():
-            if isinstance(m, nn.Conv2d):
-                nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
-            elif isinstance(m, nn.BatchNorm2d):
-                nn.init.constant_(m.weight, 1)
-                nn.init.constant_(m.bias, 0)
+        self.conv = nn.Conv2d(in_channels, out_channels, kernel_size=kernel_size, stride=stride, padding=padding,
+                              dilation=dilation, groups=groups, bias=False)
+        self.bn = nn.BatchNorm2d(out_channels)
+        self.relu = nn.ReLU(inplace=True)
 
-    def forward(self, x_lower, x_upper):
-        b, c, h, w = x_lower.size()
-        lower_feature = self.lower_conv(x_lower)
-        upper_feature = F.interpolate(self.upper_conv(x_upper), size=(h, w), mode='bilinear', align_corners=True)
-        feature = F.relu(lower_feature + upper_feature, inplace=True)
-        atten = torch.sigmoid(self.atten(feature))
-        return self.W(atten * x_lower)
+    def forward(self, x):
+        x = self.conv(x)
+        return self.relu(self.bn(x))
 
-    def extra_repr(self):
-        return 'lower_channels={}, upper_channels={}'.format(self.lower_channels, self.upper_channels)
+
+class PPMModule(nn.Module):
+    def __init__(self, in_channels, out_channels, sizes=(1, 2, 3, 6)):
+        super().__init__()
+
+        inter_channels = in_channels // len(sizes)
+        assert in_channels % len(sizes) == 0
+
+        self.stages = nn.ModuleList([self._make_stage(in_channels, inter_channels, size) for size in sizes])
+        self.conv = ConvBlock(in_channels * 2, out_channels, kernel_size=1, stride=1, padding=0)
+
+    def _make_stage(self, in_channels, inter_channels, size):
+        prior = nn.AdaptiveAvgPool2d(output_size=(size, size))
+        conv = ConvBlock(in_channels, inter_channels, kernel_size=1, stride=1, padding=0)
+        return nn.Sequential(prior, conv)
+
+    def forward(self, feats):
+        h, w = feats.size(2), feats.size(3)
+        priors = [F.interpolate(input=stage(feats), size=(h, w), mode='bilinear',
+                                align_corners=True) for stage in self.stages] + [feats]
+        bottle = self.conv(torch.cat(priors, dim=1))
+        return bottle
+
+
+class FeatureFusion(nn.Module):
+    def __init__(self, lower_channel, upper_channel):
+        super().__init__()
+
+        self.dwconv = ConvBlock(in_channels=lower_channel, out_channels=lower_channel, stride=1, padding=4, dilation=4,
+                                groups=lower_channel)
+        self.conv_high_res = nn.Conv2d(lower_channel, upper_channel, kernel_size=1, stride=1, padding=0, bias=True)
+
+        self.conv_low_res = nn.Conv2d(upper_channel, upper_channel, kernel_size=1, stride=1, padding=0, bias=True)
+        self.relu = nn.ReLU(inplace=True)
+
+    def forward(self, high_res_input, low_res_input):
+        b, c, h, w = low_res_input.size()
+        high_res_input = F.interpolate(input=high_res_input, size=(h, w), mode='bilinear', align_corners=True)
+        high_res_input = self.dwconv(high_res_input)
+        high_res_input = self.conv_high_res(high_res_input)
+
+        low_res_input = self.conv_low_res(low_res_input)
+
+        x = torch.add(high_res_input, low_res_input)
+        return self.relu(x)
 
 
 class Model(nn.Module):
@@ -76,14 +106,12 @@ class Model(nn.Module):
                 self.add_module(name, module)
         self.layer0 = nn.Sequential(*self.layer0)
 
-        # Feature Fuse
-        self.fuse_2 = FeatureFuse(64 * expansion, 512 * expansion)
-        self.fuse_3 = FeatureFuse(128 * expansion, 512 * expansion)
+        # PPM
+        self.ppm = PPMModule(512 * expansion, 512 * expansion)
+        self.fuse = FeatureFusion(64, 512 * expansion)
 
         # Refactor Layer
-        self.refactor = nn.ModuleList([nn.Linear(64 * expansion, feature_dim // 12, bias=False),
-                                       nn.Linear(128 * expansion, feature_dim // 6, bias=False),
-                                       nn.Linear(512 * expansion, 3 * feature_dim // 4, bias=False)])
+        self.refactor = nn.Linear(512 * expansion, feature_dim, bias=False)
         # Classification Layer
         self.fc = nn.Sequential(nn.BatchNorm1d(feature_dim), ProxyLinear(feature_dim, num_classes))
 
@@ -93,14 +121,9 @@ class Model(nn.Module):
         res2 = self.layer2(res1)
         res3 = self.layer3(res2)
         res4 = self.layer4(res3)
-        fused_feature_2 = self.fuse_2(res1, res4)
-        fused_feature_3 = self.fuse_3(res2, res4)
-        fused_feature_2 = torch.flatten(F.adaptive_max_pool2d(fused_feature_2, output_size=(1, 1)), start_dim=1)
-        fused_feature_3 = torch.flatten(F.adaptive_max_pool2d(fused_feature_3, output_size=(1, 1)), start_dim=1)
-        global_feature = torch.flatten(F.adaptive_max_pool2d(res4, output_size=(1, 1)), start_dim=1)
-        fused_feature_2 = self.refactor[0](fused_feature_2)
-        fused_feature_3 = self.refactor[1](fused_feature_3)
-        global_feature = self.refactor[2](global_feature)
-        feature = torch.cat((fused_feature_2, fused_feature_3, global_feature), dim=-1)
+        global_feature = self.ppm(res4)
+        global_feature = self.fuse(res0, global_feature)
+        global_feature = torch.flatten(F.adaptive_max_pool2d(global_feature, output_size=(1, 1)), start_dim=1)
+        feature = self.refactor(global_feature)
         classes = self.fc(feature)
         return F.normalize(feature, dim=-1), classes
