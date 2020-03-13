@@ -36,12 +36,9 @@ class WeightPooling(nn.Module):
         self.width = width
         self.num_point = num_point
         self.spatial_attention = nn.Parameter(torch.Tensor(1, channel, height, width))
-        self.reduce = nn.Conv1d(channel, channel, num_point, groups=channel, bias=True)
-        for m in self.modules():
-            if isinstance(m, nn.Conv1d):
-                nn.init.constant_(m.weight, 1)
-                nn.init.constant_(m.bias, 0)
+        self.reduce = nn.Parameter(torch.Tensor(1, channel, num_point))
         nn.init.constant_(self.spatial_attention, 1)
+        nn.init.constant_(self.reduce, 1)
 
     def forward(self, x):
         # [B, C, H*W]
@@ -49,7 +46,7 @@ class WeightPooling(nn.Module):
         # [B, C, N]
         output, locations = output.topk(k=self.num_point, dim=-1)
         # [B, C]
-        output = torch.flatten(self.reduce(output), start_dim=1)
+        output = (self.reduce * output).sum(dim=-1)
         return output, locations.float()
 
     def extra_repr(self):
