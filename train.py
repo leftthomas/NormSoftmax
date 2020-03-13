@@ -26,9 +26,8 @@ def train(net, optim):
     total_loss, total_correct, total_num, data_bar = 0.0, 0.0, 0, tqdm(train_data_loader, dynamic_ncols=True)
     for inputs, labels, weights in data_bar:
         inputs, labels, weights = inputs.cuda(), labels.cuda(), weights.cuda()
-        features, classes, locations = net(inputs)
-        loss = loss_criterion(classes, labels, weights) + (
-            torch.exp(-torch.log(torch.cdist(locations, locations) + 1))).mean()
+        features, classes = net(inputs)
+        loss = loss_criterion(classes, labels, weights)
         optim.zero_grad()
         loss.backward()
         optim.step()
@@ -50,7 +49,7 @@ def test(net, recall_ids):
             eval_dict[key]['features'] = []
             for inputs, labels, weights in tqdm(eval_dict[key]['data_loader'], desc='processing {} data'.format(key),
                                                 dynamic_ncols=True):
-                features, classes, locations = net(inputs.cuda())
+                features, classes = net(inputs.cuda())
                 eval_dict[key]['features'].append(features)
             eval_dict[key]['features'] = torch.cat(eval_dict[key]['features'], dim=0)
 
