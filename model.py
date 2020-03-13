@@ -57,7 +57,9 @@ class Model(nn.Module):
         res2 = self.layer2(res1)
         res3 = self.layer3(res2)
         res4 = self.layer4(res3)
-        global_feature = torch.flatten(F.adaptive_max_pool2d(res4, output_size=(1, 1)), start_dim=1)
+        max_feature = torch.flatten(F.adaptive_max_pool2d(res4, output_size=(1, 1)), start_dim=1)
+        avg_feature = torch.flatten(F.adaptive_avg_pool2d(res4, output_size=(1, 1)), start_dim=1)
+        global_feature = 0.5 * max_feature + 0.5 * avg_feature
         feature = self.refactor(global_feature)
         classes = self.fc(feature)
         return F.normalize(feature, dim=-1), classes
