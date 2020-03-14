@@ -53,16 +53,16 @@ def test(net, recall_ids):
                 eval_dict[key]['features'].append(features)
             eval_dict[key]['features'] = torch.cat(eval_dict[key]['features'], dim=0)
 
-        test_features = torch.sign(eval_dict['test']['features'])
+        test_features = torch.sign(eval_dict['test']['features']).cpu()
         # compute recall metric
         if data_name == 'isc':
-            dense_acc_list = recall(eval_dict['test']['features'], test_data_set.labels, recall_ids,
-                                    eval_dict['gallery']['features'], gallery_data_set.labels)
-            gallery_features = torch.sign(eval_dict['gallery']['features'])
+            dense_acc_list = recall(eval_dict['test']['features'].cpu(), test_data_set.labels, recall_ids,
+                                    eval_dict['gallery']['features'].cpu(), gallery_data_set.labels)
+            gallery_features = torch.sign(eval_dict['gallery']['features']).cpu()
             binary_acc_list = recall(test_features, test_data_set.labels, recall_ids,
                                      gallery_features, gallery_data_set.labels, binary=True)
         else:
-            dense_acc_list = recall(eval_dict['test']['features'], test_data_set.labels, recall_ids)
+            dense_acc_list = recall(eval_dict['test']['features'].cpu(), test_data_set.labels, recall_ids)
             binary_acc_list = recall(test_features, test_data_set.labels, recall_ids, binary=True)
     desc = 'Test Epoch {}/{} '.format(epoch, num_epochs + 1)
     for index, rank_id in enumerate(recall_ids):
