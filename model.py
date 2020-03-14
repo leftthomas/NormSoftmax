@@ -22,7 +22,7 @@ class ProxyLinear(nn.Module):
         nn.init.kaiming_uniform_(self.weight, a=math.sqrt(5))
 
     def forward(self, x):
-        output = x.matmul(self.weight.t())
+        output = x.matmul(F.normalize(self.weight, dim=-1).t())
         return output
 
     def extra_repr(self):
@@ -49,7 +49,7 @@ class Model(nn.Module):
         # Refactor Layer
         self.refactor = nn.Linear(512 * expansion, feature_dim, bias=False)
         # Classification Layer
-        self.fc = nn.Sequential(nn.BatchNorm1d(feature_dim), ProxyLinear(feature_dim, num_classes))
+        self.fc = nn.Sequential(ProxyLinear(feature_dim, num_classes))
 
     def forward(self, x):
         res0 = self.layer0(x)
@@ -57,7 +57,9 @@ class Model(nn.Module):
         res2 = self.layer2(res1)
         res3 = self.layer3(res2)
         res4 = self.layer4(res3)
-        global_feature = torch.flatten(F.adaptive_max_pool2d(res4, output_size=(1, 1)))
-        feature = self.refactor(global_feature)
+        global_feature = torch.flatten(F.adaptive_max_pool2d(res4, output_size=(1, 1)), start_dim=1)
+        std, mean = torch.std_mean(global_feature, dim=-1, keepdim=True)
+        global_feature = (global_feature - mean) / std
+        feature = F.normalize(self.refactor(global_feature), dim=-1)
         classes = self.fc(feature)
-        return F.normalize(feature, dim=-1), classes
+        return feature, classes
