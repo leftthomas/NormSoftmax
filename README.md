@@ -55,6 +55,7 @@ The models are trained on one NVIDIA Tesla V100 (32G) GPU, all the hyper-paramet
 <table>
   <thead>
     <tr>
+      <th>Backbone</th>
       <th>CARS196</th>
       <th>CUB200</th>
       <th>SOP</th>
@@ -63,8 +64,9 @@ The models are trained on one NVIDIA Tesla V100 (32G) GPU, all the hyper-paramet
   </thead>
   <tbody>
     <tr>
-      <td align="center">12.12M | 4.29G</td>
-      <td align="center">12.12M | 4.29G</td>
+      <td align="center">ResNet50</td>
+      <td align="center">27.91M | 4.12G</td>
+      <td align="center">27.91M | 4.12G</td>
       <td align="center">29.35M | 4.32G</td>
       <td align="center">18.11M | 4.30G</td>
     </tr>
