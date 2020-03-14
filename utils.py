@@ -44,12 +44,14 @@ class ImageReader(Dataset):
         return len(self.images)
 
 
-def recall(feature_vectors, feature_labels, rank, gallery_vectors=None, gallery_labels=None):
+def recall(feature_vectors, feature_labels, rank, gallery_vectors=None, gallery_labels=None, binary=False):
     num_features = len(feature_labels)
     feature_labels = torch.tensor(feature_labels, device=feature_vectors.device)
     gallery_vectors = feature_vectors if gallery_vectors is None else gallery_vectors
 
     sim_matrix = torch.mm(feature_vectors, gallery_vectors.t().contiguous())
+    if binary:
+        sim_matrix = sim_matrix / feature_vectors.size(-1)
 
     if gallery_labels is None:
         sim_matrix.fill_diagonal_(0)

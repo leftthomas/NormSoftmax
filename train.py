@@ -53,18 +53,24 @@ def test(net, recall_ids):
                 eval_dict[key]['features'].append(features)
             eval_dict[key]['features'] = torch.cat(eval_dict[key]['features'], dim=0)
 
+        test_features = torch.sign(eval_dict['test']['features'])
         # compute recall metric
         if data_name == 'isc':
-            acc_list = recall(eval_dict['test']['features'], test_data_set.labels, recall_ids,
-                              eval_dict['gallery']['features'], gallery_data_set.labels)
+            dense_acc_list = recall(eval_dict['test']['features'], test_data_set.labels, recall_ids,
+                                    eval_dict['gallery']['features'], gallery_data_set.labels)
+            gallery_features = torch.sign(eval_dict['gallery']['features'])
+            binary_acc_list = recall(test_features, test_data_set.labels, recall_ids,
+                                     gallery_features, gallery_data_set.labels, binary=True)
         else:
-            acc_list = recall(eval_dict['test']['features'], test_data_set.labels, recall_ids)
+            dense_acc_list = recall(eval_dict['test']['features'], test_data_set.labels, recall_ids)
+            binary_acc_list = recall(test_features, test_data_set.labels, recall_ids, binary=True)
     desc = 'Test Epoch {}/{} '.format(epoch, num_epochs)
     for index, rank_id in enumerate(recall_ids):
-        desc += 'R@{}:{:.2f}% '.format(rank_id, acc_list[index] * 100)
-        results['test_recall@{}'.format(rank_id)].append(acc_list[index] * 100)
+        desc += 'R@{}:{:.2f}%[{:.2f}%] '.format(rank_id, dense_acc_list[index] * 100, binary_acc_list[index] * 100)
+        results['test_dense_recall@{}'.format(rank_id)].append(dense_acc_list[index] * 100)
+        results['test_binary_recall@{}'.format(rank_id)].append(binary_acc_list[index] * 100)
     print(desc)
-    return acc_list[0]
+    return dense_acc_list[0]
 
 
 if __name__ == '__main__':
@@ -90,7 +96,8 @@ if __name__ == '__main__':
 
     results = {'train_loss': [], 'train_accuracy': []}
     for recall_id in recalls:
-        results['test_recall@{}'.format(recall_id)] = []
+        results['test_dense_recall@{}'.format(recall_id)] = []
+        results['test_binary_recall@{}'.format(recall_id)] = []
 
     # dataset loader
     train_data_set = ImageReader(data_path, data_name, 'train', crop_type)
