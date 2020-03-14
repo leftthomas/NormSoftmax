@@ -41,7 +41,11 @@ def recall(feature_vectors, feature_labels, rank, gallery_vectors=None, gallery_
     feature_labels = torch.tensor(feature_labels, device=feature_vectors.device)
     gallery_vectors = feature_vectors if gallery_vectors is None else gallery_vectors
 
-    sim_matrix = torch.mm(feature_vectors, gallery_vectors.t().contiguous())
+    # avoid oom
+    sim_matrix = []
+    for feature_vector in torch.chunk(feature_vectors, chunks=2, dim=0):
+        sim_matrix.append(torch.mm(feature_vector, gallery_vectors.t().contiguous()))
+    sim_matrix = torch.cat(sim_matrix, dim=0)
     if binary:
         sim_matrix = sim_matrix / feature_vectors.size(-1)
 
