@@ -58,8 +58,7 @@ class Model(nn.Module):
         res3 = self.layer3(res2)
         res4 = self.layer4(res3)
         global_feature = torch.flatten(F.adaptive_max_pool2d(res4, output_size=(1, 1)), start_dim=1)
-        std, mean = torch.std_mean(global_feature, dim=-1, keepdim=True)
-        global_feature = (global_feature - mean) / std
+        global_feature = F.layer_norm(global_feature, [global_feature.size(-1)])
         feature = F.normalize(self.refactor(global_feature), dim=-1)
         classes = self.fc(feature)
         return feature, classes
