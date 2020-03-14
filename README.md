@@ -77,7 +77,7 @@ The models are trained on one NVIDIA Tesla V100 (32G) GPU, all the hyper-paramet
 <table>
   <thead>
     <tr>
-      <th>Backbone</th>
+      <th>Feature Type</th>
       <th>R@1</th>
       <th>R@2</th>
       <th>R@4</th>
@@ -87,28 +87,20 @@ The models are trained on one NVIDIA Tesla V100 (32G) GPU, all the hyper-paramet
   </thead>
   <tbody>
     <tr>
-      <td align="center">ResNet18</td>
-      <td align="center">84.3% | 91.2%</td>
-      <td align="center">90.4% | 94.9%</td>
-      <td align="center">94.3% | 97.1%</td>
-      <td align="center">96.7% | 98.4%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/1W3-QKVe5HpCAHJTgxI1M5Q">r3sn</a> | <a href="https://pan.baidu.com/s/171Wqa-1TNquzedjlFhaYGg">sf5s</a></td>
+      <td align="center">Dense</td>
+      <td align="center">86.1% | 91.4%</td>
+      <td align="center">91.9% | 95.0%</td>
+      <td align="center">95.4% | 97.1%</td>
+      <td align="center">97.4% | 98.3%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1Wld7E02CaRgaZi4cv4I7dQ">gcmw</a> | <a href="https://pan.baidu.com/s/15jsM45iZY-u08Y39VkmRSQ">fygj</a></td>
     </tr>
     <tr>
-      <td align="center">ResNet50</td>
-      <td align="center">90.2% | 94.2%</td>
-      <td align="center">94.5% | 96.8%</td>
-      <td align="center">96.9% | 98.1%</td>
-      <td align="center">98.3% | 99.0%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/1W3-QKVe5HpCAHJTgxI1M5Q">r3sn</a> | <a href="https://pan.baidu.com/s/171Wqa-1TNquzedjlFhaYGg">sf5s</a></td>
-    </tr>
-    <tr>
-      <td align="center">SEResNet50</td>
-      <td align="center">90.2% | 94.2%</td>
-      <td align="center">94.3% | 96.8%</td>
-      <td align="center">96.8% | 98.1%</td>
-      <td align="center">98.4% | 98.9%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/1W3-QKVe5HpCAHJTgxI1M5Q">r3sn</a> | <a href="https://pan.baidu.com/s/171Wqa-1TNquzedjlFhaYGg">sf5s</a></td>
+      <td align="center">Binary</td>
+      <td align="center">85.2% | 90.6%</td>
+      <td align="center">91.6% | 94.6%</td>
+      <td align="center">95.2% | 96.9%</td>
+      <td align="center">97.3% | 98.2%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1Wld7E02CaRgaZi4cv4I7dQ">gcmw</a> | <a href="https://pan.baidu.com/s/15jsM45iZY-u08Y39VkmRSQ">fygj</a></td>
     </tr>
   </tbody>
 </table>
@@ -117,7 +109,7 @@ The models are trained on one NVIDIA Tesla V100 (32G) GPU, all the hyper-paramet
 <table>
   <thead>
     <tr>
-      <th>Backbone</th>
+      <th>Feature Type</th>
       <th>R@1</th>
       <th>R@2</th>
       <th>R@4</th>
@@ -127,28 +119,20 @@ The models are trained on one NVIDIA Tesla V100 (32G) GPU, all the hyper-paramet
   </thead>
   <tbody>
     <tr>
-      <td align="center">ResNet18</td>
-      <td align="center">61.9% | 68.3%</td>
-      <td align="center">72.9% | 78.5%</td>
-      <td align="center">82.1% | 86.3%</td>
-      <td align="center">89.2% | 92.2%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/1_Ij-bYHZC31cxEWUnYwqwQ">2cfi</a> | <a href="https://pan.baidu.com/s/1deaYb2RWHikztHHsbJyuNw">pi4q</a></td>
-    </tr>
-    <tr>
-      <td align="center">ResNet50</td>
+      <td align="center">Dense</td>
       <td align="center">69.1% | 76.0%</td>
       <td align="center">79.6% | 84.0%</td>
       <td align="center">87.1% | 90.3%</td>
       <td align="center">92.1% | 94.3%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/1_Ij-bYHZC31cxEWUnYwqwQ">2cfi</a> | <a href="https://pan.baidu.com/s/1deaYb2RWHikztHHsbJyuNw">pi4q</a></td>
+      <td align="center"><a href="https://pan.baidu.com/s/19Hmibn-RbxAUTnOEPxxafw">qkjs</a> | <a href="https://pan.baidu.com/s/101_f16MD7y2cLuC6RRpJBA">h37y</a></td>
     </tr>
     <tr>
-      <td align="center">SEResNet50</td>
-      <td align="center">70.9% | 79.8%</td>
-      <td align="center">79.9% | 87.1%</td>
-      <td align="center">87.0% | 91.6%</td>
-      <td align="center">92.4% | 95.0%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/1W3-QKVe5HpCAHJTgxI1M5Q">r3sn</a> | <a href="https://pan.baidu.com/s/171Wqa-1TNquzedjlFhaYGg">sf5s</a></td>
+      <td align="center">Binary</td>
+      <td align="center">69.1% | 76.0%</td>
+      <td align="center">79.6% | 84.0%</td>
+      <td align="center">87.1% | 90.3%</td>
+      <td align="center">92.1% | 94.3%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/19Hmibn-RbxAUTnOEPxxafw">qkjs</a> | <a href="https://pan.baidu.com/s/101_f16MD7y2cLuC6RRpJBA">h37y</a></td>
     </tr>
   </tbody>
 </table>
@@ -157,7 +141,7 @@ The models are trained on one NVIDIA Tesla V100 (32G) GPU, all the hyper-paramet
 <table>
   <thead>
     <tr>
-      <th>Backbone</th>
+      <th>Feature Type</th>
       <th>R@1</th>
       <th>R@10</th>
       <th>R@100</th>
@@ -167,28 +151,20 @@ The models are trained on one NVIDIA Tesla V100 (32G) GPU, all the hyper-paramet
   </thead>
   <tbody>
     <tr>
-      <td align="center">ResNet18</td>
-      <td align="center">70.6%</td>
-      <td align="center">84.1%</td>
-      <td align="center">92.1%</td>
-      <td align="center">96.9%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/17I2nQMK5XBXL1XhiZ2elAg">qgsn</a></td>
-    </tr>
-    <tr>
-      <td align="center">ResNet50</td>
+      <td align="center">Dense</td>
       <td align="center">77.7%</td>
       <td align="center">88.5%</td>
       <td align="center">94.0%</td>
       <td align="center">97.3%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/17I2nQMK5XBXL1XhiZ2elAg">qgsn</a></td>
+      <td align="center"><a href="https://pan.baidu.com/s/1izrEJUTHgB7Yafa6d938MA">3qr7</a></td>
     </tr>
     <tr>
-      <td align="center">SEResNet50</td>
-      <td align="center">30.1%</td>
-      <td align="center">45.6%</td>
-      <td align="center">64.5%</td>
-      <td align="center">83.6%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/17I2nQMK5XBXL1XhiZ2elAg">qgsn</a></td>
+      <td align="center">Binary</td>
+      <td align="center">77.7%</td>
+      <td align="center">88.5%</td>
+      <td align="center">94.0%</td>
+      <td align="center">97.3%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1izrEJUTHgB7Yafa6d938MA">3qr7</a></td>
     </tr>
   </tbody>
 </table>
@@ -197,7 +173,7 @@ The models are trained on one NVIDIA Tesla V100 (32G) GPU, all the hyper-paramet
 <table>
   <thead>
     <tr>
-      <th>Backbone</th>
+      <th>Feature Type</th>
       <th>R@1</th>
       <th>R@10</th>
       <th>R@20</th>
@@ -209,34 +185,24 @@ The models are trained on one NVIDIA Tesla V100 (32G) GPU, all the hyper-paramet
   </thead>
   <tbody>
     <tr>
-      <td align="center">ResNet18</td>
-      <td align="center">76.6%</td>
-      <td align="center">92.1%</td>
-      <td align="center">94.4%</td>
-      <td align="center">95.4%</td>
-      <td align="center">96.0%</td>
-      <td align="center">96.3%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/10Ow0JhXzRcPVsv5-j14ZjQ">8jmp</a></td>
-    </tr>
-    <tr>
-      <td align="center">ResNet50</td>
+      <td align="center">Dense</td>
       <td align="center">83.7%</td>
       <td align="center">94.8%</td>
       <td align="center">96.3%</td>
       <td align="center">96.9%</td>
       <td align="center">97.4%</td>
       <td align="center">97.6%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/10Ow0JhXzRcPVsv5-j14ZjQ">8jmp</a></td>
+      <td align="center"><a href="https://pan.baidu.com/s/1MW1Snt079y0wtPMA3Eeyhg">5wja</a></td>
     </tr>
     <tr>
-      <td align="center">SEResNet50</td>
-      <td align="center">80.8%</td>
-      <td align="center">93.5%</td>
-      <td align="center">95.2%</td>
-      <td align="center">96.1%</td>
-      <td align="center">96.7%</td>
-      <td align="center">97.1%</td>
-      <td align="center"><a href="https://pan.baidu.com/s/10Ow0JhXzRcPVsv5-j14ZjQ">8jmp</a></td>
+      <td align="center">Binary</td>
+      <td align="center">83.7%</td>
+      <td align="center">94.8%</td>
+      <td align="center">96.3%</td>
+      <td align="center">96.9%</td>
+      <td align="center">97.4%</td>
+      <td align="center">97.6%</td>
+      <td align="center"><a href="https://pan.baidu.com/s/1MW1Snt079y0wtPMA3Eeyhg">5wja</a></td>
     </tr>
   </tbody>
 </table>
