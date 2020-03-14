@@ -67,7 +67,7 @@ The models are trained on one NVIDIA Tesla V100 (32G) GPU, all the hyper-paramet
       <td align="center">ResNet50</td>
       <td align="center">27.91M | 4.12G</td>
       <td align="center">27.91M | 4.12G</td>
-      <td align="center">29.35M | 4.32G</td>
+      <td align="center">50.88M | 4.12G</td>
       <td align="center">18.11M | 4.30G</td>
     </tr>
   </tbody>
@@ -120,18 +120,18 @@ The models are trained on one NVIDIA Tesla V100 (32G) GPU, all the hyper-paramet
   <tbody>
     <tr>
       <td align="center">Dense</td>
-      <td align="center">69.1% | 76.0%</td>
-      <td align="center">79.6% | 84.0%</td>
-      <td align="center">87.1% | 90.3%</td>
-      <td align="center">92.1% | 94.3%</td>
+      <td align="center">64.1% | 68.4%</td>
+      <td align="center">75.4% | 79.9%</td>
+      <td align="center">83.6% | 87.6%</td>
+      <td align="center">90.6% | 92.9%</td>
       <td align="center"><a href="https://pan.baidu.com/s/19Hmibn-RbxAUTnOEPxxafw">qkjs</a> | <a href="https://pan.baidu.com/s/101_f16MD7y2cLuC6RRpJBA">h37y</a></td>
     </tr>
     <tr>
       <td align="center">Binary</td>
-      <td align="center">69.1% | 76.0%</td>
-      <td align="center">79.6% | 84.0%</td>
-      <td align="center">87.1% | 90.3%</td>
-      <td align="center">92.1% | 94.3%</td>
+      <td align="center">62.7% | 66.8%</td>
+      <td align="center">74.4% | 78.7%</td>
+      <td align="center">82.8% | 87.2%</td>
+      <td align="center">90.0% | 92.7%</td>
       <td align="center"><a href="https://pan.baidu.com/s/19Hmibn-RbxAUTnOEPxxafw">qkjs</a> | <a href="https://pan.baidu.com/s/101_f16MD7y2cLuC6RRpJBA">h37y</a></td>
     </tr>
   </tbody>
