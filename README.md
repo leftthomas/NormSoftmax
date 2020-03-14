@@ -1,5 +1,5 @@
-# CLF
-A PyTorch implementation of CLF based on the paper [Combination of Multiple Local Features for Image Retrieval]().
+# NormSoftmax
+A PyTorch implementation of NormSoftmax based on BMVC 2019 paper [Classification is a Strong Baseline for Deep Metric Learning](https://arxiv.org/abs/1811.12649).
 
 ![Network Architecture](results/structure.png)
 

@@ -1,8 +1,8 @@
+import numpy as np
 import torch
-import torch.nn.functional as F
 from PIL import Image
-from torch import nn
 from torch.utils.data import Dataset
+from torch.utils.data.sampler import Sampler
 from torchvision import transforms
 
 
@@ -19,26 +19,18 @@ class ImageReader(Dataset):
             self.transform = transforms.Compose([transforms.Resize((256, 256)), transforms.RandomCrop(224),
                                                  transforms.RandomHorizontalFlip(), transforms.ToTensor(), normalize])
         else:
-            self.transform = transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor(), normalize])
-        self.images, self.labels, self.weights = [], [], {}
+            self.transform = transforms.Compose([transforms.Resize((256, 256)), transforms.CenterCrop(224),
+                                                 transforms.ToTensor(), normalize])
+        self.images, self.labels = [], []
         for label, image_list in data_dict.items():
             self.images += image_list
             self.labels += [self.class_to_idx[label]] * len(image_list)
-            self.weights[self.class_to_idx[label]] = len(image_list)
-        # class-wise weight for overcome dataset imbalance
-        sum_weight = 0.0
-        for key, value in self.weights.items():
-            self.weights[key] = len(self.labels) / value
-            sum_weight += self.weights[key]
-        for key, value in self.weights.items():
-            self.weights[key] = value / sum_weight * len(self.class_to_idx)
 
     def __getitem__(self, index):
         path, target = self.images[index], self.labels[index]
-        weight = self.weights[target]
         img = Image.open(path).convert('RGB')
         img = self.transform(img)
-        return img, target, weight
+        return img, target
 
     def __len__(self):
         return len(self.images)
@@ -67,15 +59,32 @@ def recall(feature_vectors, feature_labels, rank, gallery_vectors=None, gallery_
     return acc_list
 
 
-class LabelSmoothingCrossEntropyLoss(nn.Module):
-    def __init__(self, smoothing=0.1, temperature=0.05):
-        super().__init__()
-        self.smoothing = smoothing
-        self.temperature = temperature
+class MPerClassSampler(Sampler):
+    def __init__(self, labels, batch_size, m=4):
+        self.labels = np.array(labels)
+        self.labels_unique = np.unique(labels)
+        self.batch_size = batch_size
+        self.m = m
+        assert batch_size % m == 0, 'batch size must be divided by m'
 
-    def forward(self, x, target, weight):
-        log_probs = F.log_softmax(x / self.temperature, dim=-1)
-        nll_loss = -log_probs.gather(dim=-1, index=target.unsqueeze(dim=-1)).squeeze(dim=-1)
-        smooth_loss = -log_probs.mean(dim=-1)
-        loss = (1.0 - self.smoothing) * nll_loss + self.smoothing * smooth_loss
-        return (weight * loss).mean()
+    def __len__(self):
+        return len(self.labels) // self.batch_size
+
+    def __iter__(self):
+        for _ in range(self.__len__()):
+            labels_in_batch = set()
+            inds = np.array([], dtype=np.int)
+
+            while inds.shape[0] < self.batch_size:
+                sample_label = np.random.choice(self.labels_unique)
+                if sample_label in labels_in_batch:
+                    continue
+
+                labels_in_batch.add(sample_label)
+                sample_label_ids = np.argwhere(np.in1d(self.labels, sample_label)).reshape(-1)
+                subsample = np.random.permutation(sample_label_ids)[:self.m]
+                inds = np.append(inds, subsample)
+
+            inds = inds[:self.batch_size]
+            inds = np.random.permutation(inds)
+            yield list(inds)

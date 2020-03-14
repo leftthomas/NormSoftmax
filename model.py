@@ -3,14 +3,7 @@ import math
 import torch
 import torch.nn.functional as F
 from torch import nn
-
-from resnet import resnet18, resnet50, seresnet50
-
-
-def set_bn_eval(m):
-    classname = m.__class__.__name__
-    if classname.find('BatchNorm2d') != -1:
-        m.eval()
+from torchvision.models import resnet50
 
 
 class ProxyLinear(nn.Module):
@@ -30,34 +23,24 @@ class ProxyLinear(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, backbone_type, feature_dim, num_classes):
+    def __init__(self, feature_dim, num_classes):
         super().__init__()
 
-        # Backbone Network
-        backbones = {'resnet18': (resnet18, 1), 'resnet50': (resnet50, 4), 'seresnet50': (seresnet50, 4)}
-        backbone, expansion = backbones[backbone_type]
-        self.layer0 = []
-        for name, module in backbone(pretrained=True).named_children():
-            if isinstance(module, nn.AdaptiveAvgPool2d) or isinstance(module, nn.Linear):
+        self.feature = []
+        for name, module in resnet50(pretrained=True).named_children():
+            if isinstance(module, nn.Linear):
                 continue
-            if name not in ['layer1', 'layer2', 'layer3', 'layer4']:
-                self.layer0.append(module)
-            else:
-                self.add_module(name, module)
-        self.layer0 = nn.Sequential(*self.layer0)
+            self.feature.append(module)
+        self.feature = nn.Sequential(*self.feature)
 
         # Refactor Layer
-        self.refactor = nn.Linear(512 * expansion, feature_dim, bias=False)
+        self.refactor = nn.Linear(2048, feature_dim)
         # Classification Layer
-        self.fc = nn.Sequential(ProxyLinear(feature_dim, num_classes))
+        self.fc = ProxyLinear(feature_dim, num_classes)
 
     def forward(self, x):
-        res0 = self.layer0(x)
-        res1 = self.layer1(res0)
-        res2 = self.layer2(res1)
-        res3 = self.layer3(res2)
-        res4 = self.layer4(res3)
-        global_feature = torch.flatten(F.adaptive_max_pool2d(res4, output_size=(1, 1)), start_dim=1)
+        feature = self.feature(x)
+        global_feature = torch.flatten(feature, start_dim=1)
         global_feature = F.layer_norm(global_feature, [global_feature.size(-1)])
         feature = F.normalize(self.refactor(global_feature), dim=-1)
         classes = self.fc(feature)
