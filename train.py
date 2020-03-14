@@ -117,7 +117,8 @@ if __name__ == '__main__':
     flops, params = profile(model, inputs=(torch.randn(1, 3, 224, 224).cuda(),))
     flops, params = clever_format([flops, params])
     print('# Model Params: {} FLOPs: {}'.format(params, flops))
-    optimizer_init = SGD([model.refactor.parameters(), model.fc.parameters()], lr=lr, momentum=0.9, weight_decay=1e-4)
+    optimizer_init = SGD([{'params': model.refactor.parameters()}, {'params': model.fc.parameters()}],
+                         lr=lr, momentum=0.9, weight_decay=1e-4)
     optimizer = SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=1e-4)
     lr_scheduler = StepLR(optimizer, step_size=num_epochs // 2, gamma=0.1)
     loss_criterion = nn.CrossEntropyLoss()
