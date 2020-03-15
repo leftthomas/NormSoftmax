@@ -152,18 +152,18 @@ The models are trained on one NVIDIA Tesla V100 (32G) GPU, all the hyper-paramet
   <tbody>
     <tr>
       <td align="center">Dense</td>
-      <td align="center">77.7%</td>
-      <td align="center">88.5%</td>
-      <td align="center">94.0%</td>
-      <td align="center">97.3%</td>
+      <td align="center">78.7%</td>
+      <td align="center">91.1%</td>
+      <td align="center">96.5%</td>
+      <td align="center">98.9%</td>
       <td align="center"><a href="https://pan.baidu.com/s/1izrEJUTHgB7Yafa6d938MA">3qr7</a></td>
     </tr>
     <tr>
       <td align="center">Binary</td>
-      <td align="center">77.7%</td>
-      <td align="center">88.5%</td>
-      <td align="center">94.0%</td>
-      <td align="center">97.3%</td>
+      <td align="center">77.8%</td>
+      <td align="center">90.7%</td>
+      <td align="center">96.3%</td>
+      <td align="center">98.8%</td>
       <td align="center"><a href="https://pan.baidu.com/s/1izrEJUTHgB7Yafa6d938MA">3qr7</a></td>
     </tr>
   </tbody>
